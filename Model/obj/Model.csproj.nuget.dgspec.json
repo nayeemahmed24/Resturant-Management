@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Resturant Management\\Model\\Model.csproj": {}
+    "E:\\Resturant-Management\\Model\\Model.csproj": {}
   },
   "projects": {
-    "E:\\Resturant Management\\Model\\Model.csproj": {
+    "E:\\Resturant-Management\\Model\\Model.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Resturant Management\\Model\\Model.csproj",
+        "projectUniqueName": "E:\\Resturant-Management\\Model\\Model.csproj",
         "projectName": "Model",
-        "projectPath": "E:\\Resturant Management\\Model\\Model.csproj",
+        "projectPath": "E:\\Resturant-Management\\Model\\Model.csproj",
         "packagesPath": "C:\\Users\\nayee\\.nuget\\packages\\",
-        "outputPath": "E:\\Resturant Management\\Model\\obj\\",
+        "outputPath": "E:\\Resturant-Management\\Model\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\nayee\\AppData\\Roaming\\NuGet\\NuGet.Config",

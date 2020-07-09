@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "6eBDF8cPrqm4I5KT5F06JJKZk56aGUiWckGoVgL4cpI9/LUNq57jwfGKJ4rSh3hsP5+F7KyU9hB5s3E/4BPP1w==",
+  "dgSpecHash": "YwBQ4FpPlqZJj/yBs6qAKWqCJFJHeP5pjYGhM46xR5q8olyRnQCE7txMKPiDZptUO6lQhyaSzvuqjrQkoNdUZA==",
   "success": true,
-  "projectFilePath": "E:\\Resturant Management\\JWT Token\\JWT Token.csproj",
+  "projectFilePath": "E:\\Resturant-Management\\JWT Token\\JWT Token.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\nayee\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\3.1.5\\microsoft.aspnetcore.authentication.jwtbearer.3.1.5.nupkg.sha512",
     "C:\\Users\\nayee\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",

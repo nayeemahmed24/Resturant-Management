@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Resturant Management\\JWT Token\\JWT Token.csproj": {}
+    "E:\\Resturant-Management\\JWT Token\\JWT Token.csproj": {}
   },
   "projects": {
-    "E:\\Resturant Management\\JWT Token\\JWT Token.csproj": {
+    "E:\\Resturant-Management\\JWT Token\\JWT Token.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Resturant Management\\JWT Token\\JWT Token.csproj",
+        "projectUniqueName": "E:\\Resturant-Management\\JWT Token\\JWT Token.csproj",
         "projectName": "JWT Token",
-        "projectPath": "E:\\Resturant Management\\JWT Token\\JWT Token.csproj",
+        "projectPath": "E:\\Resturant-Management\\JWT Token\\JWT Token.csproj",
         "packagesPath": "C:\\Users\\nayee\\.nuget\\packages\\",
-        "outputPath": "E:\\Resturant Management\\JWT Token\\obj\\",
+        "outputPath": "E:\\Resturant-Management\\JWT Token\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\nayee\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -27,8 +27,8 @@
         "frameworks": {
           "netcoreapp3.1": {
             "projectReferences": {
-              "E:\\Resturant Management\\Model\\Model.csproj": {
-                "projectPath": "E:\\Resturant Management\\Model\\Model.csproj"
+              "E:\\Resturant-Management\\Model\\Model.csproj": {
+                "projectPath": "E:\\Resturant-Management\\Model\\Model.csproj"
               }
             }
           }
@@ -73,14 +73,14 @@
         }
       }
     },
-    "E:\\Resturant Management\\Model\\Model.csproj": {
+    "E:\\Resturant-Management\\Model\\Model.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Resturant Management\\Model\\Model.csproj",
+        "projectUniqueName": "E:\\Resturant-Management\\Model\\Model.csproj",
         "projectName": "Model",
-        "projectPath": "E:\\Resturant Management\\Model\\Model.csproj",
+        "projectPath": "E:\\Resturant-Management\\Model\\Model.csproj",
         "packagesPath": "C:\\Users\\nayee\\.nuget\\packages\\",
-        "outputPath": "E:\\Resturant Management\\Model\\obj\\",
+        "outputPath": "E:\\Resturant-Management\\Model\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\nayee\\AppData\\Roaming\\NuGet\\NuGet.Config",

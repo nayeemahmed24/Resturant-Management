@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "EJhDxbxnc653NWLwhxUPVfge8vy7xVG/j1nmGdzeX65JfHl9N3SjTHziP87UBn8Udq4YVwf+ZoS2lhXUh+aVOA==",
+  "dgSpecHash": "gKS2syhfvVmDc5M6lyJPnK3UXuoChyLqAkpBk06Pczns8FOP3lspy3+CjJGCwwlNqiRX+PYruMDN/rLNZ4maYA==",
   "success": true,
-  "projectFilePath": "E:\\Resturant Management\\Repository\\Repository.csproj",
+  "projectFilePath": "E:\\Resturant-Management\\Repository\\Repository.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\nayee\\.nuget\\packages\\dnsclient\\1.3.1\\dnsclient.1.3.1.nupkg.sha512",
     "C:\\Users\\nayee\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\3.1.5\\microsoft.aspnetcore.authentication.jwtbearer.3.1.5.nupkg.sha512",

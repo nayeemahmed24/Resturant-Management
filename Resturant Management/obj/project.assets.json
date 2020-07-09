@@ -8183,11 +8183,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Resturant Management\\Resturant Management\\Resturant Management.csproj",
+      "projectUniqueName": "E:\\Resturant-Management\\Resturant Management\\Resturant Management.csproj",
       "projectName": "Resturant Management",
-      "projectPath": "E:\\Resturant Management\\Resturant Management\\Resturant Management.csproj",
+      "projectPath": "E:\\Resturant-Management\\Resturant Management\\Resturant Management.csproj",
       "packagesPath": "C:\\Users\\nayee\\.nuget\\packages\\",
-      "outputPath": "E:\\Resturant Management\\Resturant Management\\obj\\",
+      "outputPath": "E:\\Resturant-Management\\Resturant Management\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\nayee\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -8203,17 +8203,17 @@
       "frameworks": {
         "netcoreapp3.1": {
           "projectReferences": {
-            "E:\\Resturant Management\\JWT Token\\JWT Token.csproj": {
-              "projectPath": "E:\\Resturant Management\\JWT Token\\JWT Token.csproj"
+            "E:\\Resturant-Management\\JWT Token\\JWT Token.csproj": {
+              "projectPath": "E:\\Resturant-Management\\JWT Token\\JWT Token.csproj"
             },
-            "E:\\Resturant Management\\Model\\Model.csproj": {
-              "projectPath": "E:\\Resturant Management\\Model\\Model.csproj"
+            "E:\\Resturant-Management\\Model\\Model.csproj": {
+              "projectPath": "E:\\Resturant-Management\\Model\\Model.csproj"
             },
-            "E:\\Resturant Management\\Repository\\Repository.csproj": {
-              "projectPath": "E:\\Resturant Management\\Repository\\Repository.csproj"
+            "E:\\Resturant-Management\\Repository\\Repository.csproj": {
+              "projectPath": "E:\\Resturant-Management\\Repository\\Repository.csproj"
             },
-            "E:\\Resturant Management\\Services\\Services.csproj": {
-              "projectPath": "E:\\Resturant Management\\Services\\Services.csproj"
+            "E:\\Resturant-Management\\Services\\Services.csproj": {
+              "projectPath": "E:\\Resturant-Management\\Services\\Services.csproj"
             }
           }
         }

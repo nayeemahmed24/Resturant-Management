@@ -6707,11 +6707,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Resturant Management\\Services\\Services.csproj",
+      "projectUniqueName": "E:\\Resturant-Management\\Services\\Services.csproj",
       "projectName": "Services",
-      "projectPath": "E:\\Resturant Management\\Services\\Services.csproj",
+      "projectPath": "E:\\Resturant-Management\\Services\\Services.csproj",
       "packagesPath": "C:\\Users\\nayee\\.nuget\\packages\\",
-      "outputPath": "E:\\Resturant Management\\Services\\obj\\",
+      "outputPath": "E:\\Resturant-Management\\Services\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\nayee\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -6727,14 +6727,14 @@
       "frameworks": {
         "netcoreapp3.1": {
           "projectReferences": {
-            "E:\\Resturant Management\\JWT Token\\JWT Token.csproj": {
-              "projectPath": "E:\\Resturant Management\\JWT Token\\JWT Token.csproj"
+            "E:\\Resturant-Management\\JWT Token\\JWT Token.csproj": {
+              "projectPath": "E:\\Resturant-Management\\JWT Token\\JWT Token.csproj"
             },
-            "E:\\Resturant Management\\Model\\Model.csproj": {
-              "projectPath": "E:\\Resturant Management\\Model\\Model.csproj"
+            "E:\\Resturant-Management\\Model\\Model.csproj": {
+              "projectPath": "E:\\Resturant-Management\\Model\\Model.csproj"
             },
-            "E:\\Resturant Management\\Repository\\Repository.csproj": {
-              "projectPath": "E:\\Resturant Management\\Repository\\Repository.csproj"
+            "E:\\Resturant-Management\\Repository\\Repository.csproj": {
+              "projectPath": "E:\\Resturant-Management\\Repository\\Repository.csproj"
             }
           }
         }
