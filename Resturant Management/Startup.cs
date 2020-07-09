@@ -26,6 +26,7 @@ using Services.Email;
 using Services.Email.Configuration;
 using Services.FileUploadService;
 using Services.Helper_Services;
+using Services.MenuServices;
 using Services.UserServices;
 
 namespace Resturant_Management
@@ -65,6 +66,7 @@ namespace Resturant_Management
             services.AddSingleton<CustomTokenValidator>();
             services.AddSingleton<IFileUploadService, FileUploadService>();
             services.AddSingleton<IStoragePathService, StoragePathService>();
+            services.AddSingleton<IMenuServices, MenuServices>();
             services.Configure<Routes>(Configuration.GetSection(nameof(Routes)));
             services.AddSingleton<IRoutes>(mailVarify => mailVarify.GetRequiredService<IOptions<Routes>>().Value);
 

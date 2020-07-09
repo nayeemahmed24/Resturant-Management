@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using JWT_Token;
@@ -80,6 +81,7 @@ namespace Resturant_Management.Controllers
             try
             {
                 var user = await _accessService.GetUserByUsername(authenticateModel.Username);
+                Debug.Print(user.Id.ToString() + "  THISSSSSSS");
                 if (user == null)
                 {
                     return StatusCode(404, _exceptionModelGenerator.setData<TokenModel>(true, "NOT_EXISTS", null));
