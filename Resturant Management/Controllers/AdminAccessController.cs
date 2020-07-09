@@ -35,65 +35,7 @@ namespace Resturant_Management.Controllers
             
             _exceptionModelGenerator = exceptionModelGenerator;
         }
-        [HttpPost("register")]
-        [AllowAnonymous]
-
-        public async Task<IActionResult> SignUp(AdminInputModel adminInputModel)
-        {
-            var uri = Request.HttpContext.Request.ToString();
-            if (await _adminVerificationService.VerifyUserName(adminInputModel.UserName))
-            {
-                return BadRequest(new { message = "Username already exist" });
-            }
-            else if (await _adminVerificationService.IsEmailAvailable(adminInputModel.Email))
-            {
-                return BadRequest(new { message = "User already exist with this email" });
-            }
-            try
-            {
-                var user = await _adminAccessService.Create(adminInputModel);
-                var result = _exceptionModelGenerator.setData<AdminUserModel>(false, "Ok", user);
-                return StatusCode(201, result);
-            }
-            catch (Exception e)
-            {
-                var result = _exceptionModelGenerator.setData<AdminUserModel>(true, e.Message, null);
-                return StatusCode(500, result);
-            }
-
-        }
-
-
-        [HttpPost("login")]
-        [AllowAnonymous]
-        public async Task<IActionResult> Authenticate([FromBody]AuthenticateModel authenticateModel)
-        {
-            try
-            {
-                var user = await _adminAccessService.GetUserByUserName(authenticateModel.Username);
-                if (user == null)
-                {
-                    return StatusCode(404, _exceptionModelGenerator.setData<TokenModel>(true, "NOT_EXISTS", null));
-                }
-                else
-                {
-                    if (_adminAccessService.IsAuthorizedUser(user, authenticateModel.Password))
-                    {
-                        var token = _adminAccessService.GetAuthenticationToken(user);
-                        return StatusCode(200, _exceptionModelGenerator.setData<TokenModel>(false, "Ok", token));
-                    }
-                    else
-                    {
-                        return StatusCode(401, _exceptionModelGenerator.setData<TokenModel>(true, "INCORECT_PASSWORD", null));
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, _exceptionModelGenerator.setData<TokenModel>(true, e.Message, null));
-            }
-
-        }
+       
 
         [HttpPost("restaurant")]
         public IActionResult SignUp([FromBody]InvitationModel invitationModel)

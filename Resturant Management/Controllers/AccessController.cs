@@ -28,6 +28,8 @@ namespace Resturant_Management.Controllers
             _accessService = accessService;
             _exceptionModelGenerator = exceptionModelGenerator;
         }
+
+       
         [HttpPost("invitation")]
         [AllowAnonymous]
         public async Task<IActionResult> CreateRestaurant(RestaurantInputModel restaurantInputModel)
@@ -50,6 +52,25 @@ namespace Resturant_Management.Controllers
                 return StatusCode(500, _exceptionModelGenerator.setData<RestaurantInputModel>(true, e.Message, null));
             }
         }
+        [HttpPost("AdminCreate")]
+        [AllowAnonymous]
+        public async Task<IActionResult> CreateAdmin(RestaurantInputModel restaurantInputModel)
+        {
+
+            try
+            {
+                
+
+                var manager = await _accessService.CreateAdmin(restaurantInputModel);
+                var result = _exceptionModelGenerator.setData<RestaurantModel>(false, "Ok", manager);
+                return StatusCode(201, result);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, _exceptionModelGenerator.setData<RestaurantInputModel>(true, e.Message, null));
+            }
+        }
+
 
 
         [HttpPost("login")]

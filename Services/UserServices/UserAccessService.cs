@@ -59,6 +59,27 @@ namespace Services.UserServices
                 isEmailVerified = true,
                 role = Role.User
             };
+            
+            await _repository.SaveAsync(userModel);
+            // string mailVarificationToken = _tokenGenerator.generateToken(userModel,_jwtSetting.maiVerificationKey,24);
+            // VerificationMailSender(userResponse.email, "Verify Email", mailVarificationToken,_routes.MailVerify);
+            userModel.password = null;
+            return userModel;
+        }
+        public async Task<RestaurantModel> CreateAdmin(RestaurantInputModel userResponse)
+        {
+            string hashedPassword = _passwordManager.HashPassword(userResponse.password);
+            RestaurantModel userModel = new RestaurantModel
+            {
+                restaurantName = userResponse.restaurantName,
+                managerFirstName = userResponse.managerFirstName,
+                managerLastName = userResponse.managerLastName,
+                password = hashedPassword,
+                email = userResponse.email,
+                isEmailVerified = true,
+                role = Role.Admin
+            };
+
             await _repository.SaveAsync(userModel);
             // string mailVarificationToken = _tokenGenerator.generateToken(userModel,_jwtSetting.maiVerificationKey,24);
             // VerificationMailSender(userResponse.email, "Verify Email", mailVarificationToken,_routes.MailVerify);
