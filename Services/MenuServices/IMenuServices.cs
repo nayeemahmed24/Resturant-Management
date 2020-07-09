@@ -10,5 +10,7 @@ namespace Services.MenuServices
     public interface IMenuServices
     {
         public Task<MenuCatergory> AddCategory(MenuCategoryInput menuCategoryInput);
+        public Task<List<MenuCatergory>> GetChildCategories(MenuCategoryInput menuCategory);
+        public Task<List<MenuCatergory>> GetBaseCategories(string Id);
     }
 }

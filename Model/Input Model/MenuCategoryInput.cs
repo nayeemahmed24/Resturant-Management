@@ -16,7 +16,7 @@ namespace Model.Input_Model
         [Required]
         public string CategoryTitle { get; set; }
         public string ParentId { get; set; }
-        [Required]
+        
         public String RestaurantId { get; set; }
 
     }
