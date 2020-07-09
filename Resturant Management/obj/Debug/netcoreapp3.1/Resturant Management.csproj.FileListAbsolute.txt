@@ -1,0 +1,117 @@
+E:\Resturant Management\Resturant Management\obj\Debug\netcoreapp3.1\Resturant Management.csprojAssemblyReference.cache
+E:\Resturant Management\Resturant Management\obj\Debug\netcoreapp3.1\Resturant Management.csproj.CoreCompileInputs.cache
+E:\Resturant Management\Resturant Management\obj\Debug\netcoreapp3.1\Resturant Management.MvcApplicationPartsAssemblyInfo.cache
+E:\Resturant Management\Resturant Management\obj\Debug\netcoreapp3.1\Resturant Management.AssemblyInfoInputs.cache
+E:\Resturant Management\Resturant Management\obj\Debug\netcoreapp3.1\Resturant Management.AssemblyInfo.cs
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\appsettings.Development.json
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\appsettings.json
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Properties\launchSettings.json
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Resturant Management.exe
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Resturant Management.deps.json
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Resturant Management.runtimeconfig.json
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Resturant Management.runtimeconfig.dev.json
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Resturant Management.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Resturant Management.pdb
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\DnsClient.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Cryptography.Internal.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Razor.Language.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Microsoft.CodeAnalysis.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Microsoft.CodeAnalysis.CSharp.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Microsoft.CodeAnalysis.CSharp.Workspaces.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Microsoft.CodeAnalysis.Razor.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Microsoft.CodeAnalysis.Workspaces.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.JsonWebTokens.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Logging.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Protocols.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Tokens.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Microsoft.VisualStudio.Web.CodeGeneration.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Microsoft.VisualStudio.Web.CodeGeneration.Contracts.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Microsoft.VisualStudio.Web.CodeGeneration.Core.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\dotnet-aspnet-codegenerator-design.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Microsoft.VisualStudio.Web.CodeGeneration.Templating.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Microsoft.VisualStudio.Web.CodeGeneration.Utils.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Microsoft.VisualStudio.Web.CodeGenerators.Mvc.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\MongoDB.Bson.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\MongoDB.Driver.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\MongoDB.Driver.Core.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\MongoDB.Libmongocrypt.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\NuGet.Frameworks.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\SharpCompress.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\System.Composition.AttributedModel.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\System.Composition.Convention.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\System.Composition.Hosting.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\System.Composition.Runtime.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\System.Composition.TypedParts.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\System.IdentityModel.Tokens.Jwt.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\cs\Microsoft.CodeAnalysis.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\de\Microsoft.CodeAnalysis.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\es\Microsoft.CodeAnalysis.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\fr\Microsoft.CodeAnalysis.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\it\Microsoft.CodeAnalysis.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\ja\Microsoft.CodeAnalysis.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\ko\Microsoft.CodeAnalysis.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\pl\Microsoft.CodeAnalysis.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\pt-BR\Microsoft.CodeAnalysis.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\ru\Microsoft.CodeAnalysis.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\tr\Microsoft.CodeAnalysis.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\zh-Hans\Microsoft.CodeAnalysis.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\zh-Hant\Microsoft.CodeAnalysis.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\cs\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\de\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\es\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\fr\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\it\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\ja\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\ko\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\pl\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\pt-BR\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\ru\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\tr\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\zh-Hans\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\zh-Hant\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\cs\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\de\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\es\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\fr\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\it\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\ja\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\ko\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\pl\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\pt-BR\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\ru\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\tr\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\zh-Hans\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\zh-Hant\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\cs\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\de\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\es\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\fr\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\it\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\ja\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\ko\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\pl\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\pt-BR\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\ru\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\JWT Token.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Model.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Repository.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Services.dll
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\JWT Token.pdb
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Model.pdb
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Repository.pdb
+E:\Resturant Management\Resturant Management\bin\Debug\netcoreapp3.1\Services.pdb
+E:\Resturant Management\Resturant Management\obj\Debug\netcoreapp3.1\Resturant Management.RazorTargetAssemblyInfo.cache
+E:\Resturant Management\Resturant Management\obj\Debug\netcoreapp3.1\Resturant Management.csproj.CopyComplete
+E:\Resturant Management\Resturant Management\obj\Debug\netcoreapp3.1\staticwebassets\Resturant Management.StaticWebAssets.Manifest.cache
+E:\Resturant Management\Resturant Management\obj\Debug\netcoreapp3.1\staticwebassets\Resturant Management.StaticWebAssets.xml
+E:\Resturant Management\Resturant Management\obj\Debug\netcoreapp3.1\Resturant Management.dll
+E:\Resturant Management\Resturant Management\obj\Debug\netcoreapp3.1\Resturant Management.pdb
+E:\Resturant Management\Resturant Management\obj\Debug\netcoreapp3.1\Resturant Management.genruntimeconfig.cache
