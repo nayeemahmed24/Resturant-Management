@@ -92,3 +92,15 @@ JWT Token/bin/Debug/netcoreapp3.1/Model.dll
 .vs/Resturant Management/DesignTimeBuild/.dtbcache.v2
 *.dll
 *.dll
+
+.vs
+JWT Token/obj
+JWT Token/bin
+Model/obj
+Model/bin
+Repository/obj
+Repository/bin
+Resturant Management/obj
+Resturant Management/bin
+Services/obj
+Services/bin
