@@ -15,3 +15,4 @@ E:\Resturant-Management\Model\obj\Debug\netcoreapp3.1\Model.AssemblyInfoInputs.c
 E:\Resturant-Management\Model\obj\Debug\netcoreapp3.1\Model.AssemblyInfo.cs
 E:\Resturant-Management\Model\obj\Debug\netcoreapp3.1\Model.dll
 E:\Resturant-Management\Model\obj\Debug\netcoreapp3.1\Model.pdb
+E:\Resturant-Management\Model\obj\Debug\netcoreapp3.1\Model.csprojAssemblyReference.cache

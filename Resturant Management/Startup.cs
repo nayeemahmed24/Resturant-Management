@@ -20,6 +20,7 @@ using Model;
 using Model.Error_Handler;
 using Repository;
 using Repository.Configurations;
+using Services.AddonServices;
 using Services.AdminAuth;
 using Services.AdminAuth.Contracts;
 using Services.Email;
@@ -57,6 +58,7 @@ namespace Resturant_Management
             services.AddSingleton<ITokenGenerator, TokenGenerator>();
             services.AddSingleton<IAdminVerificationService, AdminVerficationService>();
             services.AddSingleton<IAdminAccessService, AdminAccessService>();
+            services.AddSingleton<IAddonService, AddonService>();
             services.AddSingleton<IExceptionModelGenerator, ExceptionModelGenerator>();
             services.AddSingleton<IPasswordManager, PasswordManager>();
             services.AddSingleton<IUserAccessService, UserAccessService>();
