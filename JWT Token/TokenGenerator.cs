@@ -27,6 +27,7 @@ namespace JWT_Token
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(Claims.UserId, userModel.Id.ToString()),
+                    new Claim(Claims.email,userModel.email.ToString()),
                     new Claim(Claims.Role, userModel.role)
                 }),
                 Expires = DateTime.UtcNow.AddHours(lifeSpanInHours),

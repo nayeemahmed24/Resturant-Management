@@ -9,5 +9,6 @@ namespace Model
         public static string UserId = "userId";
         public static string Role = "role";
         public static string Exp = "exp";
+        public static string email = "email";
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 using JWT_Token;
@@ -11,6 +12,7 @@ using Repository;
 using Services.AdminAuth.Contracts;
 using Services.Email;
 using Services.Helper_Services;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace Services.AdminAuth
 {
@@ -71,34 +73,54 @@ namespace Services.AdminAuth
         {
             RestaurantModel restaurantModel = new RestaurantModel
             {
-                Id = GetRandomString(),
-                managerFirstName = "",
-                managerLastName = "",
+                Id = GetUniqueId(),
+                firstName = "",
+                lastName = "",
                 restaurantName = invitationModel.restaurantName,
                 email = invitationModel.email,
                 role = Role.User
             };
 
-            string invitationToken = _tokenGenerator.generateToken(restaurantModel, _jwtSetting.maiVerificationKey, 48);
-            VerificationMailSender(restaurantModel.email, "Invitation Link", invitationToken, _routes.InvitationRoute);
+            var clientDetails = GetClientInfo(invitationModel.ClientId);
+            var receiverRoute = clientDetails.host + clientDetails.invitationRoute;
+
+            string invitationToken = _tokenGenerator.generateToken(restaurantModel, _jwtSetting.invitationKey, 48);
+            VerificationMailSender(restaurantModel.email, "Invitation Link", invitationToken, receiverRoute);
         }
-        public void VerificationMailSender(string emailTo, string subject, string token, string api)
+        public void VerificationMailSender(string emailTo, string subject, string token, string url)
         {
-            String link = api + token;
+            var parameter = new Dictionary<string, string>() { { "token", token } };
+            var requestUrl = new Uri(QueryHelpers.AddQueryString(url, parameter));
+
             MailModel mailModel = new MailModel
             {
                 To = emailTo,
-                MessageBody = link,
+                MessageBody = requestUrl.ToString(),
                 Subject = subject
             };
             _mailSender.sendMail(mailModel);
         }
-        public string GetRandomString()
+
+        public ClientModel GetClientInfo(string clientId)
+        {
+            return _repository.GetItem<ClientModel>(c => c._id == clientId);
+        }
+
+        public string GetUniqueId()
+        {
+            string first = DateTime.Now.ToString("yyMMddHHmmssff");
+            string last = GetRandomString();
+            string unique_id = first + "-" + last;
+
+            return unique_id;
+        }
+
+        private string GetRandomString()
         {
             StringBuilder builder = new StringBuilder();
             Random random = new Random();
             char ch;
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 20; i++)
             {
                 ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
                 builder.Append(ch);

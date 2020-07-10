@@ -70,7 +70,7 @@ namespace Resturant_Management.Controllers
                 var user = _userAccessService.GetUser(userId);
                 if (user != null)
                 {
-                    var newdata = _userAccessService.UpdateResturant(userUpdateModel, user);
+                    var newdata = _userAccessService.UpdateResturant(userUpdateModel,user);
                     return StatusCode(204, _exceptionModelGenerator.setData<RestaurantModel>(false, "Ok", null));
                 }
                 else

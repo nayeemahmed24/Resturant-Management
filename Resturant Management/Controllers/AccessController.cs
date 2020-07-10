@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using JWT_Token;
 using Microsoft.AspNetCore.Authorization;
@@ -38,9 +39,15 @@ namespace Resturant_Management.Controllers
             try
             {
                 var user = _accessService.ValidateMailVerifyToken(restaurantInputModel.invitationToken);
+                var identity = user.Identity as ClaimsIdentity;
+                var userId = identity.FindFirst(Claims.UserId)?.Value;
                 if (user == null)
                 {
                     var Errorresult = _exceptionModelGenerator.setData<RestaurantInputModel>(true, "Unauthorized", null);
+                    return StatusCode(401, Errorresult);
+                }else if (_accessService.isRestaurantAvailable(userId))
+                {
+                    var Errorresult = _exceptionModelGenerator.setData<RestaurantInputModel>(true, "Forbidden", null);
                     return StatusCode(403, Errorresult);
                 }
 
@@ -53,15 +60,13 @@ namespace Resturant_Management.Controllers
                 return StatusCode(500, _exceptionModelGenerator.setData<RestaurantInputModel>(true, e.Message, null));
             }
         }
-        [HttpPost("AdminCreate")]
+        [HttpPost("admincreate")]
         [AllowAnonymous]
         public async Task<IActionResult> CreateAdmin(RestaurantInputModel restaurantInputModel)
         {
 
             try
             {
-                
-
                 var manager = await _accessService.CreateAdmin(restaurantInputModel);
                 var result = _exceptionModelGenerator.setData<RestaurantModel>(false, "Ok", manager);
                 return StatusCode(201, result);
@@ -91,16 +96,15 @@ namespace Resturant_Management.Controllers
 
                     if (_accessService.IsAuthorizedUser(user, authenticateModel.Password))
                     {
-                        if (!user.isEmailVerified)
-                        {
-                            user.password = null;
-                            return StatusCode(403, _exceptionModelGenerator.setData<RestaurantModel>(true, "MAIL_NOT_VERIFIED",user ));
-                        }
-                        else
-                        {
+                        //if (!user.isEmailVerified)
+                        //{
+                        //    user.password = null;
+                        //    return StatusCode(403, _exceptionModelGenerator.setData<RestaurantModel>(true, "MAIL_NOT_VERIFIED",user ));
+                        //}
+                       
                             var token = _accessService.GetAuthenticationToken(user);
                             return StatusCode(200, _exceptionModelGenerator.setData<TokenModel>(false, "Ok", token));
-                        }
+                        
 
                     }
                     else
@@ -154,9 +158,9 @@ namespace Resturant_Management.Controllers
         {
             try
             {
-                if (userUpdateModel.token != null)
+                if (userUpdateModel.invitationToken != null)
                 {
-                    string userId = _accessService.ResetPasswordVerification(userUpdateModel.token);
+                    string userId = _accessService.ResetPasswordVerification(userUpdateModel.invitationToken);
                     if (userId != null)
                     {
                         var user = _accessService.GetUser(userId);

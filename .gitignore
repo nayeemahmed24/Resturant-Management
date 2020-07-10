@@ -93,14 +93,15 @@ JWT Token/bin/Debug/netcoreapp3.1/Model.dll
 *.dll
 *.dll
 
-.vs
-JWT Token/obj
 JWT Token/bin
-Model/obj
+JWT Token/obj
 Model/bin
-Repository/obj
+Model/obj
 Repository/bin
-Resturant Management/obj
+Repository/obj
 Resturant Management/bin
-Services/obj
+Resturant Management/obj
 Services/bin
+Services/obj
+.vs
+
