@@ -8,22 +8,19 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Model.Entities
 {
-    public class MenuItem
+    public class Addon
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
         [Required]
-        public string ItemTitle { get; set; }
+        public string AddonTitle { get; set; }
         [Required]
         public double Price { get; set; }
         [Required]
-        public MenuCatergory Parent { get; set; }
-        
+        public MenuItem ParentMenuItem { get; set; }
         [DefaultValue(false)]
         public bool Available { get; set; }
-        [Required]
-        public RestaurantModel Restaurant { get; set; }
 
     }
 }

@@ -66,20 +66,29 @@ fastlane/test_output
 # https://github.com/johnno1962/injectionforxcode
 
 iOSInjectionProject/
-
-.vs
-.vs/
-
-JWT Token/obj
-Model/obj
-Repository/obj
-Resturant Management/obj
-Services/obj
-
-JWT Token/bin
-Model/bin
-Repository/bin
-Resturant Management/bin
-Services/bin
-
-
+*.v2
+*.dll
+*.dll
+*.dll
+Services/obj/Debug/netcoreapp3.1/Services.pdb
+*.v2
+*.dll
+*.cache
+*.pdb
+Model/bin/Debug/netcoreapp3.1/Model.pdb
+Model/bin/Debug/netcoreapp3.1/Model.dll
+JWT Token/obj/Debug/netcoreapp3.1/JWT Token.csprojAssemblyReference.cache
+JWT Token/bin/Debug/netcoreapp3.1/Model.pdb
+JWT Token/bin/Debug/netcoreapp3.1/Model.dll
+.vs/Resturant Management/v16/.suo
+.vs/Resturant Management/DesignTimeBuild/.dtbcache.v2
+*.cache
+Model/bin/Debug/netcoreapp3.1/Model.pdb
+Model/bin/Debug/netcoreapp3.1/Model.dll
+JWT Token/obj/Debug/netcoreapp3.1/JWT Token.csprojAssemblyReference.cache
+JWT Token/bin/Debug/netcoreapp3.1/Model.pdb
+JWT Token/bin/Debug/netcoreapp3.1/Model.dll
+.vs/Resturant Management/v16/.suo
+.vs/Resturant Management/DesignTimeBuild/.dtbcache.v2
+*.dll
+*.dll

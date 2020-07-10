@@ -22,17 +22,16 @@ namespace Resturant_Management.Controllers
     {
         private IMenuServices _menuServices;
         private IExceptionModelGenerator _exceptionModelGenerator;
-        private IUserAccessService _userAccessService;
-        public MenuController(IMenuServices menuServices,IExceptionModelGenerator exceptionModelGenerator,IUserAccessService userAccessService)
+        //private IUserAccessService _userAccessService;
+        public MenuController(IMenuServices menuServices,IExceptionModelGenerator exceptionModelGenerator)
         {
-            _userAccessService = userAccessService;
+          //  _userAccessService = userAccessService;
             _menuServices = menuServices;
             _exceptionModelGenerator = exceptionModelGenerator;
 
         }
 
         [HttpPost("addcategory")]
-        [AllowAnonymous]
         public async Task<IActionResult> AddCategory(MenuCategoryInput menuCategoryInput)
         {
             // For Test Off
@@ -62,13 +61,12 @@ namespace Resturant_Management.Controllers
 
         }
 
-        [HttpPost("getChildCategories")]
-        public async Task<IActionResult> GetChildCategories(MenuCategoryInput menuCategoryInput)
+        [HttpPost("{ResturantId}/getChildCategories")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetChildCategories(String ResturantId, MenuCategoryInput menuCategoryInput)
         {
-            // For Test Off
-            // Authorize and Role Set
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            var userId = identity.FindFirst(Claims.UserId)?.Value;
+            
+            var userId = ResturantId;
             try
             {
                 // For Test Off
@@ -85,14 +83,12 @@ namespace Resturant_Management.Controllers
             }
         }
 
-        [HttpGet("basecategories")]
-        public async Task<IActionResult> BaseCategories()
+        [HttpGet("{ResturantId}/basecategories")]
+        [AllowAnonymous]
+        public async Task<IActionResult> BaseCategories(String ResturantId)
         {
-            // For Test Off
-            // Authorize and Role Set
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            var userId = identity.FindFirst(Claims.UserId)?.Value;
-            // var userId = "5f075a729138c5a8d03175b5";
+            
+             var userId = ResturantId;
             try
             {
                 
@@ -107,6 +103,103 @@ namespace Resturant_Management.Controllers
 
             }
         }
+
+        [HttpPost("createmenu")]
+        public async Task<IActionResult> CreateMenu(MenuItemInput menuItemInput)
+        {
+            // For Test Off
+            // Authorize and Role Set
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(Claims.UserId)?.Value;
+            try
+            {
+                menuItemInput.ResturantId = userId;
+                var menuItem = await _menuServices.AddMenuItem(menuItemInput);
+                if (menuItem != null)
+                {
+                    var resul = _exceptionModelGenerator.setData<MenuItem>(false, "Ok", menuItem);
+                    return StatusCode(201, resul);
+                }
+                var result = _exceptionModelGenerator.setData<MenuItem>(true, "Ok", null);
+                return StatusCode(500, result);
+
+
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, _exceptionModelGenerator.setData<MenuCatergory>(true, e.Message, null));
+            }
+        }
+
+        [HttpPost("MenuUpdate")]
+        public async Task<IActionResult> UpdateMenu(MenuItemInput menuItemInput)
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(Claims.UserId)?.Value;
+            try
+            {
+               
+                
+
+                if (menuItemInput.Id == null || menuItemInput.ParentId == null)
+                {
+                    var Errorresult = _exceptionModelGenerator.setData<MenuItem>(true, "Ok", null);
+                    return StatusCode(500, Errorresult);
+                }
+
+                menuItemInput.ResturantId = userId;
+                var menuItem = await _menuServices.UpdateMenu(menuItemInput);
+                if (menuItem != null)
+                {
+                    var resul = _exceptionModelGenerator.setData<MenuItem>(false, "Ok", menuItem);
+                    return StatusCode(201, resul);
+                }
+                var result = _exceptionModelGenerator.setData<MenuItem>(true, "Ok", null);
+                return StatusCode(500, result);
+
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, _exceptionModelGenerator.setData<MenuCatergory>(true, e.Message, null));
+            }
+        }
+
+
+
+        [HttpPost("ChangeAvailableStatus")]
+        public async Task<IActionResult> ChangeAvailableStatus(MenuItemInput menuItemInput)
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(Claims.UserId)?.Value;
+            try
+            {
+                if (menuItemInput.Id == null || menuItemInput.ParentId == null)
+                {
+                    var Errorresult = _exceptionModelGenerator.setData<MenuItem>(true, "Ok", null);
+                    return StatusCode(500, Errorresult);
+                }
+
+                menuItemInput.ResturantId= userId;
+                var menuItem = await _menuServices.ChangeAvailableStatus(menuItemInput);
+                if (menuItem != null)
+                {
+                    var resul = _exceptionModelGenerator.setData<MenuItem>(false, "Ok", menuItem);
+                    return StatusCode(201, resul);
+                }
+                var result = _exceptionModelGenerator.setData<MenuItem>(true, "Ok", null);
+                return StatusCode(500, result);
+
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, _exceptionModelGenerator.setData<MenuCatergory>(true, e.Message, null));
+            }
+        }
+
+
+
+
+        
 
 
     }
