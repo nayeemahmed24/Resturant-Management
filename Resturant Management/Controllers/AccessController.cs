@@ -96,16 +96,10 @@ namespace Resturant_Management.Controllers
 
                     if (_accessService.IsAuthorizedUser(user, authenticateModel.Password))
                     {
-                        //if (!user.isEmailVerified)
-                        //{
-                        //    user.password = null;
-                        //    return StatusCode(403, _exceptionModelGenerator.setData<RestaurantModel>(true, "MAIL_NOT_VERIFIED",user ));
-                        //}
-                       
+                        
                             var token = _accessService.GetAuthenticationToken(user);
                             return StatusCode(200, _exceptionModelGenerator.setData<TokenModel>(false, "Ok", token));
                         
-
                     }
                     else
                     {

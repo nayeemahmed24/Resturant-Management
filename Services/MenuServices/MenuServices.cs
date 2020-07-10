@@ -31,7 +31,8 @@ namespace Services.MenuServices
                     return null;
                 }
             }
-            
+
+            category.Restaurant.password = null;
             await _repository.SaveAsync<MenuCatergory>(category);
             if (category.Parent != null)
             {
@@ -62,6 +63,8 @@ namespace Services.MenuServices
                 if (menuItem.Parent.IsChildAvailable) return null;
 
             }
+
+            menuItem.Restaurant.password = null; 
             await _repository.SaveAsync<MenuItem>(menuItem);
             if (!menuItem.Parent.ItemAdded)
             {
@@ -75,6 +78,7 @@ namespace Services.MenuServices
         public async Task<MenuItem> UpdateMenu(MenuItemInput menu)
         {
             var menuItem = await FindMenuByMenuItemInput(menu);
+            menuItem.Restaurant.password = null;
             if (menuItem == null) return null;
             menuItem.ItemTitle = menu.ItemTitle;
             menuItem.Price = menu.Price;
@@ -136,6 +140,7 @@ namespace Services.MenuServices
             
 
             category.Restaurant = _userAccessService.GetUser(menuCategoryInput.RestaurantId);
+            category.Restaurant.password = null;
             return category;
         }
 
@@ -152,6 +157,7 @@ namespace Services.MenuServices
                 menuItem.Parent = await FindParentByMenuItemInput(menuItemInput);
             }
             menuItem.Restaurant = _userAccessService.GetUser(menuItemInput.ResturantId);
+            menuItem.Restaurant = null;
             return menuItem;
 
         }
@@ -159,6 +165,7 @@ namespace Services.MenuServices
         private async Task UpdateChildAvailable(MenuCatergory menuCatergory)
         {
             menuCatergory.IsChildAvailable = true;
+            menuCatergory.Restaurant.password = null;
             await _repository.UpdateAsync<MenuCatergory>(d => d.Id == menuCatergory.Id,
                 menuCatergory);
         }

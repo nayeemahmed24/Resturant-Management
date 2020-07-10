@@ -10,5 +10,8 @@ namespace Services.AddonServices
     public interface IAddonService
     {
         public  Task<Addon> AddAddon(AddonInput addon);
+        public Task<Addon> UpdateAddon(AddonInput addonInput);
+        public  Task<Addon> ChangeStatus(AddonInput addonInput);
+        public Task<List<Addon>> AllAddonByMenuItemId(string menuItemId);
     }
 }
