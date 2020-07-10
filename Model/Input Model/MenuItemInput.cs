@@ -1,29 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using Model.Entities;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Model.Entities
+namespace Model.Input_Model
 {
-    public class MenuItem
+    public class MenuItemInput
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
         [Required]
         public string ItemTitle { get; set; }
+
         [Required]
         public double Price { get; set; }
         [Required]
-        public MenuCatergory Parent { get; set; }
-        
-        [DefaultValue(false)]
-        public bool Available { get; set; }
-        [Required]
-        public RestaurantModel Restaurant { get; set; }
+        public String ParentId { get; set; }
+        public String ResturantId { get; set; }
 
     }
 }
