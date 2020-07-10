@@ -51,12 +51,14 @@ namespace Services.UserServices
             string hashedPassword = _passwordManager.HashPassword(userResponse.password);
             RestaurantModel userModel = new RestaurantModel
             {
+                Id = userResponse.Id,
                 restaurantName = userResponse.restaurantName,
-                managerFirstName = userResponse.managerFirstName,
-                managerLastName = userResponse.managerLastName,
+                firstName = userResponse.firstName,
+                lastName = userResponse.lastName,
+                username = userResponse.userName,
                 password = hashedPassword,
                 email = userResponse.email,
-                isEmailVerified = true,
+                //isEmailVerified = true,
                 role = Role.User
             };
             
@@ -71,12 +73,14 @@ namespace Services.UserServices
             string hashedPassword = _passwordManager.HashPassword(userResponse.password);
             RestaurantModel userModel = new RestaurantModel
             {
+                Id = GetUniqueId(),
                 restaurantName = userResponse.restaurantName,
-                managerFirstName = userResponse.managerFirstName,
-                managerLastName = userResponse.managerLastName,
+                firstName = userResponse.lastName,
+                lastName = userResponse.lastName,
+                username = userResponse.userName,
                 password = hashedPassword,
                 email = userResponse.email,
-                isEmailVerified = true,
+                //isEmailVerified = true,
                 role = Role.Admin
             };
 
@@ -98,13 +102,13 @@ namespace Services.UserServices
             {
                 Id = userModel.Id,
                 restaurantName = user.restaurantName,
-                managerFirstName = user.managerFirstName,
-                managerLastName = user.managerLastName,
+                firstName = user.firstName,
+                lastName = user.lastName,
                 logo = userModel.logo,
                 backgroundImage = userModel.backgroundImage,
                 password = userModel.password,
                 email = user.email,
-                isEmailVerified = userModel.isEmailVerified,
+                //isEmailVerified = userModel.isEmailVerified,
                 isBlockedUser = userModel.isBlockedUser,
                 role = userModel.role
             };
@@ -119,7 +123,7 @@ namespace Services.UserServices
         }
         public async Task<RestaurantModel> GetUserByUsername(string username)
         {
-            return await _repository.GetItemAsync<RestaurantModel>(d => d.restaurantName == username);
+            return await _repository.GetItemAsync<RestaurantModel>(d => d.username == username);
         }
 
         public async Task<RestaurantModel> GetUserByEmail(string email)
@@ -233,6 +237,39 @@ namespace Services.UserServices
             var user = GetUser(id);
             user.password = userUpdateModel.password;
             Update(user);
+        }
+
+        public string GetUniqueId()
+        {
+            string first = DateTime.Now.ToString("yyMMddHHmmssff");
+            string last = GetRandomString();
+            string unique_id = first + "-" + last;
+
+            return unique_id;
+        }
+
+        public string GetRandomString()
+        {
+            StringBuilder builder = new StringBuilder();
+            Random random = new Random();
+            char ch;
+            for (int i = 0; i < 20; i++)
+            {
+                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
+                builder.Append(ch);
+            }
+            return builder.ToString().ToLower();
+        }
+
+        public bool isRestaurantAvailable(string userId)
+        {
+
+            var user = GetUser(userId);
+            if (user == null)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

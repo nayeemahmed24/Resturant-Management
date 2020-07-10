@@ -13,10 +13,12 @@ namespace Model.Input_Model
         public string restaurantName { get; set; }
 
         [StringLength(20, MinimumLength = 3)]
-        public string managerFirstName { get; set; }
+        public string firstName { get; set; }
 
         [StringLength(20, MinimumLength = 3)]
-        public string managerLastName { get; set; }
+        public string lastName { get; set; }
+
+        public string userName { get; set; }
 
         [MinLength(6)]
         [DataType(DataType.Password)]
@@ -27,10 +29,14 @@ namespace Model.Input_Model
         [EmailAddress]
         public string email { get; set; }
 
-        public string token { get; set; }
-
-        [FileSizeValidation(5)]
-        [FileFormatValidation(".jpg|.png")]
+        [FileSizeValidation(5, ErrorMessage = "File size can't be larger than 5 MB")]
+        [FileFormatValidation(".jpg|.png", ErrorMessage = "Only '.jpg' & '.png' files are supported")]
         public IFormFile logo { get; set; }
+
+        [FileSizeValidation(10, ErrorMessage = "File size can't be larger than 10 MB")]
+        [FileFormatValidation(".jpg|.png", ErrorMessage = "Only '.jpg' & '.png' files are supported")]
+        public IFormFile backgroundImage { get; set; }
+
+        public string invitationToken { get; set; }
     }
 }

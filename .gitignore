@@ -67,8 +67,19 @@ fastlane/test_output
 
 iOSInjectionProject/
 
+.vs
+.vs/
+
 JWT Token/obj
 Model/obj
 Repository/obj
 Resturant Management/obj
 Services/obj
+
+JWT Token/bin
+Model/bin
+Repository/bin
+Resturant Management/bin
+Services/bin
+
+

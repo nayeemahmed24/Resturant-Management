@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>Resturant_Management</RootNamespace>
+    <UserSecretsId>162a82e1-83bd-4846-b606-d0bfd225c520</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

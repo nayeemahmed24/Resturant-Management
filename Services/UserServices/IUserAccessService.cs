@@ -28,5 +28,7 @@ namespace Services.UserServices
         public  Task<ImageDataModel> UpdateImage(PhotoUpdate photoUpdate, RestaurantModel user);
         public void ResetPassword(string id, RestaurantUpdateModel userUpdateModel);
         public  Task<RestaurantModel> CreateAdmin(RestaurantInputModel userResponse);
+
+        public bool isRestaurantAvailable(string userId);
     }
 }
