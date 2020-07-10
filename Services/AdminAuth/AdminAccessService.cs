@@ -81,8 +81,11 @@ namespace Services.AdminAuth
                 role = Role.User
             };
 
+            var clientDetails = GetClientInfo(invitationModel.ClientId);
+            var receiverRoute = clientDetails.host + clientDetails.invitationRoute;
+
             string invitationToken = _tokenGenerator.generateToken(restaurantModel, _jwtSetting.invitationKey, 48);
-            VerificationMailSender(restaurantModel.email, "Invitation Link", invitationToken, _routes.InvitationRoute);
+            VerificationMailSender(restaurantModel.email, "Invitation Link", invitationToken, receiverRoute);
         }
         public void VerificationMailSender(string emailTo, string subject, string token, string url)
         {
@@ -96,6 +99,11 @@ namespace Services.AdminAuth
                 Subject = subject
             };
             _mailSender.sendMail(mailModel);
+        }
+
+        public ClientModel GetClientInfo(string clientId)
+        {
+            return _repository.GetItem<ClientModel>(c => c._id == clientId);
         }
 
         public string GetUniqueId()
