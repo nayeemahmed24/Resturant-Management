@@ -17,15 +17,15 @@ namespace Resturant_Management.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-     [Authorize(Roles = Role.Admin)]
+     [Authorize(Roles = Role.User)]
     public class MenuController : ControllerBase
     {
         private IMenuServices _menuServices;
         private IExceptionModelGenerator _exceptionModelGenerator;
-        private IUserAccessService _userAccessService;
-        public MenuController(IMenuServices menuServices,IExceptionModelGenerator exceptionModelGenerator,IUserAccessService userAccessService)
+        //private IUserAccessService _userAccessService;
+        public MenuController(IMenuServices menuServices,IExceptionModelGenerator exceptionModelGenerator)
         {
-            _userAccessService = userAccessService;
+          //  _userAccessService = userAccessService;
             _menuServices = menuServices;
             _exceptionModelGenerator = exceptionModelGenerator;
 
@@ -164,6 +164,8 @@ namespace Resturant_Management.Controllers
             }
         }
 
+
+
         [HttpPost("ChangeAvailableStatus")]
         public async Task<IActionResult> ChangeAvailableStatus(MenuItemInput menuItemInput)
         {
@@ -193,6 +195,11 @@ namespace Resturant_Management.Controllers
                 return StatusCode(500, _exceptionModelGenerator.setData<MenuCatergory>(true, e.Message, null));
             }
         }
+
+
+
+
+        
 
 
     }

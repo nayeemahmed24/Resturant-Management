@@ -15,5 +15,6 @@ namespace Services.MenuServices
         public  Task<MenuItem> AddMenuItem(MenuItemInput menu);
         public Task<MenuItem> UpdateMenu(MenuItemInput menu);
         public Task<MenuItem> ChangeAvailableStatus(MenuItemInput menu);
+        public  Task<MenuItem> FindMenuItemById(string itemId);
     }
 }

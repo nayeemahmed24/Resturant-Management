@@ -116,6 +116,11 @@ namespace Services.MenuServices
             return null;
         }
 
+        public async Task<MenuItem> FindMenuItemById(string itemId)
+        {
+            return await _repository.GetItemAsync<MenuItem>(d => d.Id == itemId);
+        }
+
         private async Task<MenuCatergory> buildCatergory(MenuCategoryInput menuCategoryInput)
         {
             var category = new MenuCatergory
