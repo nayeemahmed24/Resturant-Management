@@ -24,9 +24,31 @@ namespace Repository
         /// <typeparam name="T">Db model.</typeparam>
         /// <param name="collectionName">Name of the collection.</param>
         /// <returns>Mongo Collection.</returns>
-        public IMongoCollection<T> GetCollection<T>(string collectionName)
+        public IMongoCollection<T> GetCollection<T>()
         {
-            return this._mongoDatabase.GetCollection<T>(collectionName);
+            return this._mongoDatabase.GetCollection<T>($"{typeof(T).Name}s");
+        }
+
+        /// <summary>
+        /// It return MongoDB Collection Object.
+        /// </summary>
+        /// <typeparam name="T">Db model.</typeparam>
+        /// <param name="collectionName">Name of the collection.</param>
+        /// <returns>Passed model as a template.</returns>
+        public IEnumerable<T> GetItemsPaginated<T>(int pageNumber,int pageSize,string sortBy, Expression<Func<T, bool>> datafilters)
+        {
+            return this._mongoDatabase.GetCollection<T>($"{typeof(T).Name}s").Find(datafilters).Skip((pageNumber - 1) * pageSize).Sort(Builders<T>.Sort.Ascending(sortBy)).Limit(pageSize).ToEnumerable();
+        }
+
+        /// <summary>
+        /// It return MongoDB Collection Object.
+        /// </summary>
+        /// <typeparam name="T">Db model.</typeparam>
+        /// <param name="collectionName">Name of the collection.</param>
+        /// <returns>Passed model as a template.</returns>
+        public long GetDocsCount<T>(Expression<Func<T, bool>> dataFilters)
+        {
+            return this._mongoDatabase.GetCollection<T>($"{typeof(T).Name}s").CountDocuments(dataFilters);
         }
 
         /// <summary>Gets the item.</summary>

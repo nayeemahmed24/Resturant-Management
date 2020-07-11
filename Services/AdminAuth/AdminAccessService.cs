@@ -13,6 +13,8 @@ using Services.AdminAuth.Contracts;
 using Services.Email;
 using Services.Helper_Services;
 using Microsoft.AspNetCore.WebUtilities;
+using Services.Paginator;
+using Model.View_Model;
 
 namespace Services.AdminAuth
 {
@@ -25,8 +27,9 @@ namespace Services.AdminAuth
         private IJwtSetting _jwtSetting;
         private IMailSender _mailSender;
         private IRoutes _routes;
+        private IPaginator _paginator;
 
-        public AdminAccessService(IMailSender mailSender,IMongoRepository repository,IPasswordManager passwordManager,IRoutes routes, ITokenGenerator tokenGenerator, IJwtSetting jwtSetting)
+        public AdminAccessService(IMailSender mailSender,IPaginator paginator,IMongoRepository repository,IPasswordManager passwordManager,IRoutes routes, ITokenGenerator tokenGenerator, IJwtSetting jwtSetting)
         {
             _repository = repository;
             _mailSender = mailSender;
@@ -34,6 +37,7 @@ namespace Services.AdminAuth
             _tokenGenerator = tokenGenerator;
             _jwtSetting = jwtSetting;
             _routes = routes;
+            _paginator = paginator;
         }
 
         public async Task<AdminUserModel> Create(AdminInputModel userResponse)
@@ -50,6 +54,12 @@ namespace Services.AdminAuth
             await _repository.SaveAsync(userModel);
             userModel.password = null;
             return userModel;
+        }
+
+        public PaginatorModel<RestaurantModel> GetAllRestaurants(PageParameters pageParameters)
+        {
+            var data = _paginator.GetPaginatedData<RestaurantModel>("restaurantName", pageParameters.PageNumber, pageParameters.PageSize, data => data.role == "User");
+            return data;
         }
 
         public async Task<AdminUserModel> GetUserByUserName(string Username)

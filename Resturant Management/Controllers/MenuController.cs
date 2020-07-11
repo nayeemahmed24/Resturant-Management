@@ -120,8 +120,8 @@ namespace Resturant_Management.Controllers
                     var resul = _exceptionModelGenerator.setData<MenuItem>(false, "Ok", menuItem);
                     return StatusCode(201, resul);
                 }
-                var result = _exceptionModelGenerator.setData<MenuItem>(true, "Ok", null);
-                return StatusCode(500, result);
+                var result = _exceptionModelGenerator.setData<MenuItem>(true, "Invalid information", null);
+                return StatusCode(203, result);
 
 
             }

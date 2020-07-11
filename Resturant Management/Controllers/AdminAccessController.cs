@@ -7,10 +7,12 @@ using JWT_Token.Configurations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Model;
 using Model.Entities;
 using Model.Error_Handler;
 using Model.Input_Model;
+using Model.View_Model;
 using MongoDB.Driver;
 using Repository;
 using Services.AdminAuth.Contracts;
@@ -46,6 +48,23 @@ namespace Resturant_Management.Controllers
                 _adminAccessService.SendInvitation(invitationModel);
                 var result = _exceptionModelGenerator.setData<RestaurantModel>(false, "Ok", null);
                 return StatusCode(201, result);
+            }
+            catch (Exception e)
+            {
+                var result = _exceptionModelGenerator.setData<RestaurantModel>(true, e.Message, null);
+                return StatusCode(500, result);
+
+            }
+        }
+
+        [HttpGet("getrestaurants")]
+        public IActionResult GetRestaurants([FromQuery] PageParameters pageParameters)
+        {
+            try
+            {
+                var data = _adminAccessService.GetAllRestaurants(pageParameters);
+                var result = _exceptionModelGenerator.setData<PaginatorModel<RestaurantModel>>(false, "Ok", data);
+                return StatusCode(200, result);
             }
             catch (Exception e)
             {
