@@ -12,6 +12,7 @@ namespace Services.MenuServices
         public Task<MenuCatergory> AddCategory(MenuCategoryInput menuCategoryInput);
         public Task<List<MenuCatergory>> GetChildCategories(string menuCategory);
         public Task<List<MenuCatergory>> GetBaseCategories(string Id);
+        public Task<List<MenuItem>> FindMenuParentId(string parentId);
         public  Task<MenuItem> AddMenuItem(MenuItemInput menu);
         public Task<MenuItem> UpdateMenu(MenuItemInput menu);
         public Task<MenuItem> ChangeAvailableStatus(MenuItemInput menu);

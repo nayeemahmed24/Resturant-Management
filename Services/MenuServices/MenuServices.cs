@@ -60,15 +60,16 @@ namespace Services.MenuServices
         public async Task<MenuItem> AddMenuItem(MenuItemInput menu)
         {
             var menuItem = await buildMenuItem(menu);
-            if (menuItem.Parent != null)
+            var parent = await FindParentByMenuItemInput(menu);
+            if (menuItem.ParentId != null)
             {
-                if (menuItem.Parent.IsChildAvailable) return null;
+                if (parent.IsChildAvailable) return null;
 
             }
             await _repository.SaveAsync<MenuItem>(menuItem);
-            if (!menuItem.Parent.ItemAdded)
+            if (!parent.ItemAdded)
             {
-                await UpdateItemAdded(menuItem.Parent);
+                await UpdateItemAdded(parent);
             }
 
             return menuItem;
@@ -119,6 +120,13 @@ namespace Services.MenuServices
             return null;
         }
 
+        public async Task<List<MenuItem>> FindMenuParentId(string parentId)
+        {
+            var items = await _repository.GetItemsAsync<MenuItem>(d => d.ParentId == parentId);
+            var listItem = items?.ToList();
+            return listItem;
+        }
+
         public async Task<MenuItem> FindMenuItemById(string itemId)
         {
             return await _repository.GetItemAsync<MenuItem>(d => d.Id == itemId);
@@ -152,11 +160,15 @@ namespace Services.MenuServices
             {
                 ItemTitle = menuItemInput.ItemTitle,
                 Price = menuItemInput.Price,
-
+                Available = true
             };
             if (menuItemInput.ParentId != null)
             {
-                menuItem.Parent = await FindParentByMenuItemInput(menuItemInput);
+                var parent = await FindParentByMenuItemInput(menuItemInput);
+                if (parent != null)
+                {
+                    menuItem.ParentId = parent.Id.ToString();
+                }
             }
             menuItem.Restaurant = _userAccessService.GetUser(menuItemInput.ResturantId);
             return menuItem;

@@ -131,16 +131,13 @@ namespace Resturant_Management.Controllers
             }
         }
 
-        [HttpPost("MenuUpdate")]
+        [HttpPut("menuUpdate")]
         public async Task<IActionResult> UpdateMenu(MenuItemInput menuItemInput)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var userId = identity.FindFirst(Claims.UserId)?.Value;
             try
             {
-               
-                
-
                 if (menuItemInput.Id == null || menuItemInput.ParentId == null)
                 {
                     var Errorresult = _exceptionModelGenerator.setData<MenuItem>(true, "Ok", null);
@@ -164,9 +161,32 @@ namespace Resturant_Management.Controllers
             }
         }
 
+        [HttpGet("getmenuitems/{parentId}")]
+        public async Task<IActionResult> GetMenuItemsByParenId(string parentId)
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(Claims.UserId)?.Value;
+            try
+            {
+                var menu = await _menuServices.FindMenuParentId(parentId);
+                if (menu != null)
+                {
+                    return StatusCode(200, _exceptionModelGenerator.setData<List<MenuItem>>(false, "Ok", menu));
+                }
+                else
+                {
+                    return StatusCode(200, _exceptionModelGenerator.setData<MenuItem>(true, "Not found", null));
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, _exceptionModelGenerator.setData<MenuCatergory>(true, e.Message, null));
+            }
+        }
 
 
-        [HttpPost("ChangeAvailableStatus")]
+
+        [HttpPut("changeItemStatus")]
         public async Task<IActionResult> ChangeAvailableStatus(MenuItemInput menuItemInput)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
