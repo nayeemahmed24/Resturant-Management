@@ -24,9 +24,11 @@ namespace Services.MenuServices
         public async Task<MenuCatergory> AddCategory(MenuCategoryInput menuCategoryInput)
         {
             var category = await buildCatergory(menuCategoryInput);
+            MenuCatergory parent ;
             if (category.Parent != null)
             {
-                if (category.Parent.ItemAdded)
+                parent = _repository.GetItem<MenuCatergory>(c => c.Id == category.Parent);
+                if (parent.ItemAdded)
                 {
                     return null;
                 }
@@ -35,14 +37,15 @@ namespace Services.MenuServices
             await _repository.SaveAsync<MenuCatergory>(category);
             if (category.Parent != null)
             {
-                await UpdateChildAvailable(category.Parent);
+                parent = _repository.GetItem<MenuCatergory>(c => c.Id == category.Parent);
+                await UpdateChildAvailable(parent);
             }
             return category;
         }
 
-        public async Task<List<MenuCatergory>> GetChildCategories(MenuCategoryInput menuCategory)
+        public async Task<List<MenuCatergory>> GetChildCategories(string parentId)
         {
-            var animals = await _repository.GetItemsAsync<MenuCatergory>(d => d.Parent.Id == menuCategory.Id && d.Restaurant.Id == menuCategory.RestaurantId);
+            var animals = await _repository.GetItemsAsync<MenuCatergory>(d => d.Parent == parentId);
             var list = animals?.ToList();
             return list;
         }
@@ -131,7 +134,11 @@ namespace Services.MenuServices
             };
             if (menuCategoryInput.ParentId != null)
             {
-                category.Parent = await FindParentCatergoryById(menuCategoryInput);
+                 var parent = await FindParentCatergoryById(menuCategoryInput);
+                if (parent != null)
+                {
+                    category.Parent = menuCategoryInput.ParentId;
+                }
             }
             
 

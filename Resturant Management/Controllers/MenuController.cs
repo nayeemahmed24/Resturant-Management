@@ -15,9 +15,9 @@ using Services.UserServices;
 
 namespace Resturant_Management.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("v1/[controller]")]
     [ApiController]
-     [Authorize(Roles = Role.User)]
+    [Authorize(Roles = Role.User)]
     public class MenuController : ControllerBase
     {
         private IMenuServices _menuServices;
@@ -61,17 +61,17 @@ namespace Resturant_Management.Controllers
 
         }
 
-        [HttpPost("{ResturantId}/getChildCategories")]
+        [HttpGet("getchild/{parentId}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetChildCategories(String ResturantId, MenuCategoryInput menuCategoryInput)
+        public async Task<IActionResult> GetChildCategories(String parentId)
         {
             
-            var userId = ResturantId;
+           // var userId = ResturantId;
             try
             {
                 // For Test Off
-                menuCategoryInput.RestaurantId = userId;
-                var categoryList = await _menuServices.GetChildCategories(menuCategoryInput);
+               // menuCategoryInput.RestaurantId = userId;
+                var categoryList = await _menuServices.GetChildCategories(parentId);
                 return StatusCode(201,
                     _exceptionModelGenerator.setData<List<MenuCatergory>>(false, null, categoryList));
 
@@ -83,7 +83,7 @@ namespace Resturant_Management.Controllers
             }
         }
 
-        [HttpGet("{ResturantId}/basecategories")]
+        [HttpGet("base/{ResturantId}")]
         [AllowAnonymous]
         public async Task<IActionResult> BaseCategories(String ResturantId)
         {
@@ -195,12 +195,5 @@ namespace Resturant_Management.Controllers
                 return StatusCode(500, _exceptionModelGenerator.setData<MenuCatergory>(true, e.Message, null));
             }
         }
-
-
-
-
-        
-
-
     }
 }
