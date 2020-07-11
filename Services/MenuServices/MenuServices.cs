@@ -52,7 +52,7 @@ namespace Services.MenuServices
 
         public async Task<List<MenuCatergory>> GetBaseCategories(string Id)
         {
-            var animals = await _repository.GetItemsAsync<MenuCatergory>(d => d.Parent == null);
+            var animals = await _repository.GetItemsAsync<MenuCatergory>(d => d.Parent == null && d.Restaurant.Id==Id);
             var list = animals?.ToList();
             return list;
         }
