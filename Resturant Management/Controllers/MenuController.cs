@@ -105,6 +105,10 @@ namespace Resturant_Management.Controllers
             {
                 
                 var categoryList = await _menuServices.GetBaseCategories(userId);
+                if(categoryList.Count == 0)
+                {
+                    return StatusCode(204, _exceptionModelGenerator.setData<MenuCatergory>(false, "No data", null));
+                }
                 var sortOrder = await GetSortOrder("base");
                 categoryList = _sortService.SortCategory(sortOrder, categoryList);
                 return StatusCode(201,

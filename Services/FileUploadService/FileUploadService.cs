@@ -46,7 +46,8 @@ namespace Services.FileUploadService
 
         public string GenerateUniqueName(IFormFile formFile)
         {
-            string filename = Path.GetFileNameWithoutExtension(formFile.FileName);
+            //string filename = Path.GetFileNameWithoutExtension(formFile.FileName);
+            string filename = "logo";
             string extension = Path.GetExtension(formFile.FileName);
 
             string uniqueName = DateTime.Now.ToString("yymmssff") + extension;

@@ -36,7 +36,5 @@ namespace Model.Input_Model
         [FileSizeValidation(10, ErrorMessage = "File size can't be larger than 10 MB")]
         [FileFormatValidation(".jpg|.png", ErrorMessage = "Only '.jpg' & '.png' files are supported")]
         public IFormFile backgroundImage { get; set; }
-
-        public string invitationToken { get; set; }
     }
 }

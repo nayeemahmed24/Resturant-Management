@@ -146,44 +146,44 @@ namespace Resturant_Management.Controllers
             return Redirect(route);
         }
 
-        [HttpPost("reset")]
-        [AllowAnonymous]
-        public IActionResult ResetPassword(RestaurantUpdateModel userUpdateModel)
-        {
-            try
-            {
-                if (userUpdateModel.invitationToken != null)
-                {
-                    string userId = _accessService.ResetPasswordVerification(userUpdateModel.invitationToken);
-                    if (userId != null)
-                    {
-                        var user = _accessService.GetUser(userId);
-                        if (user != null)
-                        {
-                            user.password = userUpdateModel.password;
-                            _accessService.Update(user);
-                            return StatusCode(200, _exceptionModelGenerator.setData<RestaurantUpdateModel>(false, "Ok", null));
-                        }
-                        else
-                        {
-                            return StatusCode(404, _exceptionModelGenerator.setData<RestaurantUpdateModel>(true, "NOT_FOUND", null));
-                        }
-                    }
-                    else
-                    {
-                        return StatusCode(404, _exceptionModelGenerator.setData<RestaurantUpdateModel>(true, "NOT_FOUND", null));
-                    }
-                }
-                else
-                {
-                    return StatusCode(401, _exceptionModelGenerator.setData<RestaurantUpdateModel>(true, "UNAUTHORIZED", null));
-                }
-            }
-            catch (Exception e)
-            {
-                return StatusCode(401, _exceptionModelGenerator.setData<RestaurantUpdateModel>(true, e.Message, null));
-            }
-        }
+        //[HttpPost("reset")]
+        //[AllowAnonymous]
+        //public IActionResult ResetPassword(RestaurantUpdateModel userUpdateModel)
+        //{
+        //    try
+        //    {
+        //        if (userUpdateModel.invitationToken != null)
+        //        {
+        //            string userId = _accessService.ResetPasswordVerification(userUpdateModel.invitationToken);
+        //            if (userId != null)
+        //            {
+        //                var user = _accessService.GetUser(userId);
+        //                if (user != null)
+        //                {
+        //                    user.password = userUpdateModel.password;
+        //                    _accessService.Update(user);
+        //                    return StatusCode(200, _exceptionModelGenerator.setData<RestaurantUpdateModel>(false, "Ok", null));
+        //                }
+        //                else
+        //                {
+        //                    return StatusCode(404, _exceptionModelGenerator.setData<RestaurantUpdateModel>(true, "NOT_FOUND", null));
+        //                }
+        //            }
+        //            else
+        //            {
+        //                return StatusCode(404, _exceptionModelGenerator.setData<RestaurantUpdateModel>(true, "NOT_FOUND", null));
+        //            }
+        //        }
+        //        else
+        //        {
+        //            return StatusCode(401, _exceptionModelGenerator.setData<RestaurantUpdateModel>(true, "UNAUTHORIZED", null));
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return StatusCode(401, _exceptionModelGenerator.setData<RestaurantUpdateModel>(true, e.Message, null));
+        //    }
+        //}
 
 
     }
