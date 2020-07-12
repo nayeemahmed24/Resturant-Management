@@ -137,6 +137,35 @@ namespace Resturant_Management.Controllers
             }
         }
 
+
+
+        [HttpPut("update/backgroundphoto")]
+        public async Task<IActionResult> PhotoBackgroundUpdate([FromForm]PhotoUpdate photoUpdate)
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(Claims.UserId)?.Value;
+            var photo = photoUpdate.profilePhoto;
+            try
+            {
+
+                var user = _userAccessService.GetUser(userId);
+                if (user != null)
+                {
+                    var newdata = _userAccessService.UpdateBackgroudImage(photoUpdate, user);
+                    return PhysicalFile(newdata.Result.path, "image/" + newdata.Result.Imagetype);
+                }
+                else
+                {
+                    return StatusCode(404, _exceptionModelGenerator.setData<RestaurantModel>(true, "NOT_FOUND", null));
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, _exceptionModelGenerator.setData<RestaurantModel>(true, e.Message, null));
+            }
+        }
+
+
         [HttpPut("reset")]
         public IActionResult ResetPassword(RestaurantUpdateModel userUpdateModel)
         {

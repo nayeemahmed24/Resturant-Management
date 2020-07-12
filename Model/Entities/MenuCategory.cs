@@ -11,7 +11,6 @@ namespace Model.Entities
     public class MenuCatergory
     {
         [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
         [Required]
         public string CategoryTitle { get; set; }

@@ -30,5 +30,6 @@ namespace Services.UserServices
         public  Task<RestaurantModel> CreateAdmin(RestaurantInputModel userResponse);
 
         public bool isRestaurantAvailable(string userId);
+        public Task<ImageDataModel> UpdateBackgroudImage(PhotoUpdate photoUpdate, RestaurantModel user);
     }
 }

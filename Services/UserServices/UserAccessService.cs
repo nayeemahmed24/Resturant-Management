@@ -232,6 +232,17 @@ namespace Services.UserServices
 
             return imageData;
         }
+        public async Task<ImageDataModel> UpdateBackgroudImage(PhotoUpdate photoUpdate, RestaurantModel user)
+        {
+            var path = await _fileUploadService.UploadSingleFile(photoUpdate.profilePhoto, FIleDirectories.ImageDir);
+
+            user.backgroundImage = path;
+            Update(user);
+
+            var imageData = ImagePath(user);
+
+            return imageData;
+        }
         public void ResetPassword(string id, RestaurantUpdateModel userUpdateModel)
         {
             var user = GetUser(id);
