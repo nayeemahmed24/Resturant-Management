@@ -8,5 +8,6 @@ namespace Model.Input_Model
     public class PhotoUpdate
     {
         public IFormFile profilePhoto { get; set; }
+        public IFormFile reastaurantImage { get; set; }
     }
 }
