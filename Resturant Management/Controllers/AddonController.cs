@@ -100,6 +100,32 @@ namespace Resturant_Management.Controllers
 
             }
         }
+        // All Addon Using menuitem ID
+        // For AllAddon with MenuItem togather go to MenuController -> "ItemDetailes"
+        [HttpGet("alladdons/{menuitemid}")]
+        public async Task<IActionResult> AllAddons(string menuitemid)
+        {
+            try
+            {
+                if (menuitemid != null)
+                {
+                    var list = await _addonService.AllAddonByMenuItemId(menuitemid);
+                    if (list != null)
+                    {
+                        var resul = _exceptionModelGenerator.setData<List<Addon>>(false, "Ok", list);
+                        return StatusCode(201, resul);
+                    }
+                
+                }
+                var result = _exceptionModelGenerator.setData<List<Addon>>(true, "Ok", null);
+                return StatusCode(500, result);
+
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, _exceptionModelGenerator.setData<List<Addon>>(true, e.Message, null));
+            }
+        }
 
 
 

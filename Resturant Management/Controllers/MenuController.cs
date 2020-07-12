@@ -13,6 +13,7 @@ using Model.Input_Model;
 using Model.View_Model;
 using Services.AddonServices;
 using Services.MenuServices;
+using Services.Sort_Service;
 using Services.UserServices;
 
 namespace Resturant_Management.Controllers
@@ -20,14 +21,15 @@ namespace Resturant_Management.Controllers
     [Route("v1/[controller]")]
     [ApiController]
 
-    [Authorize(Roles = Role.User)]
+    [Authorize(Roles = Role.Admin)]
 
     public class MenuController : ControllerBase
     {
         private IMenuServices _menuServices;
         private IExceptionModelGenerator _exceptionModelGenerator;
         private IAddonService _addonService;
-        public MenuController(IAddonService addonService,IMenuServices menuServices,IExceptionModelGenerator exceptionModelGenerator)
+        private ISortService _sortService;
+        public MenuController(ISortService sortService,IAddonService addonService,IMenuServices menuServices,IExceptionModelGenerator exceptionModelGenerator)
         {
             _addonService = addonService;
             _menuServices = menuServices;
@@ -76,6 +78,10 @@ namespace Resturant_Management.Controllers
                 // For Test Off
                // menuCategoryInput.RestaurantId = userId;
                 var categoryList = await _menuServices.GetChildCategories(parentId);
+                var sortOrder = await GetSortOrder(parentId);
+
+                categoryList = _sortService.SortCategory(sortOrder, categoryList);
+
                 return StatusCode(201,
                     _exceptionModelGenerator.setData<List<MenuCatergory>>(false, null, categoryList));
 
@@ -97,6 +103,9 @@ namespace Resturant_Management.Controllers
             {
                 
                 var categoryList = await _menuServices.GetBaseCategories(userId);
+                var sortOrder = await GetSortOrder("base");
+
+                categoryList = _sortService.SortCategory(sortOrder, categoryList);
                 return StatusCode(201,
                     _exceptionModelGenerator.setData<List<MenuCatergory>>(false, null, categoryList));
 
@@ -221,6 +230,11 @@ namespace Resturant_Management.Controllers
         }
 
 
+        // MenuItem with all Addon List
+        // In View Model = MenuItemDetails
+
+        
+
         [HttpPost("itemDetailes")]
         [AllowAnonymous]
         public async Task<IActionResult> ItemDetailes(MenuItemInput menuItem)
@@ -257,9 +271,36 @@ namespace Resturant_Management.Controllers
             
         }
 
-
-
-        
+        [HttpPost("sortedit")]
+        public async Task<IActionResult> EditSort(SortOrder sort)
+        {
+            try
+            {
+                if (sort.ParentId != null)
+                {
+                    if (sort.SortList != null)
+                    {
+                        var res = await  _sortService.EditSort(sort);
+                        if (res != null)
+                        {
+                            var resul = _exceptionModelGenerator.setData<SortOrder>(false, "Ok", res);
+                            return StatusCode(201, resul);
+                        }
+                    }
+                }
+                var result = _exceptionModelGenerator.setData<MenuItemDetailes>(true, "Ok", null);
+                return StatusCode(500, result);
+            }
+            catch (Exception e)
+            {
+                var reslt = _exceptionModelGenerator.setData<SortOrder>(true, "Ok", null);
+                return StatusCode(500, reslt);
+            }
+        }
+        private async Task<SortOrder> GetSortOrder(string parentId)
+        {
+            return await _sortService.FindSortUsingParentId(parentId);
+        }
 
 
     }

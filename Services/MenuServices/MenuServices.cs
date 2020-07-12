@@ -4,9 +4,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Model.Entities;
 using Model.Input_Model;
 using Repository;
+using Services.Sort_Service;
 using Services.UserServices;
 
 namespace Services.MenuServices
@@ -15,16 +17,19 @@ namespace Services.MenuServices
     {
         private IMongoRepository _repository;
         private IUserAccessService _userAccessService;
-        public MenuServices(IMongoRepository repository,IUserAccessService userAccessService)
+        private ISortService _sortService;
+        public MenuServices(ISortService sort,IMongoRepository repository,IUserAccessService userAccessService)
         {
+            _sortService = sort;
             _userAccessService = userAccessService;
             _repository = repository;
         }
-
+        
         public async Task<MenuCatergory> AddCategory(MenuCategoryInput menuCategoryInput)
         {
             var category = await buildCatergory(menuCategoryInput);
-            MenuCatergory parent ;
+            category.Id = GetUniqueId();
+            MenuCatergory parent;
             if (category.Parent != null)
             {
                 parent = _repository.GetItem<MenuCatergory>(c => c.Id == category.Parent);
@@ -35,11 +40,14 @@ namespace Services.MenuServices
             }
 
             category.Restaurant.password = null;
+   
             await _repository.SaveAsync<MenuCatergory>(category);
             if (category.Parent != null)
             {
                 parent = _repository.GetItem<MenuCatergory>(c => c.Id == category.Parent);
                 await UpdateChildAvailable(parent);
+
+                await _sortService.AddSort(category.Parent, category.Id);
             }
             return category;
         }
@@ -142,7 +150,8 @@ namespace Services.MenuServices
             {
                 CategoryTitle = menuCategoryInput.CategoryTitle,
                 IsChildAvailable = false,
-                ItemAdded = false
+                ItemAdded = false,
+                
             };
             if (menuCategoryInput.ParentId != null)
             {
@@ -205,5 +214,28 @@ namespace Services.MenuServices
             return menuItem;
 
         }
+        public string GetUniqueId()
+        {
+            string first = DateTime.Now.ToString("yyMMddHHmmssff");
+            string last = GetRandomString();
+            string unique_id = first + "-" + last;
+
+            return unique_id;
+        }
+        public string GetRandomString()
+        {
+            StringBuilder builder = new StringBuilder();
+            Random random = new Random();
+            char ch;
+            for (int i = 0; i < 20; i++)
+            {
+                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
+                builder.Append(ch);
+            }
+            return builder.ToString().ToLower();
+        }
+
+        
+
     }
 }
