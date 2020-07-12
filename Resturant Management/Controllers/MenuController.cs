@@ -10,6 +10,8 @@ using Model;
 using Model.Entities;
 using Model.Error_Handler;
 using Model.Input_Model;
+using Model.View_Model;
+using Services.AddonServices;
 using Services.MenuServices;
 using Services.UserServices;
 
@@ -17,15 +19,17 @@ namespace Resturant_Management.Controllers
 {
     [Route("v1/[controller]")]
     [ApiController]
+
     [Authorize(Roles = Role.User)]
+
     public class MenuController : ControllerBase
     {
         private IMenuServices _menuServices;
         private IExceptionModelGenerator _exceptionModelGenerator;
-        //private IUserAccessService _userAccessService;
-        public MenuController(IMenuServices menuServices,IExceptionModelGenerator exceptionModelGenerator)
+        private IAddonService _addonService;
+        public MenuController(IAddonService addonService,IMenuServices menuServices,IExceptionModelGenerator exceptionModelGenerator)
         {
-          //  _userAccessService = userAccessService;
+            _addonService = addonService;
             _menuServices = menuServices;
             _exceptionModelGenerator = exceptionModelGenerator;
 
@@ -215,5 +219,48 @@ namespace Resturant_Management.Controllers
                 return StatusCode(500, _exceptionModelGenerator.setData<MenuCatergory>(true, e.Message, null));
             }
         }
+
+
+        [HttpPost("itemDetailes")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ItemDetailes(MenuItemInput menuItem)
+        {
+            try
+            {
+                if (menuItem.Id != null)
+                {
+                    var menu = await _menuServices.FindMenuItemById(menuItem.Id);
+                    if (menu != null)
+                    {
+                        var listAddon = await _addonService.AllAddonByMenuItemId(menu.Id);
+                        var menuItemDetails = new MenuItemDetailes
+                        {
+                            MenuItem = menu,
+                            Addons = listAddon
+                        };
+                        var resul = _exceptionModelGenerator.setData<MenuItemDetailes>(false, "Ok", menuItemDetails);
+                        return StatusCode(201, resul);
+
+                    }
+                    var resut = _exceptionModelGenerator.setData<MenuItemDetailes>(true, "Ok", null);
+                    return StatusCode(500, resut);
+                }
+                var result = _exceptionModelGenerator.setData<MenuItemDetailes>(true, "Ok", null);
+                return StatusCode(500, result);
+
+            }
+            catch (Exception e)
+            {
+                var reslt = _exceptionModelGenerator.setData<MenuItem>(true, "Ok", null);
+                return StatusCode(500, reslt);
+            }
+            
+        }
+
+
+
+        
+
+
     }
 }
