@@ -76,7 +76,7 @@ namespace Services.Sort_Service
            {
                res.Add(catergories.Find(d=>d.Id == sortId));
            }
-           return null;
+           return res;
        }
     }
 }

@@ -49,6 +49,8 @@ namespace Services.MenuServices
 
                 await _sortService.AddSort(category.Parent, category.Id);
             }
+            else 
+                await _sortService.AddSort(null, category.Id);
             return category;
         }
 
