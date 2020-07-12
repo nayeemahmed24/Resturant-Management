@@ -1,0 +1,82 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Text;
+using System.Threading.Tasks;
+using Model.Entities;
+using Repository;
+
+namespace Services.Sort_Service
+{
+    public class SortService : ISortService
+    {
+        private readonly IMongoRepository  _repository;
+        public SortService(IMongoRepository repository)
+        {
+            _repository = repository;
+        }
+
+        public async Task AddSort(string parentId, string childId)
+        {
+            if (parentId == null)
+            {
+                parentId = "base";
+            }
+            if(parentId != null)
+            {
+                var sort = await FindSortUsingParentId(parentId);
+                if (sort == null)
+                {
+
+                    var newSort = new SortOrder
+                    {
+                        ParentId = parentId,
+                        SortList = new List<string>()
+                    };
+                    newSort.SortList.Add(childId);
+                    await _repository.SaveAsync<SortOrder>(newSort);
+                }
+                else
+                {
+                    sort.SortList.Add(childId);
+                    await _repository.UpdateAsync<SortOrder>(d => d.ParentId == parentId, sort);
+                }
+                
+            }
+            
+            
+        }
+        public async Task<SortOrder> EditSort(SortOrder sort)
+        {
+            if (sort.ParentId != null)
+            {
+                var resSort = await FindSortUsingParentId(sort.ParentId);
+                if (resSort != null)
+                {
+                    resSort.SortList = sort.SortList;
+                    await _repository.UpdateAsync<SortOrder>(d => d.ParentId == sort.ParentId, resSort);
+                    return sort;
+                }
+
+            }
+            return null;
+        }
+
+        
+
+       public async Task<SortOrder> FindSortUsingParentId(string parentId)
+       {
+            return await _repository.GetItemAsync<SortOrder>(d => d.ParentId == parentId);
+       }
+
+       public List<MenuCatergory> SortCategory(SortOrder sort, List<MenuCatergory> catergories)
+       {
+           var res = new List<MenuCatergory>();
+           foreach (var sortId in sort.SortList)
+           {
+               res.Add(catergories.Find(d=>d.Id == sortId));
+           }
+           return null;
+       }
+    }
+}
