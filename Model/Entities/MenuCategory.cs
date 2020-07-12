@@ -15,7 +15,7 @@ namespace Model.Entities
         public string Id { get; set; }
         [Required]
         public string CategoryTitle { get; set; }
-        public MenuCatergory Parent { get; set; }
+        public string Parent { get; set; }
         [Required]
         public RestaurantModel Restaurant { get; set; }
         [DefaultValue(false)]

@@ -29,6 +29,7 @@ using Services.FileUploadService;
 using Services.Helper_Services;
 using Services.MenuServices;
 using Services.UserServices;
+using Services.Paginator;
 
 namespace Resturant_Management
 {
@@ -71,6 +72,7 @@ namespace Resturant_Management
             services.AddSingleton<IMenuServices, MenuServices>();
             services.Configure<Routes>(Configuration.GetSection(nameof(Routes)));
             services.AddSingleton<IRoutes>(mailVarify => mailVarify.GetRequiredService<IOptions<Routes>>().Value);
+            services.AddSingleton<IPaginator, Paginator>();
 
 
             var serviceProvider = services.BuildServiceProvider();

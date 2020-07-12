@@ -17,10 +17,10 @@ using Services.UserServices;
 
 namespace Resturant_Management.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("v1/[controller]")]
     [ApiController]
-    // [Authorize(Roles = Role.User)]
-    [Authorize(Roles = Role.Admin)]
+
+    [Authorize(Roles = Role.User)]
 
     public class MenuController : ControllerBase
     {
@@ -65,17 +65,17 @@ namespace Resturant_Management.Controllers
 
         }
 
-        [HttpPost("{ResturantId}/getChildCategories")]
+        [HttpGet("getchild/{parentId}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetChildCategories(String ResturantId, MenuCategoryInput menuCategoryInput)
+        public async Task<IActionResult> GetChildCategories(String parentId)
         {
             
-            var userId = ResturantId;
+           // var userId = ResturantId;
             try
             {
                 // For Test Off
-                menuCategoryInput.RestaurantId = userId;
-                var categoryList = await _menuServices.GetChildCategories(menuCategoryInput);
+               // menuCategoryInput.RestaurantId = userId;
+                var categoryList = await _menuServices.GetChildCategories(parentId);
                 return StatusCode(201,
                     _exceptionModelGenerator.setData<List<MenuCatergory>>(false, null, categoryList));
 
@@ -87,7 +87,7 @@ namespace Resturant_Management.Controllers
             }
         }
 
-        [HttpGet("{ResturantId}/basecategories")]
+        [HttpGet("base/{ResturantId}")]
         [AllowAnonymous]
         public async Task<IActionResult> BaseCategories(String ResturantId)
         {
@@ -124,8 +124,8 @@ namespace Resturant_Management.Controllers
                     var resul = _exceptionModelGenerator.setData<MenuItem>(false, "Ok", menuItem);
                     return StatusCode(201, resul);
                 }
-                var result = _exceptionModelGenerator.setData<MenuItem>(true, "Ok", null);
-                return StatusCode(500, result);
+                var result = _exceptionModelGenerator.setData<MenuItem>(true, "Invalid information", null);
+                return StatusCode(203, result);
 
 
             }
@@ -135,7 +135,7 @@ namespace Resturant_Management.Controllers
             }
         }
 
-        [HttpPost("MenuUpdate")]
+        [HttpPut("menuUpdate")]
         public async Task<IActionResult> UpdateMenu(MenuItemInput menuItemInput)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
@@ -165,9 +165,32 @@ namespace Resturant_Management.Controllers
             }
         }
 
+        [HttpGet("getmenuitems/{parentId}")]
+        public async Task<IActionResult> GetMenuItemsByParenId(string parentId)
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(Claims.UserId)?.Value;
+            try
+            {
+                var menu = await _menuServices.FindMenuParentId(parentId);
+                if (menu != null)
+                {
+                    return StatusCode(200, _exceptionModelGenerator.setData<List<MenuItem>>(false, "Ok", menu));
+                }
+                else
+                {
+                    return StatusCode(200, _exceptionModelGenerator.setData<MenuItem>(true, "Not found", null));
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, _exceptionModelGenerator.setData<MenuCatergory>(true, e.Message, null));
+            }
+        }
 
 
-        [HttpPost("ChangeAvailableStatus")]
+
+        [HttpPut("changeItemStatus")]
         public async Task<IActionResult> ChangeAvailableStatus(MenuItemInput menuItemInput)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
@@ -196,6 +219,7 @@ namespace Resturant_Management.Controllers
                 return StatusCode(500, _exceptionModelGenerator.setData<MenuCatergory>(true, e.Message, null));
             }
         }
+
 
         [HttpPost("itemDetailes")]
         [AllowAnonymous]

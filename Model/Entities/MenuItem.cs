@@ -18,7 +18,7 @@ namespace Model.Entities
         [Required]
         public double Price { get; set; }
         [Required]
-        public MenuCatergory Parent { get; set; }
+        public string ParentId { get; set; }
         
         [DefaultValue(false)]
         public bool Available { get; set; }

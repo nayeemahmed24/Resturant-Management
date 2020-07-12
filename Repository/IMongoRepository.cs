@@ -10,8 +10,10 @@ namespace Repository
 {
     public interface  IMongoRepository
     {
-        IMongoCollection<T> GetCollection<T>(string collectionName);
+        IMongoCollection<T> GetCollection<T>();
         T GetItem<T>(Expression<Func<T, bool>> dataFilters);
+        IEnumerable<T> GetItemsPaginated<T>(int pageNumber, int pageSize, string sortBy, Expression<Func<T, bool>> datafilters);
+        long GetDocsCount<T>(Expression<Func<T, bool>> dataFilters);
         Task<T> GetItemAsync<T>(Expression<Func<T, bool>> dataFilters);
         IQueryable<T> GetItems<T>();
         Task<IQueryable<T>> GetItemsAsync<T>();
