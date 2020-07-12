@@ -18,6 +18,8 @@ namespace Model.Input_Model
 
         [Required]
         public double Price { get; set; }
+        public string description { get; set; }
+        public string ItemType { get; set; }
         [Required]
         public String ParentId { get; set; }
         public String ResturantId { get; set; }
