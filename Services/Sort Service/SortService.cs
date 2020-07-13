@@ -78,5 +78,16 @@ namespace Services.Sort_Service
            }
            return res;
        }
+
+       public List<MenuItem> SortItems(SortOrder sort, List<MenuItem> menuItems)
+       {
+           var res = new List<MenuItem>();
+           foreach (var sortId in sort.SortList)
+           {
+               res.Add(menuItems.Find(d=>d.Id == sortId));
+           }
+
+           return res;
+       }
     }
 }

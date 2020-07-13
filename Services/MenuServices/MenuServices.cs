@@ -78,8 +78,10 @@ namespace Services.MenuServices
 
             }
 
+            menuItem.Id = Guid.NewGuid().ToString();
             menuItem.Restaurant.password = null; 
             await _repository.SaveAsync<MenuItem>(menuItem);
+            await _sortService.AddSort(menu.ParentId, menuItem.Id);
             if (!parent.ItemAdded)
             {
                 await UpdateItemAdded(parent);

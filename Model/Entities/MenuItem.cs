@@ -11,7 +11,7 @@ namespace Model.Entities
     public class MenuItem
     {
         [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
+        
         public string Id { get; set; }
         [Required]
         public string ItemTitle { get; set; }
