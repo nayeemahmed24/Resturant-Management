@@ -98,6 +98,8 @@ namespace Services.MenuServices
             if (menuItem == null) return null;
             menuItem.ItemTitle = menu.ItemTitle;
             menuItem.Price = menu.Price;
+            menuItem.description = menu.description;
+            menuItem.ItemType = menu.ItemType;
             
 
             await _repository.UpdateAsync<MenuItem>(d => d.Id == menuItem.Id, menuItem);
@@ -193,6 +195,8 @@ namespace Services.MenuServices
             {
                 ItemTitle = menuItemInput.ItemTitle,
                 Price = menuItemInput.Price,
+                description = menuItemInput.description,
+                ItemType = menuItemInput.ItemType,
                 Available = true
             };
             if (menuItemInput.ParentId != null)
