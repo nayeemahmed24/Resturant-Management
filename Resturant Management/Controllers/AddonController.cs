@@ -103,6 +103,7 @@ namespace Resturant_Management.Controllers
         // All Addon Using menuitem ID
         // For AllAddon with MenuItem togather go to MenuController -> "ItemDetailes"
         [HttpGet("alladdons/{menuitemid}")]
+        [AllowAnonymous]
         public async Task<IActionResult> AllAddons(string menuitemid)
         {
             try
