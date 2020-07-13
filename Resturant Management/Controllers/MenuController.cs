@@ -159,7 +159,7 @@ namespace Resturant_Management.Controllers
                 if (menuItemInput.Id == null || menuItemInput.ParentId == null)
                 {
                     var Errorresult = _exceptionModelGenerator.setData<MenuItem>(true, "Ok", null);
-                    return StatusCode(500, Errorresult);
+                    return StatusCode(203, Errorresult);
                 }
 
                 menuItemInput.ResturantId = userId;
@@ -170,7 +170,7 @@ namespace Resturant_Management.Controllers
                     return StatusCode(201, resul);
                 }
                 var result = _exceptionModelGenerator.setData<MenuItem>(true, "Ok", null);
-                return StatusCode(500, result);
+                return StatusCode(203, result);
 
             }
             catch (Exception e)
