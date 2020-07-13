@@ -185,6 +185,8 @@ namespace Resturant_Management.Controllers
                 var menu = await _menuServices.FindMenuParentId(parentId);
                 if (menu != null)
                 {
+                    var sort = await _sortService.FindSortUsingParentId(parentId);
+                    menu = _sortService.SortItems(sort, menu);
                     return StatusCode(200, _exceptionModelGenerator.setData<List<MenuItem>>(false, "Ok", menu));
                 }
                 else
