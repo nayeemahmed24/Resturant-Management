@@ -98,23 +98,40 @@ namespace Services.UserServices
         }
         public async Task<bool> UpdateResturant(RestaurantUpdateModel user,RestaurantModel userModel)
         {
-            var updateR = new RestaurantModel
+            //var updateR = new RestaurantModel
+            //{
+            //    Id = userModel.Id,
+            //    restaurantName = user.restaurantName,
+            //    firstName = user.firstName,
+            //    lastName = user.lastName,
+            //    logo = userModel.logo,
+            //    backgroundImage = userModel.backgroundImage,
+            //    password = userModel.password,
+            //    email = user.email,
+            //    //isEmailVerified = userModel.isEmailVerified,
+            //    isBlockedUser = userModel.isBlockedUser,
+            //    role = userModel.role
+            //};
+
+            if(user.firstName != null && user.lastName != null)
             {
-                Id = userModel.Id,
-                restaurantName = user.restaurantName,
-                firstName = user.firstName,
-                lastName = user.lastName,
-                logo = userModel.logo,
-                backgroundImage = userModel.backgroundImage,
-                password = userModel.password,
-                email = user.email,
-                //isEmailVerified = userModel.isEmailVerified,
-                isBlockedUser = userModel.isBlockedUser,
-                role = userModel.role
-            };
+                userModel.firstName = user.firstName;
+                userModel.lastName = user.lastName;
+            }
+
+            if (user.restaurantName != null)
+            {
+                userModel.restaurantName = user.restaurantName;
+            }
+
+            if(user.password != null)
+            {
+                string hashedPassword = _passwordManager.HashPassword(user.password);
+                userModel.password = hashedPassword;
+            }
 
     
-            await _repository.UpdateAsync<RestaurantModel>(e => e.Id == userModel.Id, updateR);
+            await _repository.UpdateAsync<RestaurantModel>(e => e.Id == userModel.Id, userModel);
             return true;
         }
         public  RestaurantModel GetUser(string Id)

@@ -19,7 +19,10 @@ namespace Model.Entities
         public double Price { get; set; }
         [Required]
         public string ParentId { get; set; }
-        
+
+        public string description { get; set; }
+        public string ItemType { get; set; }
+
         [DefaultValue(false)]
         public bool Available { get; set; }
         [Required]

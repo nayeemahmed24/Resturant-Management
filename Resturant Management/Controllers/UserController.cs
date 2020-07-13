@@ -35,7 +35,7 @@ namespace Resturant_Management.Controllers
             try
             {
                 var user = _userAccessService.GetUser(userId);
-                user.logo = null;
+                //user.logo = null;
                 user.password = null;
                 if (user != null)
                 {
@@ -94,9 +94,9 @@ namespace Resturant_Management.Controllers
             {
                 var user = _userAccessService.GetUser(userId);
 
-                if (user == null)
+                if (user == null || user.logo==null)
                 {
-                    return StatusCode(404, _exceptionModelGenerator.setData<RestaurantModel>(true, "NOT_FOUND", null));
+                    return StatusCode(204, _exceptionModelGenerator.setData<RestaurantModel>(true, "NOT_FOUND", null));
                 }
 
                 var fileData = _userAccessService.ImagePath(user);
