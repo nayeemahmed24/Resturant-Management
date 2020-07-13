@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -33,6 +34,7 @@ namespace Resturant_Management.Controllers
         {
             _addonService = addonService;
             _menuServices = menuServices;
+            _sortService = sortService;
             _exceptionModelGenerator = exceptionModelGenerator;
 
         }
@@ -108,7 +110,6 @@ namespace Resturant_Management.Controllers
                     return StatusCode(204, _exceptionModelGenerator.setData<MenuCatergory>(false, "No data", null));
                 }
                 var sortOrder = await GetSortOrder("base");
-
                 categoryList = _sortService.SortCategory(sortOrder, categoryList);
                 return StatusCode(201,
                     _exceptionModelGenerator.setData<List<MenuCatergory>>(false, null, categoryList));
