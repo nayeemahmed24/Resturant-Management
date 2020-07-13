@@ -24,12 +24,13 @@ namespace Services.UserServices
         public RestaurantModel GetUser(string Id);
         public  Task<bool> Update(RestaurantModel user);
         public ImageDataModel ImagePath(RestaurantModel restaurantModel);
-        public  Task<bool> UpdateResturant(RestaurantUpdateModel user, RestaurantModel userModel);
+        public  Task<RestaurantModel> UpdateResturant(RestaurantUpdateModel user, RestaurantModel userModel);
         public  Task<ImageDataModel> UpdateImage(PhotoUpdate photoUpdate, RestaurantModel user);
         public void ResetPassword(string id, RestaurantUpdateModel userUpdateModel);
         public  Task<RestaurantModel> CreateAdmin(RestaurantInputModel userResponse);
 
         public bool isRestaurantAvailable(string userId);
         public Task<ImageDataModel> UpdateBackgroudImage(PhotoUpdate photoUpdate, RestaurantModel user);
+        public bool isUserNameAvailable(string username);
     }
 }
