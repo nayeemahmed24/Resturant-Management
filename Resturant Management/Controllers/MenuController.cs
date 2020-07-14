@@ -80,6 +80,10 @@ namespace Resturant_Management.Controllers
                 // For Test Off
                // menuCategoryInput.RestaurantId = userId;
                 var categoryList = await _menuServices.GetChildCategories(parentId);
+                if (categoryList.Count == 0)
+                {
+                    return StatusCode(203, _exceptionModelGenerator.setData<MenuCategoryInput>(true, "No data", null));
+                }
                 var sortOrder = await GetSortOrder(parentId);
 
                 categoryList = _sortService.SortCategory(sortOrder, categoryList);
@@ -157,8 +161,8 @@ namespace Resturant_Management.Controllers
             {
                 if (menuCategoryItemInput.Id == null )
                 {
-                    var Errorresult = _exceptionModelGenerator.setData<MenuCategoryInput>(true, "Ok", null);
-                    return StatusCode(500, Errorresult);
+                    var Errorresult = _exceptionModelGenerator.setData<MenuCategoryInput>(true, "Invalid input", null);
+                    return StatusCode(400, Errorresult);
                 }
 
                 menuCategoryItemInput.RestaurantId = userId;
@@ -216,7 +220,7 @@ namespace Resturant_Management.Controllers
             try
             {
                 var menu = await _menuServices.FindMenuParentId(parentId);
-                if (menu != null)
+                if (menu.Count!=0)
                 {
                     var sort = await _sortService.FindSortUsingParentId(parentId);
                     menu = _sortService.SortItems(sort, menu);
