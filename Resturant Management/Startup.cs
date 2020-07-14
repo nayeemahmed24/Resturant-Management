@@ -31,6 +31,7 @@ using Services.MenuServices;
 using Services.UserServices;
 using Services.Paginator;
 using Services.Sort_Service;
+using Services.TableServices;
 
 namespace Resturant_Management
 {
@@ -62,6 +63,7 @@ namespace Resturant_Management
             services.AddSingleton<IAdminAccessService, AdminAccessService>();
             services.AddSingleton<IAddonService, AddonService>();
             services.AddSingleton<ISortService, SortService>();
+            services.AddSingleton<ITableService, TableService>();
             services.AddSingleton<IExceptionModelGenerator, ExceptionModelGenerator>();
             services.AddSingleton<IPasswordManager, PasswordManager>();
             services.AddSingleton<IUserAccessService, UserAccessService>();

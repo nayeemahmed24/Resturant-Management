@@ -29,7 +29,7 @@ namespace Services.TableServices
                         return null;
                     }
 
-                    tableCategory.Id = TableCategory.Id;
+                    tableCategory.ParentId = TableCategory.Id;
                 }
 
                 await _repository.SaveAsync<TableCategory>(tableCategory);
@@ -69,12 +69,12 @@ namespace Services.TableServices
 
             return list;
         }
-        public async Task<List<TableCategory>> GetChildTableCategoryListByTableCategoryId(string ParentTableCategoryId,string resturantId)
+        public async Task<List<TableCategory>> GetBaseCategory(string resturantId)
         {
             var list = new List<TableCategory>();
-            if (ParentTableCategoryId != null)
+            if (resturantId != null)
             {
-                var res = await _repository.GetItemsAsync<TableCategory>(d => d.ParentId == ParentTableCategoryId && d.ResturantId == resturantId);
+                var res = await _repository.GetItemsAsync<TableCategory>(d =>  d.ResturantId == resturantId && d.ParentId == null);
                 list = res?.ToList();
             }
 
@@ -85,7 +85,7 @@ namespace Services.TableServices
             var list = new List<TableCategory>();
             if (ParentTableCategoryId != null)
             {
-                var res = await _repository.GetItemsAsync<TableCategory>(d => d.ParentId == ParentTableCategoryId );
+                var res = await _repository.GetItemsAsync<TableCategory>(d => d.ParentId == ParentTableCategoryId  );
                 list = res?.ToList();
             }
 

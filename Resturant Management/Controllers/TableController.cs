@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -29,8 +30,12 @@ namespace Resturant_Management.Controllers
         [HttpPost("createTableCategory")]
         public async Task<IActionResult> AddTableCategory(TableCategory table)
         {
+
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(Claims.UserId)?.Value;
             try
             {
+                table.ResturantId = userId;
                 var tableRes = await _tableService.AddTableCategory(table);
                 if (tableRes != null)
                 {
@@ -50,13 +55,14 @@ namespace Resturant_Management.Controllers
             }
         }
 
-        [HttpGet("{ResturantId}/baseCategory")]
+
+        [HttpGet("{ResturantId}/baseTableCategory")]
         [AllowAnonymous]
         public async Task<IActionResult> BaseCategory(string ResturantId)
         {
             try
             {
-                var tableRes = await _tableService.GetChildTableCategoryListByTableCategoryId(null,ResturantId);
+                var tableRes = await _tableService.GetBaseCategory(ResturantId);
                 if (tableRes != null)
                 {
 

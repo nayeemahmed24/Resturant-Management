@@ -13,7 +13,7 @@ namespace Model.Entities
         public string ParentId { get; set; }
         [Required]
         public string CategoryTitle { get; set; }
-        [Required]
+        
         public string ResturantId { get; set; }
     }
 }
