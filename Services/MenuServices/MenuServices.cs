@@ -98,9 +98,21 @@ namespace Services.MenuServices
             if (menuItem == null) return null;
             menuItem.ItemTitle = menu.ItemTitle;
             menuItem.Price = menu.Price;
+            menuItem.description = menu.description;
+            menuItem.ItemType = menu.ItemType;
             
 
             await _repository.UpdateAsync<MenuItem>(d => d.Id == menuItem.Id, menuItem);
+            return menuItem;
+        }
+        public async Task<MenuCatergory> UpdateMenuCategory(MenuCategoryInput menu)
+        {
+            var menuItem = await FindCategoryById(menu.Id);
+            menuItem.Restaurant.password = null;
+            if (menuItem == null) return null;
+            menuItem.CategoryTitle = menu.CategoryTitle;
+            
+            await _repository.UpdateAsync<MenuCatergory>(d => d.Id == menuItem.Id, menuItem);
             return menuItem;
         }
 
@@ -108,6 +120,11 @@ namespace Services.MenuServices
         private async Task<MenuItem> FindMenuByMenuItemInput(MenuItemInput menu)
         {
             return await _repository.GetItemAsync<MenuItem>(d => d.Id == menu.Id);
+        }
+
+        private async Task<MenuCatergory> FindCategoryById(string id)
+        {
+            return await _repository.GetItemAsync<MenuCatergory>(d => d.Id == id);
         }
         public async Task<MenuCatergory> FindParentCatergoryById(MenuCategoryInput menuCategoryInput)
         {
@@ -178,6 +195,8 @@ namespace Services.MenuServices
             {
                 ItemTitle = menuItemInput.ItemTitle,
                 Price = menuItemInput.Price,
+                description = menuItemInput.description,
+                ItemType = menuItemInput.ItemType,
                 Available = true
             };
             if (menuItemInput.ParentId != null)

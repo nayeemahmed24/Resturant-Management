@@ -49,6 +49,10 @@ namespace Resturant_Management.Controllers
                 {
                     var Errorresult = _exceptionModelGenerator.setData<RestaurantInputModel>(true, "Forbidden", null);
                     return StatusCode(403, Errorresult);
+                }else if (_accessService.isUserNameAvailable(restaurantInputModel.userName))
+                {
+                    var ErrorResult = _exceptionModelGenerator.setData<RestaurantInputModel>(true, "Username exist", null);
+                    return StatusCode(403, ErrorResult);
                 }
 
                 var manager = await _accessService.Create(restaurantInputModel);

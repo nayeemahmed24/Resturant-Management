@@ -80,6 +80,10 @@ namespace Resturant_Management.Controllers
                 // For Test Off
                // menuCategoryInput.RestaurantId = userId;
                 var categoryList = await _menuServices.GetChildCategories(parentId);
+                if (categoryList.Count == 0)
+                {
+                    return StatusCode(203, _exceptionModelGenerator.setData<MenuCategoryInput>(true, "No data", null));
+                }
                 var sortOrder = await GetSortOrder(parentId);
 
                 categoryList = _sortService.SortCategory(sortOrder, categoryList);
@@ -148,6 +152,35 @@ namespace Resturant_Management.Controllers
                 return StatusCode(500, _exceptionModelGenerator.setData<MenuCatergory>(true, e.Message, null));
             }
         }
+        [HttpPut("menucategoryUpdate")]
+        public async Task<IActionResult> UpdateMenuCategory(MenuCategoryInput menuCategoryItemInput)
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(Claims.UserId)?.Value;
+            try
+            {
+                if (menuCategoryItemInput.Id == null )
+                {
+                    var Errorresult = _exceptionModelGenerator.setData<MenuCategoryInput>(true, "Invalid input", null);
+                    return StatusCode(400, Errorresult);
+                }
+
+                menuCategoryItemInput.RestaurantId = userId;
+                var menuItem = await _menuServices.UpdateMenuCategory(menuCategoryItemInput);
+                if (menuItem != null)
+                {
+                    var resul = _exceptionModelGenerator.setData<MenuCatergory>(false, "Ok", menuItem);
+                    return StatusCode(201, resul);
+                }
+                var result = _exceptionModelGenerator.setData<MenuCatergory>(true, "Ok", null);
+                return StatusCode(500, result);
+
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, _exceptionModelGenerator.setData<MenuCatergory>(true, e.Message, null));
+            }
+        }
 
         [HttpPut("menuUpdate")]
         public async Task<IActionResult> UpdateMenu(MenuItemInput menuItemInput)
@@ -159,7 +192,7 @@ namespace Resturant_Management.Controllers
                 if (menuItemInput.Id == null || menuItemInput.ParentId == null)
                 {
                     var Errorresult = _exceptionModelGenerator.setData<MenuItem>(true, "Ok", null);
-                    return StatusCode(500, Errorresult);
+                    return StatusCode(203, Errorresult);
                 }
 
                 menuItemInput.ResturantId = userId;
@@ -170,7 +203,7 @@ namespace Resturant_Management.Controllers
                     return StatusCode(201, resul);
                 }
                 var result = _exceptionModelGenerator.setData<MenuItem>(true, "Ok", null);
-                return StatusCode(500, result);
+                return StatusCode(203, result);
 
             }
             catch (Exception e)
@@ -187,7 +220,7 @@ namespace Resturant_Management.Controllers
             try
             {
                 var menu = await _menuServices.FindMenuParentId(parentId);
-                if (menu != null)
+                if (menu.Count!=0)
                 {
                     var sort = await _sortService.FindSortUsingParentId(parentId);
                     menu = _sortService.SortItems(sort, menu);

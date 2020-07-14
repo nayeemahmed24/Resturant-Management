@@ -15,6 +15,7 @@ using Services.Helper_Services;
 using Microsoft.AspNetCore.WebUtilities;
 using Services.Paginator;
 using Model.View_Model;
+using Services.UtilityService;
 
 namespace Services.AdminAuth
 {
@@ -58,7 +59,7 @@ namespace Services.AdminAuth
 
         public PaginatorModel<RestaurantModel> GetAllRestaurants(PageParameters pageParameters)
         {
-            var data = _paginator.GetPaginatedData<RestaurantModel>("restaurantName", pageParameters.PageNumber, pageParameters.PageSize, data => data.role == "User");
+            var data = _paginator.GetPaginatedData<RestaurantModel>("restaurantName", pageParameters.PageNumber, pageParameters.PageSize, data => data.role == "User").RemoveAllPassword();
             return data;
         }
 

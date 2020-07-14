@@ -16,6 +16,7 @@ using Repository;
 using Services.Email;
 using Services.FileUploadService;
 using Services.Helper_Services;
+using Services.UtilityService;
 
 namespace Services.UserServices
 {
@@ -96,7 +97,7 @@ namespace Services.UserServices
             await _repository.UpdateAsync<RestaurantModel>(e => e.Id == user.Id, user);
             return true;
         }
-        public async Task<bool> UpdateResturant(RestaurantUpdateModel user,RestaurantModel userModel)
+        public async Task<RestaurantModel> UpdateResturant(RestaurantUpdateModel user,RestaurantModel userModel)
         {
             //var updateR = new RestaurantModel
             //{
@@ -129,10 +130,9 @@ namespace Services.UserServices
                 string hashedPassword = _passwordManager.HashPassword(user.password);
                 userModel.password = hashedPassword;
             }
-
     
             await _repository.UpdateAsync<RestaurantModel>(e => e.Id == userModel.Id, userModel);
-            return true;
+            return userModel.RemovePassword();
         }
         public  RestaurantModel GetUser(string Id)
         {
@@ -260,11 +260,11 @@ namespace Services.UserServices
 
             return imageData;
         }
-        public void ResetPassword(string id, RestaurantUpdateModel userUpdateModel)
+        public async void ResetPassword(string id, RestaurantUpdateModel restaurantUpdateModel)
         {
             var user = GetUser(id);
-            user.password = userUpdateModel.password;
-            Update(user);
+
+            await UpdateResturant(restaurantUpdateModel, user);
         }
 
         public string GetUniqueId()
@@ -293,6 +293,16 @@ namespace Services.UserServices
         {
 
             var user = GetUser(userId);
+            if (user == null)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool isUserNameAvailable(string username)
+        {
+            var user = GetUserByUsername(username);
             if (user == null)
             {
                 return false;

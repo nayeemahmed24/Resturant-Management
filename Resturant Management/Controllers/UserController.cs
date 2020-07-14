@@ -71,7 +71,7 @@ namespace Resturant_Management.Controllers
                 if (user != null)
                 {
                     var newdata = _userAccessService.UpdateResturant(userUpdateModel,user);
-                    return StatusCode(204, _exceptionModelGenerator.setData<RestaurantModel>(false, "Ok", null));
+                    return StatusCode(200, _exceptionModelGenerator.setData<RestaurantModel>(false, "Ok", newdata.Result));
                 }
                 else
                 {
