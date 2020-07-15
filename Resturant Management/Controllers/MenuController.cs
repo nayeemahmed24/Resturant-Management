@@ -237,7 +237,26 @@ namespace Resturant_Management.Controllers
             }
         }
 
+        [HttpGet("restaurantMenu")]
+        public async Task<IActionResult> GetRestaurantItems()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var restaurantId = identity.FindFirst(Claims.UserId)?.Value;
+            try
+            {
+                var menuList = await  _menuServices.GetRestaurantMenu(restaurantId);
+                if (menuList != null && menuList.Count!=0)
+                {
+                    return StatusCode(200, _exceptionModelGenerator.setData<List<MenuItem>>(false, "ok", menuList));
+                }
 
+                return StatusCode(203, _exceptionModelGenerator.setData<MenuItem>(true, "Not data", null));
+
+            }catch(Exception e)
+            {
+                return StatusCode(500, _exceptionModelGenerator.setData<MenuCatergory>(true, e.Message, null));
+            }
+        }
 
         [HttpPut("changeItemStatus")]
         public async Task<IActionResult> ChangeAvailableStatus(MenuItemInput menuItemInput)

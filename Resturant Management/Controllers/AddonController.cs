@@ -14,7 +14,7 @@ using Services.AddonServices;
 
 namespace Resturant_Management.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("v1/[controller]")]
     [ApiController]
     [Authorize(Roles = Role.User)]
     // [Authorize(Roles = Role.Admin)]
@@ -30,7 +30,6 @@ namespace Resturant_Management.Controllers
         }
 
         [HttpPost("AddAddon")]
-        
         public async Task<IActionResult> AddAddon(AddonInput addonInput)
         {
 
@@ -43,8 +42,8 @@ namespace Resturant_Management.Controllers
                     return StatusCode(201, resul);
                 }
 
-                var result = _exceptionModelGenerator.setData<Addon>(true, "Ok", null);
-                return StatusCode(500, result);
+                var result = _exceptionModelGenerator.setData<Addon>(true, "Failed", null);
+                return StatusCode(400, result);
 
             }
             catch (Exception e)
@@ -54,7 +53,7 @@ namespace Resturant_Management.Controllers
             }
         }
 
-        [HttpPost("UpdateAddon")]
+        [HttpPut("UpdateAddon")]
         public async Task<IActionResult> EditAddon(AddonInput addonInput)
         {
             try
@@ -67,8 +66,8 @@ namespace Resturant_Management.Controllers
                     return StatusCode(201, resul);
                 }
 
-                var result = _exceptionModelGenerator.setData<Addon>(true, "Ok", null);
-                return StatusCode(500, result);
+                var result = _exceptionModelGenerator.setData<Addon>(true, "Failed", null);
+                return StatusCode(400, result);
 
             }
             catch (Exception ex)
@@ -90,8 +89,8 @@ namespace Resturant_Management.Controllers
                     return StatusCode(201, resul);
                 }
 
-                var result = _exceptionModelGenerator.setData<Addon>(true, "Ok", null);
-                return StatusCode(500, result);
+                var result = _exceptionModelGenerator.setData<Addon>(true, "Failed", null);
+                return StatusCode(400, result);
 
             }
             catch (Exception e)
@@ -118,8 +117,8 @@ namespace Resturant_Management.Controllers
                     }
                 
                 }
-                var result = _exceptionModelGenerator.setData<List<Addon>>(true, "Ok", null);
-                return StatusCode(500, result);
+                var result = _exceptionModelGenerator.setData<List<Addon>>(true, "Failed", null);
+                return StatusCode(400, result);
 
             }
             catch (Exception e)
