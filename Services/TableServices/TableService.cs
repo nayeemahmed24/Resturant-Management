@@ -38,8 +38,39 @@ namespace Services.TableServices
             return null;
         }
 
+        public async Task<TableCategory> EditTableCategory(TableCategory tableCategory)
+        {
+            if (tableCategory.Id != null)
+            {
+                var res = await FindTableCategoryById(tableCategory.Id);
+                var parentCategory = new TableCategory();
+                if (tableCategory.ParentId != null)
+                {
+                    parentCategory = await FindTableCategoryById(tableCategory.ParentId);
+                    if (parentCategory == null)
+                    {
+                        return null;
+                    }
+
+                    res.ParentId = parentCategory.Id;
+
+                }
+
+                if (res != null)
+                {
+                    res.CategoryTitle = tableCategory.CategoryTitle;
+
+                    await _repository.UpdateAsync<TableCategory>(d => d.Id == res.Id, res);
+                }
+
+               
+                return tableCategory;
+            }
+            return null;
+        }
         public async Task<Table> AddTable(Table table)
         {
+            
             if (table.TableTitle >0)
             {
                 if (table.TableCategoryId != null)
@@ -57,7 +88,31 @@ namespace Services.TableServices
             }
             return null;
         }
+        public async Task<Table> EditTable(Table table)
+        {
+            if (table.Id != null)
+            {
+                var res =await FindTableById(table.Id);
+                var parentCategory = new TableCategory();
+                if (table.TableTitle > 0)
+                {
+                    if (table.TableCategoryId != null)
+                    {
+                        parentCategory = await FindTableCategoryById(table.TableCategoryId);
+                        if (parentCategory == null)
+                        {
+                            return null;
+                        }
+                    }
 
+                    res.TableTitle = table.TableTitle;
+                    res.TableCategoryId = parentCategory.Id;
+                    await _repository.UpdateAsync<Table>(d=>d.Id == table.Id,res);
+                    return res;
+                }
+            }
+            return null;
+        }
         public async Task<List<Table>> GetChildTableListByTableCategoryId(string tableCategoryId)
         {
             var list = new List<Table>();
@@ -97,7 +152,11 @@ namespace Services.TableServices
         {
             return await _repository.GetItemAsync<TableCategory>(d => d.Id == Id);
         }
+        public async Task<Table> FindTableById(string Id)
+        {
+            return await _repository.GetItemAsync<Table>(d => d.Id == Id);
+        }
 
-        
+
     }
 }

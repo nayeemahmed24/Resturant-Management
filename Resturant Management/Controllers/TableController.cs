@@ -53,7 +53,31 @@ namespace Resturant_Management.Controllers
             }
         }
 
+        [HttpPost("editTableCategory")]
+        public async Task<IActionResult> EditTableCategory(TableCategory table)
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(Claims.UserId)?.Value;
+            try
+            {
+                table.ResturantId = userId;
+                var tableRes = await _tableService.EditTableCategory(table);
+                if (tableRes != null)
+                {
+                    var resul = _exceptionModelGenerator.setData<TableCategory>(false, "Ok", tableRes);
+                    return StatusCode(201, resul);
+                }
 
+                var result = _exceptionModelGenerator.setData<Table>(true, "Ok", null);
+                return StatusCode(500, result);
+            }
+            catch (Exception e)
+            {
+
+                var result = _exceptionModelGenerator.setData<TableCategory>(true, e.Message, null);
+                return StatusCode(500, result);
+            }
+        }
         [HttpGet("baseTableCategory")]
         [AllowAnonymous]
         public async Task<IActionResult> BaseCategory()
@@ -156,6 +180,29 @@ namespace Resturant_Management.Controllers
             }
 
         }
-        
+        [HttpPost("Edittable")]
+        public async Task<IActionResult> EditTable(Table table)
+        {
+            try
+            {
+                var tableRes = await _tableService.EditTable(table);
+                if (tableRes != null)
+                {
+
+                    var resul = _exceptionModelGenerator.setData<Table>(false, "Ok", tableRes);
+                    return StatusCode(201, resul);
+                }
+
+                var result = _exceptionModelGenerator.setData<Table>(true, "Bad request", null);
+                return StatusCode(400, result);
+            }
+            catch (Exception e)
+            {
+
+                var result = _exceptionModelGenerator.setData<Table>(true, e.Message, null);
+                return StatusCode(500, result);
+            }
+
+        }
     }
 }
