@@ -266,7 +266,14 @@ namespace Services.MenuServices
             return builder.ToString().ToLower();
         }
 
-        
+        public async Task<MenuItem> UpdateMenuByMenuItem(MenuItem menu)
+        {
+            if (menu == null) return null;
+            await _repository.UpdateAsync<MenuItem>(d => d.Id == menu.Id, menu);
+            return menu;
+        }
+
+
 
     }
 }
