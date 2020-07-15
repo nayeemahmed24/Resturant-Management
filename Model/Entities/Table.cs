@@ -11,7 +11,7 @@ namespace Model.Entities
         [BsonId]
         public string Id { get; set; }
         [Required]
-        public string TableTitle { get; set; }
+        public int TableTitle { get; set; }
         [Required]
         public string TableCategoryId { get; set; }
 

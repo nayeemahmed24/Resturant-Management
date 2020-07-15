@@ -40,7 +40,7 @@ namespace Services.TableServices
 
         public async Task<Table> AddTable(Table table)
         {
-            if (table.TableTitle != null)
+            if (table.TableTitle >0)
             {
                 if (table.TableCategoryId != null)
                 {
