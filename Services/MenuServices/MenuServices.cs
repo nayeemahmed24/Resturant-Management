@@ -237,6 +237,14 @@ namespace Services.MenuServices
             return menuItem;
 
         }
+
+        public async Task<List<MenuItem>> GetRestaurantMenu(string restaurantId)
+        {
+            var menu = await _repository.GetItemsAsync<MenuItem>(data => data.Restaurant.Id == restaurantId);
+            var list = menu?.ToList();
+            return list;
+        }
+
         public string GetUniqueId()
         {
             string first = DateTime.Now.ToString("yyMMddHHmmssff");
