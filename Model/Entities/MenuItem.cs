@@ -23,6 +23,8 @@ namespace Model.Entities
         public string description { get; set; }
         public string ItemType { get; set; }
 
+        public List<string> AddonsList { get; set; }
+
         [DefaultValue(false)]
         public bool Available { get; set; }
         [Required]

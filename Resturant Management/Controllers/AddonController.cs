@@ -32,9 +32,11 @@ namespace Resturant_Management.Controllers
         [HttpPost("AddAddon")]
         public async Task<IActionResult> AddAddon(AddonInput addonInput)
         {
-
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(Claims.UserId)?.Value;
             try
             {
+                addonInput.ResturantId = userId;
                 var addon = await _addonService.AddAddon(addonInput);
                 if (addon != null)
                 {
@@ -99,17 +101,42 @@ namespace Resturant_Management.Controllers
 
             }
         }
-        // All Addon Using menuitem ID
-        // For AllAddon with MenuItem togather go to MenuController -> "ItemDetailes"
-        [HttpGet("alladdons/{menuitemid}")]
-        [AllowAnonymous]
-        public async Task<IActionResult> AllAddons(string menuitemid)
+
+        [HttpPost("assignaddon")]
+        public async Task<IActionResult> AssigAddon(AssignAddon assignAddon)
         {
             try
             {
-                if (menuitemid != null)
+                if (assignAddon != null)
                 {
-                    var list = await _addonService.AllAddonByMenuItemId(menuitemid);
+                    var res = await _addonService.AssignAddon(assignAddon);
+                    if (res != null)
+                    {
+                        var resul = _exceptionModelGenerator.setData<MenuItem>(false, "Ok", res);
+                        return StatusCode(201, resul);
+                    }
+                    
+                }
+                var result = _exceptionModelGenerator.setData<MenuItem>(true, "Failed", null);
+                return StatusCode(400, result);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, _exceptionModelGenerator.setData<MenuItem>(true, e.Message, null));
+            }
+        }
+
+
+        // All Addon Using resturant ID
+        [HttpGet("alladdons/{resturantid}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> AllAddons(string resturantid)
+        {
+            try
+            {
+                if (resturantid != null)
+                {
+                    var list = await _addonService.AllAddonByResturantId(resturantid);
                     if (list != null)
                     {
                         var resul = _exceptionModelGenerator.setData<List<Addon>>(false, "Ok", list);
@@ -127,6 +154,30 @@ namespace Resturant_Management.Controllers
             }
         }
 
+
+        [HttpGet("MenuItemAddon/{itemid}")]
+        public async Task<IActionResult> MenuItemAddons(string itemid)
+        {
+            try
+            {
+                if (itemid != null)
+                {
+                    var list = await _addonService.FindAddonByItemId(itemid);
+                    if (list != null)
+                    {
+                        var resul = _exceptionModelGenerator.setData<List<Addon>>(false, "Ok", list);
+                        return StatusCode(201, resul);
+                    }
+
+                }
+                var result = _exceptionModelGenerator.setData<List<Addon>>(true, "Failed", null);
+                return StatusCode(400, result);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, _exceptionModelGenerator.setData<List<Addon>>(true, e.Message, null));
+            }
+        }
 
 
     }

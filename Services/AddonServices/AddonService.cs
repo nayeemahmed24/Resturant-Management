@@ -26,11 +26,7 @@ namespace Services.AddonServices
         public async Task<Addon> AddAddon(AddonInput addon)
         {
             var resAddon = await buildAddon(addon);
-            if (resAddon.ParentMenuItem == null)
-            {
-                return null;
-            }
-
+            
             await _repository.SaveAsync<Addon>(resAddon);
             
             return resAddon;
@@ -52,12 +48,12 @@ namespace Services.AddonServices
             return null;
         }
 
-        public async Task<List<Addon>> AllAddonByMenuItemId(string menuItemId)
+        public async Task<List<Addon>> AllAddonByResturantId(string resturantId)
         {
             List<Addon> lists = new List<Addon>();
-            if (menuItemId != null)
+            if (resturantId != null)
             {
-                var list = await _repository.GetItemsAsync<Addon>(d => d.ParentMenuItem.Id == menuItemId);
+                var list = await _repository.GetItemsAsync<Addon>(d => d.ResturantId == resturantId);
                 list?.ToList();
                 if (list != null)
                 {
@@ -80,6 +76,57 @@ namespace Services.AddonServices
             return null;
         }
 
+        public async Task<MenuItem> AssignAddon(AssignAddon assignAddon)
+        {
+            if (assignAddon != null)
+            {
+                var menu = await _menuServices.FindMenuItemById(assignAddon.MenuItemId);
+                if (menu != null)
+                {
+                    var addon = await FindAddonById(assignAddon.AddonId);
+                    if (addon != null)
+                    {
+                        if (menu.AddonsList == null)
+                        {
+                            var list = new List<string>();
+                            list.Add(assignAddon.AddonId);
+                            menu.AddonsList = list;
+                            return await _menuServices.UpdateMenuByMenuItem(menu);
+                            
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public async Task<List<Addon>> FindAddonByItemId(string ItemId)
+        {
+            var list = new List<Addon>();
+            if (ItemId != null)
+            {
+                var menu = await _menuServices.FindMenuItemById(ItemId);
+                if (menu != null)
+                {
+                    if (menu.AddonsList != null)
+                    {
+                        if (menu.AddonsList.Count > 0)
+                        {
+                            foreach (var id in menu.AddonsList)
+                            {
+                                var Addon = await FindAddonById(id);
+                                if(Addon!=null)list.Add(Addon);
+                            }
+                            
+                        }
+                    }
+                }
+            }
+
+            return list;
+        }
+
 
         private async Task<Addon> FindAddonById(string AddonInputId)
         {
@@ -98,7 +145,7 @@ namespace Services.AddonServices
                 AddonTitle = addon.AddonTitle,
                 Price = addon.Price,
             };
-            resAddon.ParentMenuItem = await _menuServices.FindMenuItemById(addon.ParentMenuItemId);
+            resAddon.ResturantId = addon.ResturantId;
             resAddon.Available = false;
             return resAddon;
 
