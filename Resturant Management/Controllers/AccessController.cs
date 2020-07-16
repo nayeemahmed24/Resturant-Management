@@ -52,7 +52,7 @@ namespace Resturant_Management.Controllers
                 }else if (_accessService.isUserNameAvailable(restaurantInputModel.userName))
                 {
                     var ErrorResult = _exceptionModelGenerator.setData<RestaurantInputModel>(true, "Username exist", null);
-                    return StatusCode(403, ErrorResult);
+                    return StatusCode(200, ErrorResult);
                 }
 
                 var manager = await _accessService.Create(restaurantInputModel);
@@ -89,7 +89,7 @@ namespace Resturant_Management.Controllers
         {
             try
             {
-                var user = await _accessService.GetUserByUsername(authenticateModel.Username);
+                var user = _accessService.GetUserByUsername(authenticateModel.Username);
                
                 if (user == null)
                 {
