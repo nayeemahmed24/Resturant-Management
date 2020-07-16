@@ -1,0 +1,9 @@
+E:\Resturant-Management\Payment System\bin\Debug\netcoreapp3.1\Payment System.deps.json
+E:\Resturant-Management\Payment System\bin\Debug\netcoreapp3.1\Payment System.dll
+E:\Resturant-Management\Payment System\bin\Debug\netcoreapp3.1\Payment System.pdb
+E:\Resturant-Management\Payment System\obj\Debug\netcoreapp3.1\Payment System.csprojAssemblyReference.cache
+E:\Resturant-Management\Payment System\obj\Debug\netcoreapp3.1\Payment System.csproj.CoreCompileInputs.cache
+E:\Resturant-Management\Payment System\obj\Debug\netcoreapp3.1\Payment System.AssemblyInfoInputs.cache
+E:\Resturant-Management\Payment System\obj\Debug\netcoreapp3.1\Payment System.AssemblyInfo.cs
+E:\Resturant-Management\Payment System\obj\Debug\netcoreapp3.1\Payment System.dll
+E:\Resturant-Management\Payment System\obj\Debug\netcoreapp3.1\Payment System.pdb
