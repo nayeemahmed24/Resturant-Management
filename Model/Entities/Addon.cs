@@ -18,7 +18,7 @@ namespace Model.Entities
         [Required]
         public double Price { get; set; }
         [Required]
-        public MenuItem ParentMenuItem { get; set; }
+        public string ResturantId { get; set; }
         [DefaultValue(false)]
         public bool Available { get; set; }
 

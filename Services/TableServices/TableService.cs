@@ -44,6 +44,7 @@ namespace Services.TableServices
             {
                 var res = await FindTableCategoryById(tableCategory.Id);
                 var parentCategory = new TableCategory();
+                
                 if (tableCategory.ParentId != null)
                 {
                     parentCategory = await FindTableCategoryById(tableCategory.ParentId);
