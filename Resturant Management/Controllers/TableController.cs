@@ -53,7 +53,7 @@ namespace Resturant_Management.Controllers
             }
         }
 
-        [HttpPost("editTableCategory")]
+        [HttpPut("editTableCategory")]
         public async Task<IActionResult> EditTableCategory(TableCategory table)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
@@ -180,7 +180,7 @@ namespace Resturant_Management.Controllers
             }
 
         }
-        [HttpPost("Edittable")]
+        [HttpPut("edittable")]
         public async Task<IActionResult> EditTable(Table table)
         {
             try

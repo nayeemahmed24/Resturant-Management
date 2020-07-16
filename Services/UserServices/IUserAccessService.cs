@@ -14,7 +14,7 @@ namespace Services.UserServices
     {
         public ClaimsPrincipal ValidateMailVerifyToken(string token);
         public  Task<RestaurantModel> Create(RestaurantInputModel userResponse);
-        public Task<RestaurantModel> GetUserByUsername(string username);
+        public RestaurantModel GetUserByUsername(string username);
         public bool IsAuthorizedUser(RestaurantModel userModel, string password);
         public TokenModel GetAuthenticationToken(RestaurantModel user);
         public  Task<RestaurantModel> GetUserByEmail(string email);

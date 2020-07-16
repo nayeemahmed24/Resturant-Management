@@ -138,9 +138,9 @@ namespace Services.UserServices
         {
             return  _repository.GetItem<RestaurantModel>(d => d.Id == Id);
         }
-        public async Task<RestaurantModel> GetUserByUsername(string username)
+        public RestaurantModel GetUserByUsername(string username)
         {
-            return await _repository.GetItemAsync<RestaurantModel>(d => d.username == username);
+            return  _repository.GetItem<RestaurantModel>(d => d.username == username);
         }
 
         public async Task<RestaurantModel> GetUserByEmail(string email)
