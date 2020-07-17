@@ -16,7 +16,7 @@ namespace Resturant_Management.Controllers
 {
     [Route("v1/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles =[Role.User,Role.Admin])]
     public class UserController : ControllerBase
     {
         private IExceptionModelGenerator _exceptionModelGenerator;
