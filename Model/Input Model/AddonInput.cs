@@ -15,7 +15,6 @@ namespace Model.Input_Model
         public string Id { get; set; }
         [Required]
         public string AddonTitle { get; set; }
-        public List<string> AddonsList { get; set; }
         [Required]
         public double Price { get; set; }
         
