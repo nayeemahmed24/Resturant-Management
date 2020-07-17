@@ -26,5 +26,22 @@ namespace Services.UtilityService
             paginatorModel.data = paginatorModel.data.Select(data => data.RemovePassword());
             return paginatorModel;
         }
+
+        public static CustomerViewModel FilterForCustomer(this RestaurantModel restaurantModel)
+        {
+            if (restaurantModel == null)
+            {
+                return null;
+            }
+
+            CustomerViewModel customerViewModel = new CustomerViewModel
+            {
+                restaurantName = restaurantModel.restaurantName,
+                ownerEmail = restaurantModel.email,
+                ownerName = restaurantModel.firstName + " " + restaurantModel.lastName
+            };
+
+            return customerViewModel;
+        }
     }
 }
