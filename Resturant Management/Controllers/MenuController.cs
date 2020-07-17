@@ -213,6 +213,7 @@ namespace Resturant_Management.Controllers
         }
 
         [HttpGet("getmenuitems/{parentId}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetMenuItemsByParenId(string parentId)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;

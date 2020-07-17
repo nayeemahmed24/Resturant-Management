@@ -110,7 +110,7 @@ namespace Resturant_Management
             {
                 options.AddPolicy(MyCorsOrigin, builder =>
                 {
-                    builder.WithOrigins("http://localhost:4200", "http://sequenceweb.mydomain.com:4200").AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+                    builder.WithOrigins("http://localhost:4200", "http://localhost:4400", "http://sequenceweb.mydomain.com:4200").AllowAnyHeader().AllowAnyMethod().AllowCredentials();
                 });
             });
 

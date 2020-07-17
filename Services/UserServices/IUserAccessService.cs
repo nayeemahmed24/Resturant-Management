@@ -23,7 +23,7 @@ namespace Services.UserServices
         public string ResetPasswordVerification(string token);
         public RestaurantModel GetUser(string Id);
         public  Task<bool> Update(RestaurantModel user);
-        public ImageDataModel ImagePath(RestaurantModel restaurantModel);
+        public ImageDataModel ImagePath(string imageName);
         public  Task<RestaurantModel> UpdateResturant(RestaurantUpdateModel user, RestaurantModel userModel);
         public  Task<ImageDataModel> UpdateImage(PhotoUpdate photoUpdate, RestaurantModel user);
         public void ResetPassword(string id, RestaurantUpdateModel userUpdateModel);

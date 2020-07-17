@@ -177,15 +177,15 @@ namespace Services.UserServices
             tokenModel.token = token;
             return tokenModel;
         }
-        public ImageDataModel ImagePath(RestaurantModel restaurantModel)
+        public ImageDataModel ImagePath(string imageName)
         {
             string fileType = "jpg";
             string file = "";
-            if (restaurantModel.logo != null)
+            if (imageName != null)
             {
 
-                fileType = getExtension(restaurantModel.logo);
-                file = Path.Combine(Directory.GetCurrentDirectory(), _routes.StaticDir, restaurantModel.logo);
+                fileType = getExtension(imageName);
+                file = Path.Combine(Directory.GetCurrentDirectory(), _routes.StaticDir, imageName);
 
             }
             bool s = File.Exists(file);
@@ -245,7 +245,7 @@ namespace Services.UserServices
             user.logo = path;
             Update(user);
 
-            var imageData = ImagePath(user);
+            var imageData = ImagePath(user.logo);
 
             return imageData;
         }
@@ -256,7 +256,7 @@ namespace Services.UserServices
             user.backgroundImage = path;
             Update(user);
 
-            var imageData = ImagePath(user);
+            var imageData = ImagePath(user.backgroundImage);
 
             return imageData;
         }
