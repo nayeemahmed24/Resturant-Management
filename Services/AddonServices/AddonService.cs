@@ -128,7 +128,7 @@ namespace Services.AddonServices
         }
 
 
-        private async Task<Addon> FindAddonById(string AddonInputId)
+        public async Task<Addon> FindAddonById(string AddonInputId)
         {
             if (AddonInputId != null)
             {

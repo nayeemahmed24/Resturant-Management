@@ -15,5 +15,6 @@ namespace Services.AddonServices
         public Task<List<Addon>> AllAddonByResturantId(string resturantId);
         public Task<MenuItem> AssignAddon(AssignAddon assignAddon);
         public Task<List<Addon>> FindAddonByItemId(string ItemId);
+        public Task<Addon> FindAddonById(string AddonInputId);
     }
 }

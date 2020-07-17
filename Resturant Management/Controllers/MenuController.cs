@@ -345,7 +345,7 @@ namespace Resturant_Management.Controllers
                         }
                     }
                 }
-                var result = _exceptionModelGenerator.setData<MenuItemDetailes>(true, "Ok", null);
+                var result = _exceptionModelGenerator.setData<OrderDetail>(true, "Ok", null);
                 return StatusCode(500, result);
             }
             catch (Exception e)

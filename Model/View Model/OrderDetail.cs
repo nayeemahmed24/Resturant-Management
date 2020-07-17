@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using Model.Entities;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Model.Entities
+namespace Model.View_Model
 {
-    public class Order
+    public class OrderDetail
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
         [Required]
-        public List<OrderUnit> Items { get; set; }
+        public List<OrderUnitView> Items { get; set; }
         public OrderStatus Status { get; set; }
-        [Required]
         public string ResturantId { get; set; }
     }
 }
