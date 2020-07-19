@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\JWT Token\JWT Token.csproj" />
     <ProjectReference Include="..\Model\Model.csproj" />
+    <ProjectReference Include="..\Payment System\Payment System.csproj" />
     <ProjectReference Include="..\Repository\Repository.csproj" />
     <ProjectReference Include="..\Services\Services.csproj" />
   </ItemGroup>

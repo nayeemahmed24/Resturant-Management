@@ -18,6 +18,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Model;
 using Model.Error_Handler;
+using Payment_System.Service;
 using Repository;
 using Repository.Configurations;
 using Services.AddonServices;
@@ -64,6 +65,7 @@ namespace Resturant_Management
             services.AddSingleton<IAdminAccessService, AdminAccessService>();
             services.AddSingleton<IAddonService, AddonService>();
             services.AddSingleton<ISortService, SortService>();
+            services.AddSingleton<IPaymentService,PaymentSevice>();
             services.AddSingleton<ITableService, TableService>();
             services.AddSingleton<IOrderService, OrderService>();
             services.AddSingleton<IExceptionModelGenerator, ExceptionModelGenerator>();
