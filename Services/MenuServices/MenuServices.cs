@@ -47,10 +47,10 @@ namespace Services.MenuServices
                 parent = _repository.GetItem<MenuCatergory>(c => c.Id == category.Parent);
                 await UpdateChildAvailable(parent);
 
-                await _sortService.AddSort(category.Parent, category.Id);
+                await _sortService.AddSort(category.Parent, category.Id,false);
             }
             else 
-                await _sortService.AddSort(null, category.Id);
+                await _sortService.AddSort(null, category.Id,false);
             return category;
         }
 
@@ -81,7 +81,7 @@ namespace Services.MenuServices
             menuItem.Id = Guid.NewGuid().ToString();
             menuItem.Restaurant.password = null; 
             await _repository.SaveAsync<MenuItem>(menuItem);
-            await _sortService.AddSort(menu.ParentId, menuItem.Id);
+            await _sortService.AddSort(menu.ParentId, menuItem.Id,false);
             if (!parent.ItemAdded)
             {
                 await UpdateItemAdded(parent);

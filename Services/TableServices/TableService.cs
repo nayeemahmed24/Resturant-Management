@@ -5,14 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 using Model.Entities;
 using Repository;
+using Services.Sort_Service;
 
 namespace Services.TableServices
 {
     public class TableService : ITableService
     {
         private IMongoRepository _repository;
-        public TableService(IMongoRepository repository)
+        private ISortService _sortService;
+        public TableService(ISortService sortService,IMongoRepository repository)
         {
+            _sortService = sortService;
             _repository = repository;
         }
 
@@ -29,7 +32,12 @@ namespace Services.TableServices
                         return null;
                     }
 
+                    await _sortService.AddSort(tableCategory.ParentId, tableCategory.Id, true);
                     tableCategory.ParentId = TableCategory.Id;
+                }
+                else
+                {
+                    await _sortService.AddSort(null, tableCategory.Id, true);
                 }
 
                 await _repository.SaveAsync<TableCategory>(tableCategory);
