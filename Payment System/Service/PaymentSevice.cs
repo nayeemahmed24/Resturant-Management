@@ -13,7 +13,7 @@ namespace Payment_System.Service
         {
             try
             {
-                StripeConfiguration.ApiKey = "";
+                StripeConfiguration.ApiKey = "sk_test_51H6B94HNroh8Enm6yjNDBW3eZHJNYAHmmZ2FEseqT9VomRePdbeJz02bBxoZLQbFAY6xLaPkuOvaN8LysjVGgAS600SNByQSwC";
                 var optionsToken = new TokenCreateOptions
                 {
                     Card = new CreditCardOptions

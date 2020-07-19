@@ -8,11 +8,12 @@ namespace Services.Sort_Service
 {
     public interface ISortService
     {
-        public Task AddSort(string parentId, string childId);
+        public Task AddSort(string parentId, string childId,bool isTable);
         public Task<SortOrder> EditSort(SortOrder sort);
         public Task<SortOrder> FindSortUsingParentId(string parentId);
         public List<MenuCatergory> SortCategory(SortOrder sort, List<MenuCatergory> catergories);
         public List<MenuItem> SortItems(SortOrder sort, List<MenuItem> menuItems);
+        public List<TableCategory> SortTableCategories(SortOrder sort, List<TableCategory> menuItems);
 
 
     }

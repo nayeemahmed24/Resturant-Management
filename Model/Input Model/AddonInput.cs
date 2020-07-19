@@ -17,6 +17,8 @@ namespace Model.Input_Model
         public string AddonTitle { get; set; }
         [Required]
         public double Price { get; set; }
+        [Required]
+        public string AddonCategoryId { get; set; }
         
         public string ResturantId { get; set; }
     }
