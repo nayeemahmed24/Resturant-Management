@@ -278,6 +278,13 @@ namespace Services.UserServices
             await UpdateResturant(restaurantUpdateModel, user);
         }
 
+        public async void PasswordRecovery(RestaurantModel restaurantModel)
+        {
+            string hashedPassword = _passwordManager.HashPassword(restaurantModel.password);
+            restaurantModel.password = hashedPassword;
+            await Update(restaurantModel);
+        }
+
         public void SendRecoveryMail(string clientId,RestaurantModel restaurantModel)
         {
            
@@ -286,7 +293,7 @@ namespace Services.UserServices
             string redirectionRoute = clientData.host + clientData.recoverRoute;
             var emailModel = new EmailTemplateModel()
             { 
-                text = "This mail is from Restaurant Management system. Click the below button to reset your password", 
+                text = "This mail is from Restaurant Management system. Click the button below to reset your password", 
                 buttonText = "Reset Password", 
                 link =redirectionRoute
             };

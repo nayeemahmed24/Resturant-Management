@@ -127,7 +127,7 @@ namespace Resturant_Management.Controllers
                 if (user != null)
                 {
                     _accessService.SendRecoveryMail(recoveryModel.clientId, user);
-                    return StatusCode(307, _exceptionModelGenerator.setData<RestaurantUpdateModel>(false, "MAIL_SENT", null));
+                    return StatusCode(200, _exceptionModelGenerator.setData<RestaurantUpdateModel>(false, "MAIL_SENT", null));
                 }
                 else
                 {
@@ -140,7 +140,7 @@ namespace Resturant_Management.Controllers
             }
         }
 
-        [HttpPost("reset")]
+        [HttpPut("reset")]
         [AllowAnonymous]
         public IActionResult ResetPassword(RecoveryModel recoveryModel)
         {
@@ -155,7 +155,7 @@ namespace Resturant_Management.Controllers
                         if (user != null)
                         {
                             user.password = recoveryModel.password;
-                            _accessService.Update(user);
+                            _accessService.PasswordRecovery(user);
                             return StatusCode(200, _exceptionModelGenerator.setData<RestaurantUpdateModel>(false, "Ok", null));
                         }
                         else

@@ -34,5 +34,6 @@ namespace Services.UserServices
         public bool isRestaurantAvailable(string userId);
         public Task<ImageDataModel> UpdateBackgroudImage(PhotoUpdate photoUpdate, RestaurantModel user);
         public bool isUserNameAvailable(string username);
+        public void PasswordRecovery(RestaurantModel restaurantModel);
     }
 }
