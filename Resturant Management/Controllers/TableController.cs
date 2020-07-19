@@ -90,7 +90,7 @@ namespace Resturant_Management.Controllers
             try
             {
                 var tableRes = await _tableService.GetBaseCategory(restaurantId);
-                if (tableRes != null)
+                if (tableRes != null || tableRes.Count!=0)
                 {
                     var sort = await _sortService.FindSortUsingParentId("tablebase");
                     tableRes = _sortService.SortTableCategories(sort, tableRes);
