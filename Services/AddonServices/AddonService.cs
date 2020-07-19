@@ -32,6 +32,22 @@ namespace Services.AddonServices
             return resAddon;
         }
 
+        public async Task<AddonCategory> AddAddonCategory(AddonCategory addonCategory)
+        {
+            addonCategory.Id = Guid.NewGuid().ToString();
+            if(addonCategory.ParentId != null)
+            {
+                var ParentCat = await FindAddonCategoryById(addonCategory.ParentId);
+                if (ParentCat == null) return null;
+            }
+
+            await _repository.SaveAsync<AddonCategory>(addonCategory);
+            return addonCategory;
+
+        }
+
+
+
         public async Task<Addon> UpdateAddon(AddonInput addonInput)
         {
             var addon = await FindAddonById(addonInput.Id);
@@ -60,6 +76,22 @@ namespace Services.AddonServices
                     lists = list?.ToList();
                 }
                 
+            }
+            return lists;
+        }
+
+        public async Task<List<Addon>> AllAddonChildByCategoryId(string CategoryId)
+        {
+            List<Addon> lists = new List<Addon>();
+            if (CategoryId != null)
+            {
+                var list = await _repository.GetItemsAsync<Addon>(d => d.ParentId == CategoryId);
+                list?.ToList();
+                if (list != null)
+                {
+                    lists = list?.ToList();
+                }
+
             }
             return lists;
         }
@@ -138,12 +170,33 @@ namespace Services.AddonServices
 
             return null;
         }
+        public async Task<List<AddonCategory>> FindBaseAddonCategory(string resturantId)
+        {
+            if (resturantId != null)
+            {
+                var addon = await _repository.GetItemsAsync<AddonCategory>(d => d.RestaurantId == resturantId && d.ParentId == null);
+                return addon?.ToList();
+            }
+
+            return null;
+        }
+        public async Task<AddonCategory> FindAddonCategoryById(string AddonCategortId)
+        {
+            if (AddonCategortId != null)
+            {
+                var addon = await _repository.GetItemAsync<AddonCategory>(d => d.Id == AddonCategortId);
+                return addon;
+            }
+
+            return null;
+        }
         private async Task<Addon> buildAddon(AddonInput addon)
         {
             var resAddon = new Addon
             {
                 AddonTitle = addon.AddonTitle,
                 Price = addon.Price,
+                ParentId = addon.AddonCategoryId,
             };
             resAddon.ResturantId = addon.ResturantId;
             resAddon.Available = false;

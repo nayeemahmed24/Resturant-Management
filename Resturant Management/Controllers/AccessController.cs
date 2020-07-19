@@ -12,6 +12,8 @@ using Model;
 using Model.Entities;
 using Model.Error_Handler;
 using Model.Input_Model;
+using Payment_System.Model;
+using Payment_System.Service;
 using Services.UserServices;
 
 namespace Resturant_Management.Controllers
@@ -24,14 +26,41 @@ namespace Resturant_Management.Controllers
         private IUserAccessService _accessService;
         private IExceptionModelGenerator _exceptionModelGenerator;
         private IRoutes _routes;
-        public AccessController(IRoutes routes,IUserAccessService accessService,IExceptionModelGenerator exceptionModelGenerator)
+        
+        //Test Payment
+        private IPaymentService _paymentService; 
+
+        public AccessController(IRoutes routes,IPaymentService paymentService,IUserAccessService accessService,IExceptionModelGenerator exceptionModelGenerator)
         {
+            _paymentService = paymentService;
             _routes = routes;
             _accessService = accessService;
             _exceptionModelGenerator = exceptionModelGenerator;
         }
 
-       
+        [HttpGet("pay")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Pay()
+        {
+            var pay = new PaymentInputModel();
+            pay.year = 2021;
+            pay.cardNumber = "4242424242424242";
+            pay.cvc = "123";
+            pay.month = 1;
+            pay.value = 800;
+            try
+            {
+
+                var res = await _paymentService.MakePayment(pay);
+                return StatusCode(201, _exceptionModelGenerator.setData<String>(false, res, null));
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, _exceptionModelGenerator.setData<RestaurantInputModel>(true, e.Message, null));
+            }
+        }
+
+
         [HttpPost("invitation")]
         [AllowAnonymous]
         public async Task<IActionResult> CreateRestaurant(RestaurantInputModel restaurantInputModel)

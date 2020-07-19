@@ -10,6 +10,7 @@ using Model;
 using Model.Entities;
 using Model.Error_Handler;
 using Repository;
+using Services.Sort_Service;
 using Services.TableServices;
 
 namespace Resturant_Management.Controllers
@@ -19,10 +20,12 @@ namespace Resturant_Management.Controllers
     [Authorize(Roles = Role.User)]
     public class TableController : ControllerBase
     {
+        private ISortService _sortService;
         private ITableService _tableService;
         private IExceptionModelGenerator _exceptionModelGenerator;
-        public TableController(ITableService tableService, IExceptionModelGenerator exceptionModelGenerator)
+        public TableController(ISortService sortService,ITableService tableService, IExceptionModelGenerator exceptionModelGenerator)
         {
+            _sortService = sortService;
             _tableService = tableService;
             _exceptionModelGenerator = exceptionModelGenerator;
         }
@@ -89,7 +92,8 @@ namespace Resturant_Management.Controllers
                 var tableRes = await _tableService.GetBaseCategory(restaurantId);
                 if (tableRes != null)
                 {
-
+                    var sort = await _sortService.FindSortUsingParentId("tablebase");
+                    tableRes = _sortService.SortTableCategories(sort, tableRes);
                     var resul = _exceptionModelGenerator.setData<List<TableCategory>>(false, "Ok", tableRes);
                     return StatusCode(201, resul);
                 }
@@ -114,7 +118,8 @@ namespace Resturant_Management.Controllers
                 var tableRes = await _tableService.GetChildTableCategoryListByTableCategoryId(categoryId);
                 if (tableRes != null)
                 {
-
+                    var sort = await _sortService.FindSortUsingParentId(categoryId);
+                    tableRes = _sortService.SortTableCategories(sort, tableRes);
                     var resul = _exceptionModelGenerator.setData<List<TableCategory>>(false, "Ok", tableRes);
                     return StatusCode(201, resul);
                 }
@@ -203,6 +208,37 @@ namespace Resturant_Management.Controllers
                 return StatusCode(500, result);
             }
 
+        }
+
+        [HttpPost("sortedit")]
+        public async Task<IActionResult> EditSort(SortOrder sort)
+        {
+            try
+            {
+                if (sort.ParentId != null)
+                {
+                    if (sort.SortList != null)
+                    {
+                        var res = await _sortService.EditSort(sort);
+                        if (res != null)
+                        {
+                            var resul = _exceptionModelGenerator.setData<SortOrder>(false, "Ok", res);
+                            return StatusCode(201, resul);
+                        }
+                    }
+                }
+                var result = _exceptionModelGenerator.setData<SortOrder>(true, "Ok", null);
+                return StatusCode(500, result);
+            }
+            catch (Exception e)
+            {
+                var reslt = _exceptionModelGenerator.setData<SortOrder>(true, "Ok", null);
+                return StatusCode(500, reslt);
+            }
+        }
+        private async Task<SortOrder> GetSortOrder(string parentId)
+        {
+            return await _sortService.FindSortUsingParentId(parentId);
         }
     }
 }

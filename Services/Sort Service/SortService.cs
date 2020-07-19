@@ -16,13 +16,18 @@ namespace Services.Sort_Service
             _repository = repository;
         }
 
-        public async Task AddSort(string parentId, string childId)
+        public async Task AddSort(string parentId, string childId,bool isTable)
         {
-            if (parentId == null)
+            if (parentId == null && isTable == false)
             {
                 parentId = "base";
             }
-            if(parentId != null)
+            if (parentId == null && isTable )
+            {
+                parentId = "tablebase";
+            }
+
+            if (parentId != null)
             {
                 var sort = await FindSortUsingParentId(parentId);
                 if (sort == null)
@@ -74,8 +79,13 @@ namespace Services.Sort_Service
            var res = new List<MenuCatergory>();
            foreach (var sortId in sort.SortList)
            {
-               res.Add(catergories.Find(d=>d.Id == sortId));
-           }
+               var resulty = catergories.Find(d => d.Id == sortId);
+               if (resulty != null)
+               {
+
+                   res.Add(resulty);
+               }
+            }
            return res;
        }
 
@@ -84,10 +94,31 @@ namespace Services.Sort_Service
            var res = new List<MenuItem>();
            foreach (var sortId in sort.SortList)
            {
-               res.Add(menuItems.Find(d=>d.Id == sortId));
-           }
+               var resulty = menuItems.Find(d => d.Id == sortId);
+               if (resulty != null)
+               {
+
+                   res.Add(resulty);
+               }
+            }
 
            return res;
        }
+
+       public List<TableCategory> SortTableCategories(SortOrder sort, List<TableCategory> menuItems)
+       {
+           var res = new List<TableCategory>();
+           foreach (var sortId in sort.SortList)
+           {
+               var resulty = menuItems.Find(d => d.Id == sortId);
+               if (resulty != null)
+               {
+
+                   res.Add(resulty);
+               }
+           }
+
+           return res;
+        }
     }
 }

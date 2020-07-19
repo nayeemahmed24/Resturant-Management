@@ -11,7 +11,15 @@ using Model.Entities;
 using Model.Error_Handler;
 using Model.Input_Model;
 using Services.AddonServices;
-
+/// <summary>
+/// "AddAddonCategory"
+/// "AddAddon"
+/// "basecategories/{resturantid}" 
+/// "childaddons/{categoryid}"
+///  "UpdateAddon"
+///  "MenuItemAddon/{itemid}"
+///  "AssignAddon"
+/// </summary>
 namespace Resturant_Management.Controllers
 {
     [Route("v1/[controller]")]
@@ -27,6 +35,30 @@ namespace Resturant_Management.Controllers
         {
             _addonService = addonService;
             _exceptionModelGenerator = exceptionModelGenerator;
+        }
+
+        [HttpPost("AddAddonCategory")]
+        public async Task<IActionResult> AddAddonCategory(AddonCategory addonCategory)
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(Claims.UserId)?.Value;
+            try
+            {
+                addonCategory.RestaurantId = userId;
+                var res = await _addonService.AddAddonCategory(addonCategory);
+                if (res != null)
+                {
+                    var resul = _exceptionModelGenerator.setData<AddonCategory>(false, "Ok", res);
+                    return StatusCode(201, resul);
+                }
+                var result = _exceptionModelGenerator.setData<AddonCategory>(true, "Failed", null);
+                return StatusCode(400, result);
+
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, _exceptionModelGenerator.setData<AddonCategory>(true, e.Message, null));
+            }
         }
 
         [HttpPost("AddAddon")]
@@ -54,6 +86,28 @@ namespace Resturant_Management.Controllers
 
             }
         }
+
+        [HttpGet("childaddons/{categoryid}")]
+        public async Task<IActionResult> Addons(string categoryid)
+        {
+            try
+            {
+                var res = await _addonService.AllAddonChildByCategoryId(categoryid);
+                if (res != null)
+                { 
+                    var resul = _exceptionModelGenerator.setData<List<Addon>>(false, "Ok", res);
+                    return StatusCode(201, resul);
+                }
+
+                var result = _exceptionModelGenerator.setData<List<Addon>>(true, "Failed", null);
+                return StatusCode(400, result);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, _exceptionModelGenerator.setData<List<Addon>>(true, e.Message, null));
+            }
+        }
+
 
         [HttpPut("UpdateAddon")]
         public async Task<IActionResult> EditAddon(AddonInput addonInput)
@@ -99,6 +153,28 @@ namespace Resturant_Management.Controllers
             {
                 return StatusCode(500, _exceptionModelGenerator.setData<Addon>(true, e.Message, null));
 
+            }
+        }
+
+        [HttpGet("basecategories/{resturantid}")]
+        public async Task<IActionResult> BaseCategories(string resturantid)
+        {
+            try
+            {
+                var res = _addonService.FindBaseAddonCategory(resturantid);
+                if (res != null)
+                {
+                    var resul = _exceptionModelGenerator.setData<List<AddonCategory>>(false, "Ok", res);
+                    return StatusCode(201, resul);
+                }
+
+                var result = _exceptionModelGenerator.setData<Addon>(true, "Failed", null);
+                return StatusCode(400, result);
+
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, _exceptionModelGenerator.setData<List<Addon>>(true, e.Message, null));
             }
         }
 
