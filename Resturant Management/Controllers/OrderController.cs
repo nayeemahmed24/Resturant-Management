@@ -27,7 +27,7 @@ namespace Resturant_Management.Controllers
             _exceptionModelGenerator = exceptionModelGenerator;
         }
 
-        [HttpPost("Order")]
+        [HttpPost("placeOrder")]
         [AllowAnonymous]
         public async Task<IActionResult> MakeOrder(Order order)
         {
