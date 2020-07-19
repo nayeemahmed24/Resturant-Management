@@ -26,6 +26,7 @@ namespace Services.Email
             message.To.Add(new MailAddress(mailModel.To));
             message.From = new MailAddress(_mailSetting.Sender);
             message.Subject = mailModel.Subject;
+            message.IsBodyHtml = true;
             message.Body = mailModel.MessageBody;
             server.Send(message);
 

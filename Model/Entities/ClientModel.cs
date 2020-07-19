@@ -11,5 +11,6 @@ namespace Model.Entities
         public string _id { get; set; }
         public string host { get; set; }
         public string invitationRoute { get; set; }
+        public string recoverRoute { get; set; }
     }
 }

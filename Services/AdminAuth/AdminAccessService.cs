@@ -16,6 +16,8 @@ using Microsoft.AspNetCore.WebUtilities;
 using Services.Paginator;
 using Model.View_Model;
 using Services.UtilityService;
+using RazorLight;
+using System.IO;
 
 namespace Services.AdminAuth
 {
@@ -96,17 +98,28 @@ namespace Services.AdminAuth
             var receiverRoute = clientDetails.host + clientDetails.invitationRoute;
 
             string invitationToken = _tokenGenerator.generateToken(restaurantModel, _jwtSetting.invitationKey, 48);
-            VerificationMailSender(restaurantModel.email, "Invitation Link", invitationToken, receiverRoute);
+            var emailModel = new EmailTemplateModel() {
+                text ="Welcome to Restaurant Management service! You are now authorized to create an account for your restaurant. Click the button below to continue. Thank you.",
+                buttonText = "Register Now",
+                link = receiverRoute
+            };
+            VerificationMailSender(restaurantModel.email, "Invitation Link", invitationToken, emailModel);
         }
-        public void VerificationMailSender(string emailTo, string subject, string token, string url)
+        public async void VerificationMailSender(string emailTo, string subject, string token, EmailTemplateModel emailTemplateModel)
         {
             var parameter = new Dictionary<string, string>() { { "token", token } };
-            var requestUrl = new Uri(QueryHelpers.AddQueryString(url, parameter));
+            var requestUrl = new Uri(QueryHelpers.AddQueryString(emailTemplateModel.link, parameter));
+
+            emailTemplateModel.link = requestUrl.ToString();
+
+            var templateFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "EmailTemplates");
+            var engine = new RazorLightEngineBuilder().UseFileSystemProject(templateFolderPath).UseMemoryCachingProvider().Build();
+            string template = await engine.CompileRenderAsync("EmailTemplate.cshtml", emailTemplateModel);
 
             MailModel mailModel = new MailModel
             {
                 To = emailTo,
-                MessageBody = requestUrl.ToString(),
+                MessageBody = template,
                 Subject = subject
             };
             _mailSender.sendMail(mailModel);

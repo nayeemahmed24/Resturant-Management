@@ -14,7 +14,7 @@ using Services.OrderService;
 
 namespace Resturant_Management.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("v1/[controller]")]
     [ApiController]
     [Authorize(Roles = Role.User)]
     public class OrderController : ControllerBase
@@ -61,7 +61,6 @@ namespace Resturant_Management.Controllers
                 var res = await _orderService.ActiveOrders(userId);
                 if (res != null)
                 {
-
                     var resul = _exceptionModelGenerator.setData<List<Order>>(false, "Ok", res);
                     return StatusCode(201, resul);
                 }
