@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using JWT_Token;
 using JWT_Token.Configurations;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.WebUtilities;
 using Model;
 using Model.Entities;
 using Model.Input_Model;
@@ -17,6 +19,7 @@ using Services.Email;
 using Services.FileUploadService;
 using Services.Helper_Services;
 using Services.UtilityService;
+using RazorLight;
 
 namespace Services.UserServices
 {
@@ -30,6 +33,7 @@ namespace Services.UserServices
         private IMailSender _mailSender;
         private IRoutes _routes;
         private IFileUploadService _fileUploadService;
+     
         public UserAccessService(IFileUploadService fileUploadService,IRoutes routes,IMailSender mailSender,ITokenGenerator tokenGenerator,IMongoRepository repository,IPasswordManager passwordManager,CustomTokenValidator customTokenValidator,IJwtSetting jwtSetting)
         {
             _fileUploadService = fileUploadService;
@@ -40,7 +44,6 @@ namespace Services.UserServices
             _repository = repository;
             _jwtSetting = jwtSetting;
             _passwordManager = passwordManager;
-
         }
         public ClaimsPrincipal ValidateMailVerifyToken(string token)
         {
@@ -148,13 +151,21 @@ namespace Services.UserServices
             return await _repository.GetItemAsync<RestaurantModel>(d => d.email == email);
         }
 
-        public void VerificationMailSender(string emailTo, string subject, string token, string api)
+        public async void VerificationMailSender(string emailTo, string subject, string token,EmailTemplateModel emailTemplateModel)
         {
-            String link = api + token;
+            var parameter = new Dictionary<string, string>() { { "token", token } };
+            var requestUrl = new Uri(QueryHelpers.AddQueryString(emailTemplateModel.link, parameter));
+
+            emailTemplateModel.link = requestUrl.ToString();
+
+            var templateFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "EmailTemplates");
+            var engine = new RazorLightEngineBuilder().UseFileSystemProject(templateFolderPath).UseMemoryCachingProvider().Build();
+            string result = await engine.CompileRenderAsync("EmailTemplate.cshtml", emailTemplateModel);
+
             MailModel mailModel = new MailModel
             {
                 To = emailTo,
-                MessageBody = link,
+                MessageBody = result,
                 Subject = subject
             };
             _mailSender.sendMail(mailModel);
@@ -177,15 +188,15 @@ namespace Services.UserServices
             tokenModel.token = token;
             return tokenModel;
         }
-        public ImageDataModel ImagePath(RestaurantModel restaurantModel)
+        public ImageDataModel ImagePath(string imageName)
         {
             string fileType = "jpg";
             string file = "";
-            if (restaurantModel.logo != null)
+            if (imageName != null)
             {
 
-                fileType = getExtension(restaurantModel.logo);
-                file = Path.Combine(Directory.GetCurrentDirectory(), _routes.StaticDir, restaurantModel.logo);
+                fileType = getExtension(imageName);
+                file = Path.Combine(Directory.GetCurrentDirectory(), _routes.StaticDir, imageName);
 
             }
             bool s = File.Exists(file);
@@ -245,7 +256,7 @@ namespace Services.UserServices
             user.logo = path;
             Update(user);
 
-            var imageData = ImagePath(user);
+            var imageData = ImagePath(user.logo);
 
             return imageData;
         }
@@ -256,7 +267,7 @@ namespace Services.UserServices
             user.backgroundImage = path;
             Update(user);
 
-            var imageData = ImagePath(user);
+            var imageData = ImagePath(user.backgroundImage);
 
             return imageData;
         }
@@ -265,6 +276,23 @@ namespace Services.UserServices
             var user = GetUser(id);
 
             await UpdateResturant(restaurantUpdateModel, user);
+        }
+
+        public void SendRecoveryMail(string clientId,RestaurantModel restaurantModel)
+        {
+           
+            string oneTimeToken = GetPasswordRecoverToken(restaurantModel);
+            var clientData = GetClientInfo(clientId);
+            string redirectionRoute = clientData.host + clientData.recoverRoute;
+            var emailModel = new EmailTemplateModel()
+            { 
+                text = "This mail is from Restaurant Management system. Click the below button to reset your password", 
+                buttonText = "Reset Password", 
+                link =redirectionRoute
+            };
+        
+
+            VerificationMailSender(restaurantModel.email, "Reset Your Password", oneTimeToken,emailModel);
         }
 
         public string GetUniqueId()
@@ -308,6 +336,10 @@ namespace Services.UserServices
                 return false;
             }
             return true;
+        }
+        public ClientModel GetClientInfo(string clientId)
+        {
+            return _repository.GetItem<ClientModel>(c => c._id == clientId);
         }
     }
 }

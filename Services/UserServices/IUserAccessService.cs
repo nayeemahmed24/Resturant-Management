@@ -19,11 +19,13 @@ namespace Services.UserServices
         public TokenModel GetAuthenticationToken(RestaurantModel user);
         public  Task<RestaurantModel> GetUserByEmail(string email);
         public string GetPasswordRecoverToken(RestaurantModel userModel);
-        public void VerificationMailSender(string emailTo, string subject, string token, string api);
+        public void VerificationMailSender(string emailTo, string subject, string token, EmailTemplateModel emailTemplateModel);
         public string ResetPasswordVerification(string token);
+        public void SendRecoveryMail(string clientId, RestaurantModel restaurantModel);
+        public ClientModel GetClientInfo(string clientId);
         public RestaurantModel GetUser(string Id);
         public  Task<bool> Update(RestaurantModel user);
-        public ImageDataModel ImagePath(RestaurantModel restaurantModel);
+        public ImageDataModel ImagePath(string imageName);
         public  Task<RestaurantModel> UpdateResturant(RestaurantUpdateModel user, RestaurantModel userModel);
         public  Task<ImageDataModel> UpdateImage(PhotoUpdate photoUpdate, RestaurantModel user);
         public void ResetPassword(string id, RestaurantUpdateModel userUpdateModel);

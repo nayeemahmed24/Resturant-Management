@@ -110,8 +110,6 @@ namespace Resturant_Management.Controllers
             }
         }
 
-
-
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Authenticate([FromBody]AuthenticateModel authenticateModel)
@@ -146,18 +144,18 @@ namespace Resturant_Management.Controllers
             }
 
         }
+
         [HttpPost("recover")]
         [AllowAnonymous]
-        public async Task<IActionResult> RecoverPassword(RestaurantUpdateModel userUpdateModel)
+        public async Task<IActionResult> RecoverPassword(RecoveryModel recoveryModel)
         {
             try
             {
 
-                var user = await _accessService.GetUserByEmail(userUpdateModel.email);
+                var user = _accessService.GetUserByUsername(recoveryModel.username);
                 if (user != null)
                 {
-                    string oneTimeToken = _accessService.GetPasswordRecoverToken(user);
-                    _accessService.VerificationMailSender(user.email, "Reset Your Password", oneTimeToken, _routes.RecoverPassword);
+                    _accessService.SendRecoveryMail(recoveryModel.clientId, user);
                     return StatusCode(307, _exceptionModelGenerator.setData<RestaurantUpdateModel>(false, "MAIL_SENT", null));
                 }
                 else
@@ -171,52 +169,44 @@ namespace Resturant_Management.Controllers
             }
         }
 
-        [HttpGet("recover/{token}")]
+        [HttpPost("reset")]
         [AllowAnonymous]
-        public IActionResult SetNewPassword(string token)
+        public IActionResult ResetPassword(RecoveryModel recoveryModel)
         {
-            string route = _routes.ResetRoute + token;
-            return Redirect(route);
+            try
+            {
+                if (recoveryModel.token != null)
+                {
+                    string userId = _accessService.ResetPasswordVerification(recoveryModel.token);
+                    if (userId != null)
+                    {
+                        var user = _accessService.GetUser(userId);
+                        if (user != null)
+                        {
+                            user.password = recoveryModel.password;
+                            _accessService.Update(user);
+                            return StatusCode(200, _exceptionModelGenerator.setData<RestaurantUpdateModel>(false, "Ok", null));
+                        }
+                        else
+                        {
+                            return StatusCode(404, _exceptionModelGenerator.setData<RestaurantUpdateModel>(true, "NOT_FOUND", null));
+                        }
+                    }
+                    else
+                    {
+                        return StatusCode(404, _exceptionModelGenerator.setData<RestaurantUpdateModel>(true, "NOT_FOUND", null));
+                    }
+                }
+                else
+                {
+                    return StatusCode(401, _exceptionModelGenerator.setData<RestaurantUpdateModel>(true, "UNAUTHORIZED", null));
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(401, _exceptionModelGenerator.setData<RestaurantUpdateModel>(true, e.Message, null));
+            }
         }
-
-        //[HttpPost("reset")]
-        //[AllowAnonymous]
-        //public IActionResult ResetPassword(RestaurantUpdateModel userUpdateModel)
-        //{
-        //    try
-        //    {
-        //        if (userUpdateModel.invitationToken != null)
-        //        {
-        //            string userId = _accessService.ResetPasswordVerification(userUpdateModel.invitationToken);
-        //            if (userId != null)
-        //            {
-        //                var user = _accessService.GetUser(userId);
-        //                if (user != null)
-        //                {
-        //                    user.password = userUpdateModel.password;
-        //                    _accessService.Update(user);
-        //                    return StatusCode(200, _exceptionModelGenerator.setData<RestaurantUpdateModel>(false, "Ok", null));
-        //                }
-        //                else
-        //                {
-        //                    return StatusCode(404, _exceptionModelGenerator.setData<RestaurantUpdateModel>(true, "NOT_FOUND", null));
-        //                }
-        //            }
-        //            else
-        //            {
-        //                return StatusCode(404, _exceptionModelGenerator.setData<RestaurantUpdateModel>(true, "NOT_FOUND", null));
-        //            }
-        //        }
-        //        else
-        //        {
-        //            return StatusCode(401, _exceptionModelGenerator.setData<RestaurantUpdateModel>(true, "UNAUTHORIZED", null));
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return StatusCode(401, _exceptionModelGenerator.setData<RestaurantUpdateModel>(true, e.Message, null));
-        //    }
-        //}
 
 
     }

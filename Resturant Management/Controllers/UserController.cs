@@ -99,7 +99,7 @@ namespace Resturant_Management.Controllers
                     return StatusCode(204, _exceptionModelGenerator.setData<RestaurantModel>(true, "NOT_FOUND", null));
                 }
 
-                var fileData = _userAccessService.ImagePath(user);
+                var fileData = _userAccessService.ImagePath(user.logo);
 
                 var b = PhysicalFile(fileData.path, "image/" + fileData.Imagetype);
 
