@@ -15,6 +15,8 @@ namespace Services.TableServices
         public Task<List<Table>> GetChildTableListByTableCategoryId(string tableCategoryId);
         public  Task<List<TableCategory>> GetBaseCategory( string resturantId);
         public Task<List<TableCategory>> GetChildTableCategoryListByTableCategoryId(string ParentTableCategoryId);
+        public Task DeleteCategory(string id);
+        public  Task DeleteTableWithAll(string id);
 
     }
 }

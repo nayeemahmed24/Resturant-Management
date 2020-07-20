@@ -81,15 +81,14 @@ namespace Resturant_Management.Controllers
                 return StatusCode(500, result);
             }
         }
-        [HttpGet("baseTableCategory")]
+        [HttpGet("baseTableCategory/{resturantid}")]
         [AllowAnonymous]
-        public async Task<IActionResult> BaseCategory()
+        public async Task<IActionResult> BaseCategory(string resturantid)
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            var restaurantId = identity.FindFirst(Claims.UserId)?.Value;
+            
             try
             {
-                var tableRes = await _tableService.GetBaseCategory(restaurantId);
+                var tableRes = await _tableService.GetBaseCategory(resturantid);
                 if (tableRes != null)
                 {
                     var sort = await _sortService.FindSortUsingParentId("tablebase");
@@ -228,11 +227,43 @@ namespace Resturant_Management.Controllers
                     }
                 }
                 var result = _exceptionModelGenerator.setData<SortOrder>(true, "Ok", null);
-                return StatusCode(500, result);
+                return StatusCode(400, result);
             }
             catch (Exception e)
             {
-                var reslt = _exceptionModelGenerator.setData<SortOrder>(true, "Ok", null);
+                var reslt = _exceptionModelGenerator.setData<SortOrder>(true, e.Message, null);
+                return StatusCode(500, reslt);
+            }
+        }
+
+        [HttpGet("delete/{categoryid}")]
+        public async Task<IActionResult> Delete(string categoryid)
+        {
+            try
+            {
+                await _tableService.DeleteCategory(categoryid);
+                var result = _exceptionModelGenerator.setData<string>(false, "Sucess", null);
+                return StatusCode(201, result);
+            }
+            catch (Exception e)
+            {
+                var reslt = _exceptionModelGenerator.setData<SortOrder>(true, e.Message, null);
+                return StatusCode(500, reslt);
+            }
+        }
+
+        [HttpGet("delete/{tableid}")]
+        public async Task<IActionResult> DeleteTable(string tableid)
+        {
+            try
+            {
+                await _tableService.DeleteTableWithAll(tableid);
+                var result = _exceptionModelGenerator.setData<string>(false, "Sucess", null);
+                return StatusCode(201, result);
+            }
+            catch (Exception e)
+            {
+                var reslt = _exceptionModelGenerator.setData<SortOrder>(true, e.Message, null);
                 return StatusCode(500, reslt);
             }
         }

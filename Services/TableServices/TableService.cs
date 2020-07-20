@@ -89,8 +89,8 @@ namespace Services.TableServices
                     {
                         return null;
                     }
-
                     table.Id = Guid.NewGuid().ToString();
+                    await _sortService.AddSort(table.TableCategoryId, table.Id, true);
                     await _repository.SaveAsync<Table>(table);
                     return table;
                 }
@@ -166,6 +166,119 @@ namespace Services.TableServices
             return await _repository.GetItemAsync<Table>(d => d.Id == Id);
         }
 
+        public async Task DeleteTable(string Id)
+        {
+            await _repository.DeleteAsync<Table>(d => d.Id == Id);
+        }
+        public async Task DeleteTableCategory(string Id)
+        {
+            await _repository.DeleteAsync<TableCategory>(d => d.Id == Id);
+        }
+
+        public async Task DeleteCategory(string id)
+        {
+            var Category = await FindTableCategoryById(id);
+            if (Category != null)
+            {
+                string parent;
+                if (Category.ParentId == null)
+                {
+                    parent = "tablebase";
+                }
+                else
+                {
+                    parent = Category.ParentId;
+                }
+                // List Theke out
+                if (parent != null)
+                {
+                    var sort = await _sortService.FindSortUsingParentId(parent);
+                    if (sort != null)
+                    {
+                        if (sort.SortList != null)
+                        {
+                            sort.SortList.Remove(Category.Id);
+                        }
+
+                        var UpSort = await _sortService.EditSort(sort);
+                    }
+                }
+
+                await Delete(Category.Id);
+                var delsort = await _sortService.FindSortUsingParentId(Category.Id);
+                if (delsort != null)
+                {
+                    await DeleteRec(delsort.ParentId);
+                }
+
+            }
+
+        }
+        public async Task DeleteTableWithAll(string id)
+        {
+            var table = await FindTableById(id);
+            if (table != null)
+            {
+                // List Theke out
+                if (table.TableCategoryId != null)
+                {
+                    var sort = await _sortService.FindSortUsingParentId(table.TableCategoryId);
+                    if (sort != null)
+                    {
+                        if (sort.SortList != null)
+                        {
+                            sort.SortList.Remove(table.Id);
+                        }
+
+                        var UpSort = await _sortService.EditSort(sort);
+                    }
+                }
+
+                await Delete(table.Id);
+            }
+        }
+        public async Task DeleteRec(string sortid)
+        {
+            var sorts = await _sortService.FindSortUsingParentId(sortid);
+            if (sorts != null)
+            {
+
+                foreach (var child in sorts.SortList)
+                {
+                    var unit = await _sortService.FindSortUsingParentId(child);
+                    if (unit != null)
+                    {
+                        await DeleteRec(child);
+                    }
+                    else
+                    {
+                        await Delete(child);
+                    }
+
+                }
+
+                await Delete(sortid);
+                await _sortService.DeleteSort(sorts);
+
+            }
+        }
+
+        private async Task Delete(string id)
+        {
+            var table = await FindTableById(id);
+            if (table != null)
+            {
+                await DeleteTable(id);
+            }
+            else
+            {
+                var cat = await FindTableCategoryById(id);
+                if (cat != null)
+                {
+                    await DeleteTableCategory(id);
+                }
+            }
+        }
 
     }
 }

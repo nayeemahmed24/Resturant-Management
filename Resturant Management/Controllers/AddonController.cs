@@ -161,7 +161,7 @@ namespace Resturant_Management.Controllers
         {
             try
             {
-                var res = _addonService.FindBaseAddonCategory(resturantid);
+                var res = await _addonService.FindBaseAddonCategory(resturantid);
                 if (res != null)
                 {
                     var resul = _exceptionModelGenerator.setData<List<AddonCategory>>(false, "Ok", res);

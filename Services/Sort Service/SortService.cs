@@ -74,6 +74,11 @@ namespace Services.Sort_Service
             return await _repository.GetItemAsync<SortOrder>(d => d.ParentId == parentId);
        }
 
+
+       public async Task DeleteSort(SortOrder sort)
+       {
+           await _repository.DeleteAsync<SortOrder>(d => d.Id == sort.Id);
+       }
        public List<MenuCatergory> SortCategory(SortOrder sort, List<MenuCatergory> catergories)
        {
            var res = new List<MenuCatergory>();
