@@ -45,12 +45,11 @@ namespace Resturant_Management.Controllers
                     return StatusCode(201, resul);
                 }
 
-                var result = _exceptionModelGenerator.setData<Table>(true, "Ok", null);
-                return StatusCode(500, result);
+                var result = _exceptionModelGenerator.setData<Table>(true, "Bad request", null);
+                return StatusCode(400, result);
             }
             catch (Exception e)
             {
-
                 var result = _exceptionModelGenerator.setData<TableCategory>(true, e.Message, null);
                 return StatusCode(500, result);
             }
@@ -71,8 +70,8 @@ namespace Resturant_Management.Controllers
                     return StatusCode(201, resul);
                 }
 
-                var result = _exceptionModelGenerator.setData<Table>(true, "Ok", null);
-                return StatusCode(500, result);
+                var result = _exceptionModelGenerator.setData<Table>(true, "Bad request", null);
+                return StatusCode(400, result);
             }
             catch (Exception e)
             {
@@ -98,8 +97,8 @@ namespace Resturant_Management.Controllers
                     return StatusCode(201, resul);
                 }
 
-                var result = _exceptionModelGenerator.setData<List<TableCategory>>(true, "Ok", null);
-                return StatusCode(500, result);
+                var result = _exceptionModelGenerator.setData<List<TableCategory>>(true, "No data", null);
+                return StatusCode(404, result);
             }
             catch (Exception e)
             {
@@ -124,8 +123,8 @@ namespace Resturant_Management.Controllers
                     return StatusCode(201, resul);
                 }
 
-                var result = _exceptionModelGenerator.setData<List<TableCategory>>(true, "Ok", null);
-                return StatusCode(500, result);
+                var result = _exceptionModelGenerator.setData<List<TableCategory>>(true, "No data", null);
+                return StatusCode(404, result);
             }
             catch (Exception e)
             {
@@ -151,7 +150,7 @@ namespace Resturant_Management.Controllers
                 }
 
                 var result = _exceptionModelGenerator.setData<List<Table>>(true, "Ok", null);
-                return StatusCode(500, result);
+                return StatusCode(400, result);
             }
             catch (Exception e)
             {
@@ -183,8 +182,8 @@ namespace Resturant_Management.Controllers
                 var result = _exceptionModelGenerator.setData<Table>(true, e.Message, null);
                 return StatusCode(500, result);
             }
-
         }
+
         [HttpPut("edittable")]
         public async Task<IActionResult> EditTable(Table table)
         {
@@ -228,7 +227,7 @@ namespace Resturant_Management.Controllers
                     }
                 }
                 var result = _exceptionModelGenerator.setData<SortOrder>(true, "Ok", null);
-                return StatusCode(500, result);
+                return StatusCode(400, result);
             }
             catch (Exception e)
             {
