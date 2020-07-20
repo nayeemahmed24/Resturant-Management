@@ -236,7 +236,7 @@ namespace Resturant_Management.Controllers
             }
         }
 
-        [HttpGet("delete/{categoryid}")]
+        [HttpGet("deletecategory/{categoryid}")]
         public async Task<IActionResult> Delete(string categoryid)
         {
             try

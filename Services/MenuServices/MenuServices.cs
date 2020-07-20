@@ -273,6 +273,120 @@ namespace Services.MenuServices
             return menu;
         }
 
+        public async Task DeleteMenuItem(string Id)
+        {
+            await _repository.DeleteAsync<MenuItem>(d => d.Id == Id);
+        }
+        public async Task DeleteCategory(string Id)
+        {
+            await _repository.DeleteAsync<MenuCatergory>(d => d.Id == Id);
+        }
+
+        public async Task DeleteMenuCategory(string id)
+        {
+            var Category = await FindCategoryById(id);
+            if (Category != null)
+            {
+                string parent;
+                if (Category.Parent == null)
+                {
+                    parent = "base";
+                }
+                else
+                {
+                    parent = Category.Parent;
+                }
+                // List Theke out
+                if (parent != null)
+                {
+                    var sort = await _sortService.FindSortUsingParentId(parent);
+                    if (sort != null)
+                    {
+                        if (sort.SortList != null)
+                        {
+                            sort.SortList.Remove(Category.Id);
+                        }
+
+                        var UpSort = await _sortService.EditSort(sort);
+                    }
+                }
+
+                await Delete(Category.Id);
+                var delsort = await _sortService.FindSortUsingParentId(Category.Id);
+                if (delsort != null)
+                {
+                    await DeleteRec(delsort.ParentId);
+                }
+
+            }
+
+        }
+        public async Task DeleteMenuWithAll(string id)
+        {
+            var table = await FindMenuItemById(id);
+            if (table != null)
+            {
+                // List Theke out
+                if (table.ParentId != null)
+                {
+                    var sort = await _sortService.FindSortUsingParentId(table.ParentId);
+                    if (sort != null)
+                    {
+                        if (sort.SortList != null)
+                        {
+                            sort.SortList.Remove(table.Id);
+                        }
+
+                        var UpSort = await _sortService.EditSort(sort);
+                    }
+                }
+
+                await Delete(table.Id);
+            }
+        }
+        public async Task DeleteRec(string sortid)
+        {
+            var sorts = await _sortService.FindSortUsingParentId(sortid);
+            if (sorts != null)
+            {
+
+                foreach (var child in sorts.SortList)
+                {
+                    var unit = await _sortService.FindSortUsingParentId(child);
+                    if (unit != null)
+                    {
+                        await DeleteRec(child);
+                    }
+                    else
+                    {
+                        await Delete(child);
+                    }
+
+                }
+
+                await Delete(sortid);
+                await _sortService.DeleteSort(sorts);
+
+            }
+        }
+
+        private async Task Delete(string id)
+        {
+            var table = await FindMenuItemById(id);
+            if (table != null)
+            {
+                await DeleteMenuItem(id);
+            }
+            else
+            {
+                var cat = await FindCategoryById(id);
+                if (cat != null)
+                {
+                    await DeleteCategory(id);
+                }
+            }
+        }
+
 
 
     }
