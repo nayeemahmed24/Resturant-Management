@@ -32,6 +32,13 @@ namespace Services.AddonServices
             return resAddon;
         }
 
+        public async Task<List<AddonCategory>> FindChildAddonCategoryById(string addonCategoryId)
+        {
+            var addonCategories = await _repository.GetItemsAsync<AddonCategory>(d => d.ParentId == addonCategoryId);
+            var list = addonCategories?.ToList();
+            return list;
+        }
+
         public async Task<AddonCategory> AddAddonCategory(AddonCategory addonCategory)
         {
             addonCategory.Id = Guid.NewGuid().ToString();
@@ -179,6 +186,69 @@ namespace Services.AddonServices
             }
 
             return null;
+        }
+
+        public async Task DeleteAddon(string addonid)
+        {
+            var addon = await FindAddonById(addonid);
+            if (addon != null)
+            {
+                await _repository.DeleteAsync<Addon>(d => d.Id == addonid);
+            }
+        }
+
+        public async Task DeleteAddonCategory(string addoncategoryid)
+        {
+            var addoncat = await FindAddonCategoryById(addoncategoryid);
+            if (addoncat != null)
+            {
+                await DeleteRec(addoncategoryid);
+            }
+        }
+        public async Task DeleteRec(string addonid)
+        {
+            var addons = await AllAddonChildByCategoryId(addonid);
+            await DelCat(addonid);
+            if (addons != null)
+            {
+                foreach (var addon in addons)
+                {
+                    await DeleteAddon(addon.Id);
+                }
+            }
+            else
+            {
+                var cats = await FindChildAddonCategoryById(addonid);
+                if (cats != null)
+                {
+                    foreach (var cat in cats)
+                    {
+                        await DeleteRec(cat.Id);
+                    }
+                }
+            }
+        }
+
+        private async Task Delete(string id)
+        {
+            var table = await FindAddonById(id);
+            if (table != null)
+            {
+                await DeleteAddon(id);
+            }
+            else
+            {
+                await DelCat(id);
+            }
+        }
+
+        private async Task DelCat(string id)
+        {
+            var cat = await FindAddonCategoryById(id);
+            if (cat != null)
+            {
+                await _repository.DeleteAsync<AddonCategory>(d => d.Id == cat.Id);
+            }
         }
         public async Task<AddonCategory> FindAddonCategoryById(string AddonCategortId)
         {

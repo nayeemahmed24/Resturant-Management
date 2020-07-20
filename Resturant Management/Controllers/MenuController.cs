@@ -290,6 +290,38 @@ namespace Resturant_Management.Controllers
         }
 
 
+        [HttpGet("deletecategory/{categoryid}")]
+        public async Task<IActionResult> Delete(string categoryid)
+        {
+            try
+            {
+                await _menuServices.DeleteMenuCategory(categoryid);
+                var result = _exceptionModelGenerator.setData<string>(false, "Sucess", null);
+                return StatusCode(201, result);
+            }
+            catch (Exception e)
+            {
+                var reslt = _exceptionModelGenerator.setData<SortOrder>(true, e.Message, null);
+                return StatusCode(500, reslt);
+            }
+        }
+
+        [HttpGet("delete/{tableid}")]
+        public async Task<IActionResult> DeleteTable(string tableid)
+        {
+            try
+            {
+                await _menuServices.DeleteMenuWithAll(tableid);
+                var result = _exceptionModelGenerator.setData<string>(false, "Sucess", null);
+                return StatusCode(201, result);
+            }
+            catch (Exception e)
+            {
+                var reslt = _exceptionModelGenerator.setData<SortOrder>(true, e.Message, null);
+                return StatusCode(500, reslt);
+            }
+        }
+
         // MenuItem with all Addon List
         // In View Model = MenuItemDetails
 

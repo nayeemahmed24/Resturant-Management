@@ -20,6 +20,8 @@ namespace Services.MenuServices
         public Task<MenuItem> ChangeAvailableStatus(MenuItemInput menu);
         public  Task<MenuItem> FindMenuItemById(string itemId);
         public  Task<MenuItem> UpdateMenuByMenuItem(MenuItem menu);
+        public Task DeleteMenuCategory(string id);
+        public  Task DeleteMenuWithAll(string id);
 
 
     }
