@@ -251,10 +251,11 @@ namespace Services.UserServices
 
         public async Task<ImageDataModel> UpdateImage(PhotoUpdate photoUpdate, RestaurantModel user)
         {
+            await _fileUploadService.DeleteImage(user.logo);
             var path = await _fileUploadService.UploadSingleFile(photoUpdate.profilePhoto, FIleDirectories.ImageDir);
 
             user.logo = path;
-            Update(user);
+            await Update(user);
 
             var imageData = ImagePath(user.logo);
 
@@ -262,10 +263,11 @@ namespace Services.UserServices
         }
         public async Task<ImageDataModel> UpdateBackgroudImage(PhotoUpdate photoUpdate, RestaurantModel user)
         {
+            await _fileUploadService.DeleteImage(user.logo);
             var path = await _fileUploadService.UploadSingleFile(photoUpdate.profilePhoto, FIleDirectories.ImageDir);
 
             user.backgroundImage = path;
-            Update(user);
+            await Update(user);
 
             var imageData = ImagePath(user.backgroundImage);
 
