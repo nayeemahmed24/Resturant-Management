@@ -9,7 +9,8 @@ namespace Payment_System.Service
 {
     public class PaymentSevice:IPaymentService
     {
-        public async Task<dynamic> MakePayment(PaymentInputModel pm)
+        
+        public async Task<bool> MakePayment(PaymentInputModel pm)
         {
             try
             {
@@ -39,16 +40,16 @@ namespace Payment_System.Service
 
                 if (charge.Paid)
                 {
-                    return "Success";
+                    return true;
                 }
                 else
                 {
-                    return "Failed";
+                    return false;
                 }
             }
             catch(Exception e)
             {
-                return e.Message;
+                return false;
             }
         }
     }

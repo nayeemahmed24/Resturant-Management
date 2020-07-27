@@ -34,6 +34,18 @@ namespace Services.OrderService
 
             return null;
         }
+        public async Task<Order> makePayment(String orderId)
+        {
+            if (orderId != null)
+            {
+                var order = await FindOrderbyId(orderId);
+                order.Paid = true;
+                await _repository.UpdateAsync<Order>(d => d.Id == order.Id, order);
+                return order;
+            }
+
+            return null;
+        }
 
 
         public async Task<OrderDetail> GetFullOrder(string orderId)

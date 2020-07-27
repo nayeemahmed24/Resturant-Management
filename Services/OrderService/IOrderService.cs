@@ -12,5 +12,6 @@ namespace Services.OrderService
         public  Task<Order> makeOrder(Order order);
         public Task<List<Order>> ActiveOrders(string ResturantId);
         public Task<OrderDetail> GetFullOrder(string orderId);
+        public Task<Order> makePayment(String orderId);
     }
 }
