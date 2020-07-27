@@ -8,8 +8,8 @@ namespace Model.Input_Model
     public class AssignAddon
     {
         [Required]
-        public string MenuItemId { get; set; }
+        public string ItemId { get; set; }
         [Required]
-        public string AddonId { get; set; }
+        public string AddonCategoryId { get; set; }
     }
 }
