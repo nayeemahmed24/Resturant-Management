@@ -20,7 +20,8 @@ namespace Services.AddonServices
         public Task<AddonCategory> FindAddonCategoryById(string AddonCategortId);
         public Task<List<Addon>> AllAddonChildByCategoryId(string CategoryId);
         public Task<List<AddonCategory>> FindBaseAddonCategory(string resturantId);
-
+        public Task DeleteAddon(string addonid);
+        public Task DeleteAddonCategory(string addoncategoryid);
 
     }
 }

@@ -21,6 +21,14 @@ namespace Services.FileUploadService
             _storagePathService = storagePathService;
         }
 
+        public async Task DeleteImage(string imagePath)
+        {
+            var filePath = imagePath;
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+        }
         public async Task<string> UploadSingleFile(IFormFile file, string imagePath)
         {
             string storagePath = _storagePathService.SetFilePath(imagePath);
@@ -60,5 +68,6 @@ namespace Services.FileUploadService
     public interface IFileUploadService
     {
         public Task<string> UploadSingleFile(IFormFile file, string imagePath);
+        public Task DeleteImage(string imagePath);
     }
 }

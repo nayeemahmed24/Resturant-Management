@@ -164,10 +164,10 @@ namespace Resturant_Management.Controllers
             var resturantid = identity.FindFirst(Claims.UserId)?.Value;
             try
             {
-                var res = _addonService.FindBaseAddonCategory(resturantid);
+                var res = await _addonService.FindBaseAddonCategory(resturantid);
                 if (res != null)
                 {
-                    var resul = _exceptionModelGenerator.setData<List<AddonCategory>>(false, "Ok", res.Result);
+                    var resul = _exceptionModelGenerator.setData<List<AddonCategory>>(false, "Ok", res);
                     return StatusCode(201, resul);
                 }
 
@@ -233,6 +233,36 @@ namespace Resturant_Management.Controllers
             }
         }
 
+        [HttpGet("delete/{addonid}")]
+        public async Task<IActionResult> DeleteAddon(string addonid)
+        {
+            try
+            {
+                await _addonService.DeleteAddon(addonid);
+                var resul = _exceptionModelGenerator.setData<string>(false, "Success", null);
+                return StatusCode(201, resul);
+
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, _exceptionModelGenerator.setData<List<Addon>>(true, e.Message, null));
+            }
+        }
+        [HttpGet("deleteCategory/{addoncategoryid}")]
+        public async Task<IActionResult> DeleteAddonCategory(string addoncategoryid)
+        {
+            try
+            {
+                await _addonService.DeleteAddonCategory(addoncategoryid);
+                var resul = _exceptionModelGenerator.setData<string>(false, "Success", null);
+                return StatusCode(201, resul);
+
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, _exceptionModelGenerator.setData<List<Addon>>(true, e.Message, null));
+            }
+        }
 
         [HttpGet("MenuItemAddon/{itemid}")]
         public async Task<IActionResult> MenuItemAddons(string itemid)

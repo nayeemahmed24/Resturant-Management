@@ -14,6 +14,7 @@ namespace Services.Sort_Service
         public List<MenuCatergory> SortCategory(SortOrder sort, List<MenuCatergory> catergories);
         public List<MenuItem> SortItems(SortOrder sort, List<MenuItem> menuItems);
         public List<TableCategory> SortTableCategories(SortOrder sort, List<TableCategory> menuItems);
+        public  Task DeleteSort(SortOrder sort);
 
 
     }
