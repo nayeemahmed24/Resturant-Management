@@ -80,14 +80,15 @@ namespace Resturant_Management.Controllers
                 return StatusCode(500, result);
             }
         }
-        [HttpGet("baseTableCategory/{resturantid}")]
+        [HttpGet("baseTableCategory")]
         [AllowAnonymous]
-        public async Task<IActionResult> BaseCategory(string resturantid)
+        public async Task<IActionResult> BaseCategory()
         {
-            
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(Claims.UserId)?.Value;
             try
             {
-                var tableRes = await _tableService.GetBaseCategory(resturantid);
+                var tableRes = await _tableService.GetBaseCategory(userId);
                 if (tableRes != null || tableRes.Count!=0)
                 {
                     var sort = await _sortService.FindSortUsingParentId("tablebase");
