@@ -100,6 +100,7 @@ namespace Services.MenuServices
             menuItem.Price = menu.Price;
             menuItem.description = menu.description;
             menuItem.ItemType = menu.ItemType;
+            menuItem.AddonCategories = menu.AddonCategories;
             
 
             await _repository.UpdateAsync<MenuItem>(d => d.Id == menuItem.Id, menuItem);
@@ -198,6 +199,7 @@ namespace Services.MenuServices
                 Price = menuItemInput.Price,
                 description = menuItemInput.description,
                 ItemType = menuItemInput.ItemType,
+                AddonCategories = menuItemInput.AddonCategories,
                 Available = true
             };
             if (menuItemInput.ParentId != null)

@@ -15,13 +15,13 @@ namespace Model.Input_Model
         public string Id { get; set; }
         [Required]
         public string ItemTitle { get; set; }
-
         [Required]
         public double Price { get; set; }
         public string description { get; set; }
         public string ItemType { get; set; }
         [Required]
         public String ParentId { get; set; }
+        public List<string> AddonCategories { get; set; }
         public String ResturantId { get; set; }
 
     }
