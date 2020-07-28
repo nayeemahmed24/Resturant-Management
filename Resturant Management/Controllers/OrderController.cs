@@ -9,7 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 using Model;
 using Model.Entities;
 using Model.Error_Handler;
+using Model.Input_Model;
 using Model.View_Model;
+using Payment_System.Model;
+using Payment_System.Service;
 using Services.OrderService;
 
 namespace Resturant_Management.Controllers
@@ -21,10 +24,44 @@ namespace Resturant_Management.Controllers
     {
         private IExceptionModelGenerator _exceptionModelGenerator;
         private IOrderService _orderService;
-        public OrderController(IOrderService orderService,IExceptionModelGenerator exceptionModelGenerator)
+        //Test Payment
+        private IPaymentService _paymentService;
+        public OrderController( IPaymentService paymentService,IOrderService orderService,IExceptionModelGenerator exceptionModelGenerator)
         {
+            _paymentService = paymentService;
             _orderService = orderService;
             _exceptionModelGenerator = exceptionModelGenerator;
+        }
+
+
+
+        [HttpGet("pay")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Pay(PaymentInputModel pm)
+        {
+            
+            try
+            {
+
+                var res = await _paymentService.MakePayment(pm);
+                if (res)
+                {
+                    var order = await _orderService.makePayment(pm.OrderId);
+                    if (order != null)
+                    {
+                        return StatusCode(201, _exceptionModelGenerator.setData<Order>(false, "Ok", order));
+
+                    }
+                }
+                return StatusCode(201, _exceptionModelGenerator.setData<Order>(true, "Ok", null));
+
+
+
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, _exceptionModelGenerator.setData<RestaurantInputModel>(true, e.Message, null));
+            }
         }
 
         [HttpPost("Order")]

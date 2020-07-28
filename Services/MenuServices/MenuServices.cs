@@ -122,7 +122,7 @@ namespace Services.MenuServices
             return await _repository.GetItemAsync<MenuItem>(d => d.Id == menu.Id);
         }
 
-        private async Task<MenuCatergory> FindCategoryById(string id)
+        public async Task<MenuCatergory> FindCategoryById(string id)
         {
             return await _repository.GetItemAsync<MenuCatergory>(d => d.Id == id);
         }
@@ -172,6 +172,7 @@ namespace Services.MenuServices
                 CategoryTitle = menuCategoryInput.CategoryTitle,
                 IsChildAvailable = false,
                 ItemAdded = false,
+                
                 
             };
             if (menuCategoryInput.ParentId != null)
@@ -343,6 +344,15 @@ namespace Services.MenuServices
 
                 await Delete(table.Id);
             }
+        }
+
+        public async Task AssignOnCategory(MenuCatergory menu)
+        {
+            await _repository.UpdateAsync<MenuCatergory>(d => d.Id == menu.Id, menu);
+        }
+        public async Task AssignOnItem(MenuItem menu)
+        {
+            await _repository.UpdateAsync<MenuItem>(d => d.Id == menu.Id, menu);
         }
         public async Task DeleteRec(string sortid)
         {

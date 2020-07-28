@@ -115,23 +115,31 @@ namespace Services.AddonServices
             return null;
         }
 
-        public async Task<MenuItem> AssignAddon(AssignAddon assignAddon)
+        public async Task<dynamic> AssignAddon(AssignAddon assignAddon)
         {
             if (assignAddon != null)
             {
-                var menu = await _menuServices.FindMenuItemById(assignAddon.MenuItemId);
-                if (menu != null)
+                var addonCat = await FindAddonCategoryById(assignAddon.AddonCategoryId);
+                if (addonCat != null)
                 {
-                    var addon = await FindAddonById(assignAddon.AddonId);
-                    if (addon != null)
+
+                    var catergory = await _menuServices.FindCategoryById(assignAddon.ItemId);
+                    if (catergory != null)
                     {
-                        if (menu.AddonsList == null)
+                        if(catergory.AddonCategories == null)catergory.AddonCategories = new List<string>();
+                        catergory.AddonCategories.Add(addonCat.Id);
+                        await _menuServices.AssignOnCategory(catergory);
+                        return catergory;
+                    }
+                    else
+                    {
+                        var menu = await _menuServices.FindMenuItemById(assignAddon.ItemId);
+                        if (menu != null)
                         {
-                            var list = new List<string>();
-                            list.Add(assignAddon.AddonId);
-                            menu.AddonsList = list;
-                            return await _menuServices.UpdateMenuByMenuItem(menu);
-                            
+                            if (menu.AddonCategories == null) menu.AddonCategories = new List<string>();
+                            menu.AddonCategories.Add(addonCat.Id);
+                            await _menuServices.AssignOnItem(menu);
+                            return menu;
                         }
                     }
                 }
@@ -140,6 +148,8 @@ namespace Services.AddonServices
             return null;
         }
 
+        
+        // Menu er Addon
         public async Task<List<Addon>> FindAddonByItemId(string ItemId)
         {
             var list = new List<Addon>();
@@ -148,24 +158,107 @@ namespace Services.AddonServices
                 var menu = await _menuServices.FindMenuItemById(ItemId);
                 if (menu != null)
                 {
-                    if (menu.AddonsList != null)
+                    if (menu.AddonCategories != null)
                     {
-                        if (menu.AddonsList.Count > 0)
+                        if (menu.AddonCategories.Count > 0)
                         {
-                            foreach (var id in menu.AddonsList)
+                            foreach (var id in menu.AddonCategories)
                             {
-                                var Addon = await FindAddonById(id);
-                                if(Addon!=null)list.Add(Addon);
+                                var Addon = await AllAddonChildByCategoryId(id);
+                                if (Addon != null)
+                                {
+                                    foreach (var addon in Addon)
+                                    {
+                                        list.Add(addon);
+                                    }
+                                }
                             }
                             
                         }
                     }
+
+                    if (menu.ParentId != null)
+                    {
+                        var Addon = await AllAddonOfParentCategories(menu.ParentId,null);
+                        if (Addon != null)
+                        {
+                            foreach (var addon in Addon)
+                            {
+                                list.Add(addon);
+                            }
+                        }
+                    }
+
                 }
             }
-
+        
             return list;
         }
 
+        // Category er Addon
+        private async Task<List<Addon>> AddonInMenuCategory(string categoryId)
+        {
+            List<Addon> list = new List<Addon>();
+            if (categoryId != null)
+            {
+                var category = await _menuServices.FindCategoryById(categoryId);
+                if (category != null)
+                {
+                    if (category.AddonCategories != null)
+                    {
+                        foreach (var catId in category.AddonCategories)
+                        {
+                            var addons = await AllAddonChildByCategoryId(catId);
+                            if (addons != null)
+                            {
+                                foreach (var addon in addons)
+                                {
+                                    list.Add(addon);
+                                }
+                            }
+                        }
+
+                        return list;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private async Task<List<Addon>> AllAddonOfParentCategories(string catId,List<Addon> addons)
+        {
+
+            if (catId != null)
+            {
+                List<Addon> list;
+                if (addons==null)
+                {
+                    addons = new List<Addon>();
+                }
+                var category = await _menuServices.FindCategoryById(catId);
+                list = await AddonInMenuCategory(catId);
+                if (list != null)
+                {
+                    foreach (var addon in list)
+                    {
+                        addons.Add(addon);
+                    }
+                }
+
+                List<Addon> res;
+                res = addons;
+                if (category.Parent != null)
+                {
+                     res = await AllAddonOfParentCategories(category.Parent, addons);
+                }
+                
+                return res;
+
+            }
+
+            return null;
+        }
 
         public async Task<Addon> FindAddonById(string AddonInputId)
         {

@@ -8,6 +8,6 @@ namespace Payment_System.Service
 {
     public interface IPaymentService
     {
-        public Task<dynamic> MakePayment(PaymentInputModel pm);
+        public Task<bool> MakePayment(PaymentInputModel pm);
     }
 }

@@ -17,6 +17,7 @@ namespace Model.Entities
         public string Parent { get; set; }
         [Required]
         public RestaurantModel Restaurant { get; set; }
+        public List<string> AddonCategories { get; set; }
         [DefaultValue(false)]
         public bool IsChildAvailable { get; set; }
         [DefaultValue(false)]

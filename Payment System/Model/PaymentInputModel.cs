@@ -15,5 +15,7 @@ namespace Payment_System.Model
         public string cvc { get; set; }
 
         public int value { get; set; }
+
+        public string OrderId { set; get; }
     }
 }

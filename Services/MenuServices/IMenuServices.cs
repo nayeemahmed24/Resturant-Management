@@ -22,7 +22,9 @@ namespace Services.MenuServices
         public  Task<MenuItem> UpdateMenuByMenuItem(MenuItem menu);
         public Task DeleteMenuCategory(string id);
         public  Task DeleteMenuWithAll(string id);
-
+        public Task<MenuCatergory> FindCategoryById(string id);
+        public Task AssignOnCategory(MenuCatergory menu);
+        public Task AssignOnItem(MenuItem menu);
 
     }
 }
