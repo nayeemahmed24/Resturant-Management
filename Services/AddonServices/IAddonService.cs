@@ -14,7 +14,7 @@ namespace Services.AddonServices
         public Task<Addon> UpdateAddon(AddonInput addonInput);
         public  Task<Addon> ChangeStatus(AddonInput addonInput);
         public Task<List<Addon>> AllAddonByResturantId(string resturantId);
-        public Task<MenuItem> AssignAddon(AssignAddon assignAddon);
+        public Task<dynamic> AssignAddon(AssignAddon assignAddon);
         public Task<List<Addon>> FindAddonByItemId(string ItemId);
         public Task<Addon> FindAddonById(string AddonInputId);
         public Task<AddonCategory> FindAddonCategoryById(string AddonCategortId);

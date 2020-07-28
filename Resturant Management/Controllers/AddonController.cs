@@ -181,6 +181,8 @@ namespace Resturant_Management.Controllers
             }
         }
 
+
+
         [HttpPost("assignaddon")]
         public async Task<IActionResult> AssigAddon(AssignAddon assignAddon)
         {
@@ -191,17 +193,17 @@ namespace Resturant_Management.Controllers
                     var res = await _addonService.AssignAddon(assignAddon);
                     if (res != null)
                     {
-                        var resul = _exceptionModelGenerator.setData<MenuItem>(false, "Ok", res);
+                        var resul = _exceptionModelGenerator.setData<dynamic>(false, "Ok", res);
                         return StatusCode(201, resul);
                     }
                     
                 }
-                var result = _exceptionModelGenerator.setData<MenuItem>(true, "Failed", null);
+                var result = _exceptionModelGenerator.setData<dynamic>(true, "Failed", null);
                 return StatusCode(400, result);
             }
             catch (Exception e)
             {
-                return StatusCode(500, _exceptionModelGenerator.setData<MenuItem>(true, e.Message, null));
+                return StatusCode(500, _exceptionModelGenerator.setData<dynamic>(true, e.Message, null));
             }
         }
 
@@ -271,13 +273,14 @@ namespace Resturant_Management.Controllers
             {
                 if (itemid != null)
                 {
-                    var list = await _addonService.FindAddonByItemId(itemid);
+                    var lists = await _addonService.FindAddonByItemId(itemid);
+                    var list = lists.Distinct().ToList();
                     if (list != null)
                     {
                         var resul = _exceptionModelGenerator.setData<List<Addon>>(false, "Ok", list);
                         return StatusCode(201, resul);
                     }
-
+        
                 }
                 var result = _exceptionModelGenerator.setData<List<Addon>>(true, "Failed", null);
                 return StatusCode(400, result);
