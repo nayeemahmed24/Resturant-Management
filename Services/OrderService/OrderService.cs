@@ -98,7 +98,7 @@ namespace Services.OrderService
                     {
                         foreach (var addons in menuItem.Addons)
                         {
-                            var addon = await _addonService.FindAddonById(addons.AddonId);
+                            var addon = await _addonService.FindAddonById(addons.Id);
                             if (addon != null)
                             {
                                 var resAddon = new AddonUnitView();
