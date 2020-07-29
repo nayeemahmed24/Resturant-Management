@@ -34,6 +34,41 @@ namespace Services.OrderService
 
             return null;
         }
+
+        public async Task<SoldQuantity> FindTotalSellByItemType(string itemType, string resturantId)
+        {
+            if (itemType != null && resturantId != null)
+            {
+                var result = new SoldQuantity();
+                result.ItemType = itemType;
+                result.Quantity = 0;result.TotalPrice = 0;
+                var Orders = await _repository.GetItemsAsync<Order>(d => d.ResturantId == resturantId);
+                if (Orders != null)
+                {
+                    foreach (var order in Orders)
+                    {
+                        var menuList = order.Items;
+                        foreach (var menu in menuList)
+                        {
+                            var or = menu.MenuItemId;
+                            var item = await _menuServices.FindMenuItemById(or);
+                            if (item.ItemType == itemType)
+                            {
+                                result.Quantity += menu.quantity;
+                                result.TotalPrice += menu.quantity * item.Price;
+                            }
+                        }
+                    }
+
+                    return result;
+                }
+
+                
+
+            }
+            return null;
+        }
+
         public async Task<Order> makePayment(String orderId)
         {
             if (orderId != null)
@@ -63,7 +98,14 @@ namespace Services.OrderService
             return null;
         }
 
-        public async Task<List<Order>> ActiveOrders(string ResturantId)
+        public async Task<List<Order>> ProcessingOrders(string ResturantId)
+        {
+            var res = await _repository.GetItemsAsync<Order>(d =>
+                d.ResturantId == ResturantId && d.Status == OrderStatus.Proccesing);
+            var list = res?.ToList();
+            return list;
+        }
+        public async Task<List<Order>> ReceivedOrders(string ResturantId)
         {
             var res = await _repository.GetItemsAsync<Order>(d =>
                 d.ResturantId == ResturantId && d.Status == OrderStatus.Received);
@@ -71,6 +113,36 @@ namespace Services.OrderService
             return list;
         }
 
+        public async Task<Order> MakeProcessing(string OrderId)
+        {
+            if (OrderId != null)
+            {
+                var order = await FindOrderbyId(OrderId);
+                if (order != null)
+                {
+                    order.Status = OrderStatus.Proccesing;
+                    await _repository.UpdateAsync<Order>(d => d.Id == order.Id, order);
+                    return order;
+                }
+            }
+
+            return null;
+        }
+        public async Task<Order> MakeReady(string OrderId)
+        {
+            if (OrderId != null)
+            {
+                var order = await FindOrderbyId(OrderId);
+                if (order != null)
+                {
+                    order.Status = OrderStatus.Ready;
+                    await _repository.UpdateAsync<Order>(d => d.Id == order.Id, order);
+                    return order;
+                }
+            }
+
+            return null;
+        }
         public async Task<Order> FindOrderbyId(string orderId)
         {
             return await _repository.GetItemAsync<Order>(d => d.Id == orderId);
