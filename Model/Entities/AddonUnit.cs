@@ -8,8 +8,7 @@ namespace Model.Entities
     public class AddonUnit
     {
         [Required]
-        public string AddonId { get; set; }
-        [Required]
+        public string Id { get; set; }
         public double Quantity { get; set; }
     }
 }

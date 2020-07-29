@@ -45,12 +45,11 @@ namespace Resturant_Management.Controllers
                     return StatusCode(201, resul);
                 }
 
-                var result = _exceptionModelGenerator.setData<Table>(true, "Ok", null);
-                return StatusCode(500, result);
+                var result = _exceptionModelGenerator.setData<Table>(true, "Bad request", null);
+                return StatusCode(400, result);
             }
             catch (Exception e)
             {
-
                 var result = _exceptionModelGenerator.setData<TableCategory>(true, e.Message, null);
                 return StatusCode(500, result);
             }
@@ -71,8 +70,8 @@ namespace Resturant_Management.Controllers
                     return StatusCode(201, resul);
                 }
 
-                var result = _exceptionModelGenerator.setData<Table>(true, "Ok", null);
-                return StatusCode(500, result);
+                var result = _exceptionModelGenerator.setData<Table>(true, "Bad request", null);
+                return StatusCode(400, result);
             }
             catch (Exception e)
             {
@@ -81,15 +80,16 @@ namespace Resturant_Management.Controllers
                 return StatusCode(500, result);
             }
         }
-        [HttpGet("baseTableCategory/{resturantid}")]
+        [HttpGet("baseTableCategory")]
         [AllowAnonymous]
-        public async Task<IActionResult> BaseCategory(string resturantid)
+        public async Task<IActionResult> BaseCategory()
         {
-            
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(Claims.UserId)?.Value;
             try
             {
-                var tableRes = await _tableService.GetBaseCategory(resturantid);
-                if (tableRes != null)
+                var tableRes = await _tableService.GetBaseCategory(userId);
+                if (tableRes != null || tableRes.Count!=0)
                 {
                     var sort = await _sortService.FindSortUsingParentId("tablebase");
                     tableRes = _sortService.SortTableCategories(sort, tableRes);
@@ -97,8 +97,8 @@ namespace Resturant_Management.Controllers
                     return StatusCode(201, resul);
                 }
 
-                var result = _exceptionModelGenerator.setData<List<TableCategory>>(true, "Ok", null);
-                return StatusCode(500, result);
+                var result = _exceptionModelGenerator.setData<List<TableCategory>>(true, "No data", null);
+                return StatusCode(404, result);
             }
             catch (Exception e)
             {
@@ -123,8 +123,8 @@ namespace Resturant_Management.Controllers
                     return StatusCode(201, resul);
                 }
 
-                var result = _exceptionModelGenerator.setData<List<TableCategory>>(true, "Ok", null);
-                return StatusCode(500, result);
+                var result = _exceptionModelGenerator.setData<List<TableCategory>>(true, "No data", null);
+                return StatusCode(404, result);
             }
             catch (Exception e)
             {
@@ -150,7 +150,7 @@ namespace Resturant_Management.Controllers
                 }
 
                 var result = _exceptionModelGenerator.setData<List<Table>>(true, "Ok", null);
-                return StatusCode(500, result);
+                return StatusCode(400, result);
             }
             catch (Exception e)
             {
@@ -182,8 +182,8 @@ namespace Resturant_Management.Controllers
                 var result = _exceptionModelGenerator.setData<Table>(true, e.Message, null);
                 return StatusCode(500, result);
             }
-
         }
+
         [HttpPut("edittable")]
         public async Task<IActionResult> EditTable(Table table)
         {

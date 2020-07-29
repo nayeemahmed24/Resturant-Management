@@ -53,8 +53,6 @@ namespace Services.AddonServices
 
         }
 
-
-
         public async Task<Addon> UpdateAddon(AddonInput addonInput)
         {
             var addon = await FindAddonById(addonInput.Id);

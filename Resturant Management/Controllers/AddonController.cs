@@ -37,7 +37,7 @@ namespace Resturant_Management.Controllers
             _exceptionModelGenerator = exceptionModelGenerator;
         }
 
-        [HttpPost("AddAddonCategory")]
+        [HttpPost("createCategory")]
         public async Task<IActionResult> AddAddonCategory(AddonCategory addonCategory)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
@@ -61,7 +61,7 @@ namespace Resturant_Management.Controllers
             }
         }
 
-        [HttpPost("AddAddon")]
+        [HttpPost("createAddon")]
         public async Task<IActionResult> AddAddon(AddonInput addonInput)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
@@ -112,6 +112,7 @@ namespace Resturant_Management.Controllers
         [HttpPut("UpdateAddon")]
         public async Task<IActionResult> EditAddon(AddonInput addonInput)
         {
+
             try
             {
 
@@ -156,9 +157,11 @@ namespace Resturant_Management.Controllers
             }
         }
 
-        [HttpGet("basecategories/{resturantid}")]
-        public async Task<IActionResult> BaseCategories(string resturantid)
+        [HttpGet("basecategories")]
+        public async Task<IActionResult> BaseCategories()
         {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var resturantid = identity.FindFirst(Claims.UserId)?.Value;
             try
             {
                 var res = await _addonService.FindBaseAddonCategory(resturantid);
@@ -264,6 +267,7 @@ namespace Resturant_Management.Controllers
         }
 
         [HttpGet("MenuItemAddon/{itemid}")]
+        [AllowAnonymous]
         public async Task<IActionResult> MenuItemAddons(string itemid)
         {
             try
