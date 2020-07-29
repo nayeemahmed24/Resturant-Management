@@ -87,15 +87,15 @@ namespace Resturant_Management.Controllers
                 return StatusCode(500, result);
             }
         }
-        [HttpGet("ActiveOrder")]
-        [AllowAnonymous]
-        public async Task<IActionResult> ActiveOrder()
+        // Get All Processing Order
+        [HttpGet("ProcessingOrder")]
+        public async Task<IActionResult> ProcessingOrder()
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var userId = identity.FindFirst(Claims.UserId)?.Value;
             try
             {
-                var res = await _orderService.ActiveOrders(userId);
+                var res = await _orderService.ProcessingOrders(userId);
                 if (res != null)
                 {
                     var resul = _exceptionModelGenerator.setData<List<Order>>(false, "Ok", res);
@@ -110,6 +110,99 @@ namespace Resturant_Management.Controllers
                 return StatusCode(500, result);
             }
         }
+        // Get All Recieced Order
+        [HttpGet("RecievedOrder")]
+        public async Task<IActionResult> ReceivedOrder()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(Claims.UserId)?.Value;
+            try
+            {
+                var res = await _orderService.ReceivedOrders(userId);
+                if (res != null)
+                {
+                    var resul = _exceptionModelGenerator.setData<List<Order>>(false, "Ok", res);
+                    return StatusCode(201, resul);
+                }
+                var result = _exceptionModelGenerator.setData<List<Order>>(true, "Ok", null);
+                return StatusCode(500, result);
+            }
+            catch (Exception e)
+            {
+                var result = _exceptionModelGenerator.setData<List<Order>>(true, e.Message, null);
+                return StatusCode(500, result);
+            }
+        }
+        
+        [HttpGet("changestatus/process/{orderid}")]
+        public async Task<IActionResult> MakeProcessOrder(string orderid)
+        {
+            
+            try
+            {
+                var res = await _orderService.MakeProcessing(orderid);
+                if (res != null)
+                {
+                    var resul = _exceptionModelGenerator.setData<Order>(false, "Ok", res);
+                    return StatusCode(201, resul);
+                }
+                var result = _exceptionModelGenerator.setData<Order>(true, "Ok", null);
+                return StatusCode(500, result);
+            }
+            catch (Exception e)
+            {
+                var result = _exceptionModelGenerator.setData<Order>(true, e.Message, null);
+                return StatusCode(500, result);
+            }
+        }
+        [HttpGet("changestatus/ready/{orderid}")]
+        public async Task<IActionResult> MakeReadyOrder(string orderid)
+        {
+
+            try
+            {
+                var res = await _orderService.MakeReady(orderid);
+                if (res != null)
+                {
+                    var resul = _exceptionModelGenerator.setData<Order>(false, "Ok", res);
+                    return StatusCode(201, resul);
+                }
+                var result = _exceptionModelGenerator.setData<Order>(true, "Ok", null);
+                return StatusCode(500, result);
+            }
+            catch (Exception e)
+            {
+                var result = _exceptionModelGenerator.setData<Order>(true, e.Message, null);
+                return StatusCode(500, result);
+            }
+        }
+
+        [HttpGet("TotalSell/{itemtype}")]
+        public async Task<IActionResult> TotalSell(string itemtype)
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(Claims.UserId)?.Value;
+            try
+            {
+                var res = await _orderService.FindTotalSellByItemType(itemtype,userId);
+                if (res != null)
+                {
+                    var resul = _exceptionModelGenerator.setData<SoldQuantity>(false, "Ok", res);
+                    return StatusCode(201, resul);
+                }
+                var result = _exceptionModelGenerator.setData<SoldQuantity>(true, "Ok", null);
+                return StatusCode(500, result);
+            }
+            catch (Exception e)
+            {
+                var result = _exceptionModelGenerator.setData<SoldQuantity>(true, e.Message, null);
+                return StatusCode(500, result);
+            }
+        }
+
+
+
+
 
         [HttpGet]
         public async Task<IActionResult> GetOrderDetail(string orderId)
