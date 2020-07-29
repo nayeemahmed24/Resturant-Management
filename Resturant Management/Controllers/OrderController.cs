@@ -243,14 +243,14 @@ namespace Resturant_Management.Controllers
             }
         }
 
-        [HttpGet("ItemTypeAnalysis")]
-        public async Task<IActionResult> ItemTypeAnalysis()
+        [HttpPost("ItemTypeAnalysis")]
+        public async Task<IActionResult> ItemTypeAnalysis(TimeRange range)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var userId = identity.FindFirst(Claims.UserId)?.Value;
             try
             {
-                var res = await _orderService.AnalysisBasedOnType();
+                var res = await _orderService.AnalysisBasedOnType(range.StarTime,range.EndTime,userId);
                 if (res != null)
                 {
                     var resul = _exceptionModelGenerator.setData<ItemTypeAnalysis>(false, "Ok", res);
