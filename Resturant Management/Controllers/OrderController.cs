@@ -242,5 +242,29 @@ namespace Resturant_Management.Controllers
                 return StatusCode(500, result);
             }
         }
+
+        [HttpGet("ItemTypeAnalysis")]
+        public async Task<IActionResult> ItemTypeAnalysis()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(Claims.UserId)?.Value;
+            try
+            {
+                var res = await _orderService.AnalysisBasedOnType();
+                if (res != null)
+                {
+                    var resul = _exceptionModelGenerator.setData<ItemTypeAnalysis>(false, "Ok", res);
+                    return StatusCode(201, resul);
+                }
+                var result = _exceptionModelGenerator.setData<ItemTypeAnalysis>(true, "Ok", null);
+                return StatusCode(500, result);
+            }
+            catch (Exception e)
+            {
+                var result = _exceptionModelGenerator.setData<ItemTypeAnalysis>(true, e.Message, null);
+                return StatusCode(500, result);
+            }
+        }
+
     }
 }

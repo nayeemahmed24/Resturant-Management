@@ -190,5 +190,55 @@ namespace Services.OrderService
 
             return OrderDetail;
         }
+
+
+        public async Task<ItemTypeAnalysis> AnalysisBasedOnType(DateTime start, DateTime end, string resturantId)
+        {
+            Dictionary<string, ItemUnit> trac = new Dictionary<string, ItemUnit>();
+            var Orders = await _repository.GetItemsAsync<Order>(d => d.ResturantId == resturantId);
+            if (Orders != null)
+            {
+                foreach (var order in Orders)
+                {
+                    if (order.OrderdAt != null)
+                    {
+                        if (DateTime.Compare(order.OrderdAt, start) > 0 &&
+                            DateTime.Compare(order.OrderdAt, end) < 0)
+                        {
+                            var menuList = order.Items;
+                            foreach (var menu in menuList)
+                            {
+                                var or = menu.MenuItemId;
+                                var item = await _menuServices.FindMenuItemById(or);
+                                if (trac[item.ItemType] == null)
+                                {
+                                    trac[item.ItemType] = new ItemUnit();
+                                    trac[item.ItemType].ItemType = item.ItemType;
+                                    trac[item.ItemType].Quantity = 0;
+                                    trac[item.ItemType].TotalSell = 0.0;
+                                }
+
+                                trac[item.ItemType].Quantity += menu.quantity;
+                                trac[item.ItemType].TotalSell += menu.quantity * item.Price;
+                            }
+                        }
+                    }
+
+
+                }
+
+                var res = new ItemTypeAnalysis();
+                for (int i = 0; i < trac.Count; i++)
+                {
+                    res.ItemUnits = new List<ItemUnit>();
+                    res.ItemUnits.Add(trac[trac.Keys.ElementAt(i)]);
+                }
+
+                return res;
+            }
+
+            return null;
+
+        } 
     }
 }
