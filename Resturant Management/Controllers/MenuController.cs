@@ -325,41 +325,41 @@ namespace Resturant_Management.Controllers
         // MenuItem with all Addon List
         // In View Model = MenuItemDetails
 
-        // [HttpPost("itemDetailes")]
-        // [AllowAnonymous]
-        // public async Task<IActionResult> ItemDetailes(MenuItemInput menuItem)
-        // {
-        //     try
-        //     {
-        //         if (menuItem.Id != null)
-        //         {
-        //             var menu = await _menuServices.FindMenuItemById(menuItem.Id);
-        //             if (menu != null)
-        //             {
-        //                 var listAddon = await _addonService.AllAddonByMenuItemId(menu.Id);
-        //                 var menuItemDetails = new MenuItemDetailes
-        //                 {
-        //                     MenuItem = menu,
-        //                     Addons = listAddon
-        //                 };
-        //                 var resul = _exceptionModelGenerator.setData<MenuItemDetailes>(false, "Ok", menuItemDetails);
-        //                 return StatusCode(201, resul);
-        //
-        //             }
-        //             var resut = _exceptionModelGenerator.setData<MenuItemDetailes>(true, "Ok", null);
-        //             return StatusCode(500, resut);
-        //         }
-        //         var result = _exceptionModelGenerator.setData<MenuItemDetailes>(true, "Ok", null);
-        //         return StatusCode(500, result);
-        //
-        //     }
-        //     catch (Exception e)
-        //     {
-        //         var reslt = _exceptionModelGenerator.setData<MenuItem>(true, "Ok", null);
-        //         return StatusCode(500, reslt);
-        //     }
-        //     
-        // }
+        [HttpGet("itemDetailes/{id}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ItemDetailes(string id)
+        {
+            try
+            {
+                if (id != null)
+                {
+                    var menu = await _menuServices.FindMenuItemById(id);
+                    if (menu != null)
+                    {
+                        var listAddon = await _addonService.FindAddonByItemId(menu.Id);
+                        var menuItemDetails = new MenuItemDetailes
+                        {
+                            Menu = menu,
+                            Addons = listAddon
+                        };
+                        var resul = _exceptionModelGenerator.setData<MenuItemDetailes>(false, "Ok", menuItemDetails);
+                        return StatusCode(201, resul);
+        
+                    }
+                    var resut = _exceptionModelGenerator.setData<MenuItemDetailes>(true, "Ok", null);
+                    return StatusCode(500, resut);
+                }
+                var result = _exceptionModelGenerator.setData<MenuItemDetailes>(true, "Ok", null);
+                return StatusCode(500, result);
+        
+            }
+            catch (Exception e)
+            {
+                var reslt = _exceptionModelGenerator.setData<MenuItem>(true, "Ok", null);
+                return StatusCode(500, reslt);
+            }
+            
+        }
 
         [HttpPost("sortedit")]
         public async Task<IActionResult> EditSort(SortOrder sort)
