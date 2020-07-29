@@ -22,5 +22,8 @@ namespace Model.Entities
         public bool Paid { get; set; }
         [Required]
         public string ResturantId { get; set; }
+        [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
+        [BsonRepresentation(BsonType.DateTime)]
+        public DateTime OrderdAt { get; set; } = DateTime.Now;
     }
 }

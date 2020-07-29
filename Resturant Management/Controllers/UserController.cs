@@ -58,6 +58,33 @@ namespace Resturant_Management.Controllers
 
         }
 
+        [HttpGet("OpenClose")]
+        public async Task<IActionResult> OpenClose()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(Claims.UserId)?.Value;
+            try
+            {
+                var user = await _userAccessService.OpenClose(userId);
+                if (user != null)
+                {
+                    var result = _exceptionModelGenerator.setData<RestaurantModel>(false, "Ok", user);
+                    return StatusCode(200, result);
+                }
+                else
+                {
+                    var result = _exceptionModelGenerator.setData<RestaurantModel>(true, "NOT_FOUND", null);
+                    return StatusCode(404, result);
+                }
+
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, _exceptionModelGenerator.setData<RestaurantModel>(true, e.Message, null));
+            }
+        } 
+
+
         [HttpPut("update")]
         public IActionResult Put(RestaurantUpdateModel userUpdateModel)
         {

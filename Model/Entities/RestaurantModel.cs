@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
@@ -21,6 +22,8 @@ namespace Model.Entities
         public string email { get; set; }
         //public bool isEmailVerified { get; set; }
         public bool isBlockedUser { get; set; }
+        [DefaultValue(ResturantStatus.Close)]
+        public ResturantStatus OpenClose { get; set; }
         public string role { get; set; }
     }
 }
