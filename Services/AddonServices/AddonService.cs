@@ -126,8 +126,8 @@ namespace Services.AddonServices
                     var catergory = await _menuServices.FindCategoryById(assignAddon.ItemId);
                     if (catergory != null)
                     {
-                        if(catergory.AddonCategories == null)catergory.AddonCategories = new List<string>();
-                        catergory.AddonCategories.Add(addonCat.Id);
+                        if(catergory.AddonCategories == null)catergory.AddonCategories = new List<AddonCategory>();
+                        catergory.AddonCategories.Add(addonCat);
                         await _menuServices.AssignOnCategory(catergory);
                         return catergory;
                     }
@@ -136,8 +136,8 @@ namespace Services.AddonServices
                         var menu = await _menuServices.FindMenuItemById(assignAddon.ItemId);
                         if (menu != null)
                         {
-                            if (menu.AddonCategories == null) menu.AddonCategories = new List<string>();
-                            menu.AddonCategories.Add(addonCat.Id);
+                            if (menu.AddonCategories == null) menu.AddonCategories = new List<AddonCategory>();
+                            menu.AddonCategories.Add(addonCat);
                             await _menuServices.AssignOnItem(menu);
                             return menu;
                         }
@@ -164,7 +164,7 @@ namespace Services.AddonServices
                         {
                             foreach (var id in menu.AddonCategories)
                             {
-                                var Addon = await AllAddonChildByCategoryId(id);
+                                var Addon = await AllAddonChildByCategoryId(id.Id);
                                 if (Addon != null)
                                 {
                                     foreach (var addon in Addon)
@@ -208,7 +208,7 @@ namespace Services.AddonServices
                     {
                         foreach (var catId in category.AddonCategories)
                         {
-                            var addons = await AllAddonChildByCategoryId(catId);
+                            var addons = await AllAddonChildByCategoryId(catId.Id);
                             if (addons != null)
                             {
                                 foreach (var addon in addons)
