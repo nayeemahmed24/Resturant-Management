@@ -267,6 +267,7 @@ namespace Resturant_Management.Controllers
         }
 
         [HttpGet("MenuItemAddon/{itemid}")]
+        [AllowAnonymous]
         public async Task<IActionResult> MenuItemAddons(string itemid)
         {
             try
