@@ -34,6 +34,7 @@ using Services.UserServices;
 using Services.Paginator;
 using Services.Sort_Service;
 using Services.TableServices;
+using Resturant_Management.Communication.Hubs;
 
 namespace Resturant_Management
 {
@@ -116,7 +117,7 @@ namespace Resturant_Management
                 });
             });
 
-
+            services.AddSignalR();
 
         }
 
@@ -140,6 +141,7 @@ namespace Resturant_Management
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<CommunicatonHub>("/notification");
             });
         }
     }

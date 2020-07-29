@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Model;
 using Model.Entities;
 using Model.Error_Handler;
@@ -13,6 +14,7 @@ using Model.Input_Model;
 using Model.View_Model;
 using Payment_System.Model;
 using Payment_System.Service;
+using Resturant_Management.Communication.Hubs;
 using Services.OrderService;
 
 namespace Resturant_Management.Controllers
@@ -24,13 +26,15 @@ namespace Resturant_Management.Controllers
     {
         private IExceptionModelGenerator _exceptionModelGenerator;
         private IOrderService _orderService;
+        private IHubContext<CommunicatonHub> _hubContext;
         //Test Payment
         private IPaymentService _paymentService;
-        public OrderController( IPaymentService paymentService,IOrderService orderService,IExceptionModelGenerator exceptionModelGenerator)
+        public OrderController( IPaymentService paymentService,IHubContext<CommunicatonHub> hubContext,IOrderService orderService,IExceptionModelGenerator exceptionModelGenerator)
         {
             _paymentService = paymentService;
             _orderService = orderService;
             _exceptionModelGenerator = exceptionModelGenerator;
+            _hubContext = hubContext;
         }
 
 
@@ -63,9 +67,9 @@ namespace Resturant_Management.Controllers
             }
         }
 
-        [HttpPost("Order")]
+        [HttpPost("Order/{restaurantId}")]
         [AllowAnonymous]
-        public async Task<IActionResult> PlaceOrder(Order order)
+        public async Task<IActionResult> PlaceOrder(string restaurantId,Order order)
         {
             try
             {
@@ -73,8 +77,8 @@ namespace Resturant_Management.Controllers
                 var res = await _orderService.makeOrder(order);
                 if (res != null)
                 {
-
                     var resul = _exceptionModelGenerator.setData<Order>(false, "Ok", res);
+                    await _hubContext.Clients.All.SendAsync(restaurantId, resul);
                     return StatusCode(201, resul);
                 }
                 var result = _exceptionModelGenerator.setData<Table>(true, "Ok", null);
@@ -86,6 +90,7 @@ namespace Resturant_Management.Controllers
                 return StatusCode(500, result);
             }
         }
+
         [HttpGet("ActiveOrder")]
         [AllowAnonymous]
         public async Task<IActionResult> ActiveOrder()
