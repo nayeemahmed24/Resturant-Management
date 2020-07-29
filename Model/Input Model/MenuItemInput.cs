@@ -21,7 +21,7 @@ namespace Model.Input_Model
         public string ItemType { get; set; }
         [Required]
         public String ParentId { get; set; }
-        public List<string> AddonCategories { get; set; }
+        public List<AddonCategory> AddonCategories { get; set; }
         public String ResturantId { get; set; }
 
     }
