@@ -18,5 +18,6 @@ namespace Services.OrderService
         Task<Order> MakeReady(string OrderId);
         Task<Order> MakeProcessing(string OrderId);
         Task<SoldQuantity> FindTotalSellByItemType(string itemType, string resturantId);
+        Task<ItemTypeAnalysis> AnalysisBasedOnType(DateTime start, DateTime end, string resturantId);
     }
 }
