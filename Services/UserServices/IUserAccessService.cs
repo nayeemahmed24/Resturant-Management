@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using JWT_Token;
+using Model;
 using Model.Entities;
 using Model.Input_Model;
 using Model.View_Model;
@@ -14,6 +15,8 @@ namespace Services.UserServices
     {
         public ClaimsPrincipal ValidateMailVerifyToken(string token);
         public  Task<RestaurantModel> Create(RestaurantInputModel userResponse);
+        Task<RestaurantModel> OpenClose(string userid);
+        Task<ResturantStatus> GetStatus(string userid);
         public RestaurantModel GetUserByUsername(string username);
         public bool IsAuthorizedUser(RestaurantModel userModel, string password);
         public TokenModel GetAuthenticationToken(RestaurantModel user);

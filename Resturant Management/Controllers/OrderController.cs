@@ -14,6 +14,7 @@ using Model.View_Model;
 using Payment_System.Model;
 using Payment_System.Service;
 using Services.OrderService;
+using Services.UserServices;
 
 namespace Resturant_Management.Controllers
 {
@@ -26,8 +27,10 @@ namespace Resturant_Management.Controllers
         private IOrderService _orderService;
         //Test Payment
         private IPaymentService _paymentService;
-        public OrderController( IPaymentService paymentService,IOrderService orderService,IExceptionModelGenerator exceptionModelGenerator)
+        private IUserAccessService _userAccessService;
+        public OrderController( IUserAccessService userAccessService,IPaymentService paymentService,IOrderService orderService,IExceptionModelGenerator exceptionModelGenerator)
         {
+            _userAccessService = userAccessService;
             _paymentService = paymentService;
             _orderService = orderService;
             _exceptionModelGenerator = exceptionModelGenerator;
@@ -70,6 +73,16 @@ namespace Resturant_Management.Controllers
         {
             try
             {
+                if (order.ResturantId != null)
+                {
+                    var status = await _userAccessService.GetStatus(order.ResturantId);
+                    if (status == ResturantStatus.Close)
+                    {
+                        var resut = _exceptionModelGenerator.setData<Order>(true, "Resturant Is Closed", null);
+                        return StatusCode(500, resut);
+
+                    }
+                }
                 order.Status = OrderStatus.Received;
                 var res = await _orderService.makeOrder(order);
                 if (res != null)

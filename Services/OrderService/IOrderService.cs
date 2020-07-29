@@ -17,6 +17,6 @@ namespace Services.OrderService
         public Task<List<Order>> ProcessingOrders(string ResturantId);
         Task<Order> MakeReady(string OrderId);
         Task<Order> MakeProcessing(string OrderId);
-        Task<SoldQuantity> FindTotalSellByItemType(string itemType, string resturantId)
+        Task<SoldQuantity> FindTotalSellByItemType(string itemType, string resturantId);
     }
 }

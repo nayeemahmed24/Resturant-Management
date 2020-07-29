@@ -343,5 +343,44 @@ namespace Services.UserServices
         {
             return _repository.GetItem<ClientModel>(c => c._id == clientId);
         }
+
+        public async Task<ResturantStatus> GetStatus(string userid)
+        {
+            if (userid != null)
+            {
+                var Res = GetUser(userid);
+                if (Res != null)
+                {
+                    return Res.OpenClose;
+                }
+
+                
+            }
+            return ResturantStatus.Close;
+        }
+        public async Task<RestaurantModel> OpenClose(string userid)
+        {
+            if (userid != null)
+            {
+                var Resturant =  GetUser(userid);
+                if (Resturant != null)
+                {
+                    if (Resturant.OpenClose == ResturantStatus.Open)
+                    {
+                        Resturant.OpenClose = ResturantStatus.Close;
+                    }
+                    else
+                    {
+                        Resturant.OpenClose = ResturantStatus.Open;
+                    }
+
+                    await _repository.UpdateAsync<RestaurantModel>(d => d.Id == Resturant.Id, Resturant);
+
+                    return Resturant;
+                }
+            }
+
+            return null;
+        }
     }
 }
