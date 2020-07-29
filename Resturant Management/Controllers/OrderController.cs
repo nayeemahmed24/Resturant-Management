@@ -66,7 +66,7 @@ namespace Resturant_Management.Controllers
 
         [HttpPost("Order")]
         [AllowAnonymous]
-        public async Task<IActionResult> MakeOrder(Order order)
+        public async Task<IActionResult> PlaceOrder(Order order)
         {
             try
             {
