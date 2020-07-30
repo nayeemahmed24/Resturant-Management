@@ -114,7 +114,7 @@ namespace Services.OrderService
             }
             return listRes;
         }
-        public async Task<List<OrderDetail>> ReceivedOrders(string ResturantId)
+        public async Task<List<Order>> ReceivedOrders(string ResturantId)
         {
             var res = await _repository.GetItemsAsync<Order>(d =>
                 d.ResturantId == ResturantId && d.Status == OrderStatus.Received);
