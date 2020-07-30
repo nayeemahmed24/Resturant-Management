@@ -41,36 +41,46 @@ namespace Resturant_Management.Controllers
             _hubContext = hubContext;
         }
 
-
-        [HttpGet("pay")]
+        // Pay and place ( Card Payment )
+        [HttpGet("Order/PlacePay")]
         [AllowAnonymous]
         public async Task<IActionResult> Pay(PaymentInputModel pm)
         {
-            
             try
             {
-
-                var res = await _paymentService.MakePayment(pm);
-                if (res)
+                if (pm.Order.ResturantId != null)
                 {
-                    var order = await _orderService.makePayment(pm.OrderId);
-                    if (order != null)
+                    var status = await _userAccessService.GetStatus(pm.Order.ResturantId);
+                    if (status == ResturantStatus.Close)
                     {
-                        return StatusCode(201, _exceptionModelGenerator.setData<Order>(false, "Ok", order));
-
+                        var resut = _exceptionModelGenerator.setData<Order>(true, "Resturant Is Closed", null);
+                        return StatusCode(500, resut);
                     }
                 }
-                return StatusCode(201, _exceptionModelGenerator.setData<Order>(true, "Ok", null));
-
-
+                var paymentStatus = await _paymentService.MakePayment(pm);
+                if (paymentStatus)
+                {
+                    pm.Order.Status = OrderStatus.Received;
+                    var res = await _orderService.makeOrder(pm.Order);
+                    if (res != null)
+                    {
+                        var resul = _exceptionModelGenerator.setData<Order>(false, "Ok", res);
+                        await _hubContext.Clients.All.SendAsync(pm.Order.ResturantId, resul);
+                        return StatusCode(201, resul);
+                    }
+                }
+                var result = _exceptionModelGenerator.setData<Table>(true, "Ok", null);
+                return StatusCode(500, result);
 
             }
             catch (Exception e)
             {
                 return StatusCode(500, _exceptionModelGenerator.setData<RestaurantInputModel>(true, e.Message, null));
             }
+
         }
 
+        // Cash Payment 
         [HttpPost("Order/{restaurantId}")]
         [AllowAnonymous]
         public async Task<IActionResult> PlaceOrder(string restaurantId,Order order)
