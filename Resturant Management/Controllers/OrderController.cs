@@ -217,10 +217,6 @@ namespace Resturant_Management.Controllers
             }
         }
 
-
-
-
-
         [HttpGet]
         public async Task<IActionResult> GetOrderDetail(string orderId)
         {
@@ -266,7 +262,7 @@ namespace Resturant_Management.Controllers
             }
         }
 
-        [HttpGet("Delete/{id}")]
+        [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             try
