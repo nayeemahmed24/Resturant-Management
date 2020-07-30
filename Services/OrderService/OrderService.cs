@@ -253,6 +253,22 @@ namespace Services.OrderService
 
             return null;
 
-        } 
+        }
+
+        public async Task<Order> DeleteOrder(string id)
+        {
+            if (id != null)
+            {
+                var order = await FindOrderbyId(id);
+                if (order != null)
+                {
+                    await _repository.DeleteAsync<Order>(d=>d.Id == order.Id);
+                    return order;
+                }
+
+            }
+
+            return null;
+        }
     }
 }
