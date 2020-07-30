@@ -119,14 +119,14 @@ namespace Services.OrderService
             var res = await _repository.GetItemsAsync<Order>(d =>
                 d.ResturantId == ResturantId && d.Status == OrderStatus.Received);
             var list = res?.ToList();
-            var listRes = new List<OrderDetail>();
-            foreach (var order in list)
-            {
-                var resOrderDetail = await BuildOrderDetail(order);
-                listRes.Add(resOrderDetail);
-            }
+           // var listRes = new List<OrderDetail>();
+            //foreach (var order in list)
+            //{
+            //    var resOrderDetail = await BuildOrderDetail(order);
+            //    listRes.Add(resOrderDetail);
+            //}
 
-            return listRes;
+            return list;
         }
 
         public async Task<Order> MakeProcessing(string OrderId)
@@ -253,6 +253,6 @@ namespace Services.OrderService
 
             return null;
 
-        } 
+        }
     }
 }
