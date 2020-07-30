@@ -115,7 +115,7 @@ namespace Resturant_Management.Controllers
                 var res = await _orderService.ProcessingOrders(userId);
                 if (res != null)
                 {
-                    var resul = _exceptionModelGenerator.setData<List<OrderDetail>>(false, "Ok", res);
+                    var resul = _exceptionModelGenerator.setData<List<Order>>(false, "Ok", res);
                     return StatusCode(201, resul);
                 }
                 var result = _exceptionModelGenerator.setData<List<OrderDetail>>(true, "Ok", null);
