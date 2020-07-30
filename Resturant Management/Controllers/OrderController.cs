@@ -249,9 +249,15 @@ namespace Resturant_Management.Controllers
             }
         }
 
-        [HttpPost("ItemTypeAnalysis")]
-        public async Task<IActionResult> ItemTypeAnalysis(TimeRange range)
+        [HttpGet("ItemTypeAnalysis/ThisMonth")]
+        public async Task<IActionResult> ItemTypeAnalysisMonth()
         {
+            TimeRange range = new TimeRange();
+            var date = DateTime.Now;
+            var firstDayOfMonth = new DateTime(date.Year, date.Month, 1);
+            var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
+            range.StarTime = firstDayOfMonth;
+            range.EndTime = lastDayOfMonth;
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var userId = identity.FindFirst(Claims.UserId)?.Value;
             try
@@ -272,7 +278,67 @@ namespace Resturant_Management.Controllers
             }
         }
 
-        [HttpDelete("Delete/{id}")]
+
+        [HttpGet("ItemTypeAnalysis/ThisYear")]
+        public async Task<IActionResult> ItemTypeAnalysisYear()
+        {
+            TimeRange range = new TimeRange();
+            var date = DateTime.Now;
+            var firstDayOfMonth = new DateTime(date.Year, 1, 1);
+            var lastDayOfMonth = new DateTime(date.Year, 1, 1).AddYears(1).AddDays(-1);
+            range.StarTime = firstDayOfMonth;
+            range.EndTime = lastDayOfMonth;
+
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(Claims.UserId)?.Value;
+            try
+            {
+                var res = await _orderService.AnalysisBasedOnType(range.StarTime, range.EndTime, userId);
+                if (res != null)
+                {
+                    var resul = _exceptionModelGenerator.setData<ItemTypeAnalysis>(false, "Ok", res);
+                    return StatusCode(201, resul);
+                }
+                var result = _exceptionModelGenerator.setData<ItemTypeAnalysis>(true, "Ok", null);
+                return StatusCode(500, result);
+            }
+            catch (Exception e)
+            {
+                var result = _exceptionModelGenerator.setData<ItemTypeAnalysis>(true, e.Message, null);
+                return StatusCode(500, result);
+            }
+        }
+
+        [HttpGet("ItemTypeAnalysis/ThisDay")]
+        public async Task<IActionResult> ItemTypeAnalysisDay()
+        {
+            TimeRange range = new TimeRange();
+            var date = DateTime.Now;
+            var firstDayOfMonth = new DateTime(date.Year, date.Month, date.Day,0,0,1);
+            var lastDayOfMonth = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);
+            range.StarTime = firstDayOfMonth;
+            range.EndTime = lastDayOfMonth;
+
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(Claims.UserId)?.Value;
+            try
+            {
+                var res = await _orderService.AnalysisBasedOnType(range.StarTime, range.EndTime, userId);
+                if (res != null)
+                {
+                    var resul = _exceptionModelGenerator.setData<ItemTypeAnalysis>(false, "Ok", res);
+                    return StatusCode(201, resul);
+                }
+                var result = _exceptionModelGenerator.setData<ItemTypeAnalysis>(true, "Ok", null);
+                return StatusCode(500, result);
+            }
+            catch (Exception e)
+            {
+                var result = _exceptionModelGenerator.setData<ItemTypeAnalysis>(true, e.Message, null);
+                return StatusCode(500, result);
+            }
+        }
+        [HttpGet("Delete/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             try
