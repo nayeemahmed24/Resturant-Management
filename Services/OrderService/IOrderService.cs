@@ -13,8 +13,8 @@ namespace Services.OrderService
         
         public Task<OrderDetail> GetFullOrder(string orderId);
         public Task<Order> makePayment(String orderId);
-        Task<List<Order>> ReceivedOrders(string ResturantId);
-        public Task<List<Order>> ProcessingOrders(string ResturantId);
+        Task<List<OrderDetail>> ReceivedOrders(string ResturantId);
+        public Task<List<OrderDetail>> ProcessingOrders(string ResturantId);
         Task<Order> MakeReady(string OrderId);
         Task<Order> MakeProcessing(string OrderId);
         Task<SoldQuantity> FindTotalSellByItemType(string itemType, string resturantId);
