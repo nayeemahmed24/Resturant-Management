@@ -69,13 +69,13 @@ namespace Resturant_Management.Controllers
                         return StatusCode(201, resul);
                     }
                 }
-                var result = _exceptionModelGenerator.setData<Table>(true, "Ok", null);
+                var result = _exceptionModelGenerator.setData<Order>(true, "Ok", null);
                 return StatusCode(500, result);
 
             }
             catch (Exception e)
             {
-                return StatusCode(500, _exceptionModelGenerator.setData<RestaurantInputModel>(true, e.Message, null));
+                return StatusCode(500, _exceptionModelGenerator.setData<Order>(true, e.Message, null));
             }
 
         }
@@ -105,7 +105,7 @@ namespace Resturant_Management.Controllers
                     await _hubContext.Clients.All.SendAsync(restaurantId, resul);
                     return StatusCode(201, resul);
                 }
-                var result = _exceptionModelGenerator.setData<Table>(true, "Ok", null);
+                var result = _exceptionModelGenerator.setData<Order>(true, "Ok", null);
                 return StatusCode(500, result);
             }
             catch (Exception e)
