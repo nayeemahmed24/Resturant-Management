@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Model.Entities;
 
 namespace Payment_System.Model
 {
@@ -16,6 +17,7 @@ namespace Payment_System.Model
 
         public int value { get; set; }
 
-        public string OrderId { set; get; }
+        
+        public Order Order { get; set; }
     }
 }
