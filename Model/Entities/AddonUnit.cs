@@ -9,6 +9,7 @@ namespace Model.Entities
     {
         [Required]
         public string Id { get; set; }
+        public string name { get; set; }
         public double Quantity { get; set; }
     }
 }
