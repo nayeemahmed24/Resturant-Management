@@ -266,5 +266,27 @@ namespace Resturant_Management.Controllers
             }
         }
 
+        [HttpGet("Delete/{id}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            try
+            {
+                var res = await _orderService.DeleteOrder(id);
+                if (res != null)
+                {
+                    var resul = _exceptionModelGenerator.setData<Order>(false, "Ok", res);
+                    return StatusCode(201, resul);
+                }
+                var result = _exceptionModelGenerator.setData<Order>(true, "Order Not Found", null);
+                return StatusCode(500, result);
+
+            }
+            catch (Exception e)
+            {
+                var result = _exceptionModelGenerator.setData<Order>(true, e.Message, null);
+                return StatusCode(500, result);
+            }
+        }
+
     }
 }
