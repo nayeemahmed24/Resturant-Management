@@ -100,19 +100,33 @@ namespace Services.OrderService
             return null;
         }
 
-        public async Task<List<Order>> ProcessingOrders(string ResturantId)
+        public async Task<List<OrderDetail>> ProcessingOrders(string ResturantId)
         {
             var res = await _repository.GetItemsAsync<Order>(d =>
                 d.ResturantId == ResturantId && d.Status == OrderStatus.Proccesing);
             var list = res?.ToList();
-            return list;
+            var listRes = new List<OrderDetail>();
+            foreach (var order in list)
+            {
+                var resOrderDetail = await BuildOrderDetail(order);
+                listRes.Add(resOrderDetail);
+
+            }
+            return listRes;
         }
         public async Task<List<Order>> ReceivedOrders(string ResturantId)
         {
             var res = await _repository.GetItemsAsync<Order>(d =>
                 d.ResturantId == ResturantId && d.Status == OrderStatus.Received);
             var list = res?.ToList();
-            return list;
+            var listRes = new List<OrderDetail>();
+            foreach (var order in list)
+            {
+                var resOrderDetail = await BuildOrderDetail(order);
+                listRes.Add(resOrderDetail);
+            }
+
+            return listRes;
         }
 
         public async Task<Order> MakeProcessing(string OrderId)
