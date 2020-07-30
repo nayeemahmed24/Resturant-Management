@@ -253,7 +253,7 @@ namespace Resturant_Management.Controllers
             }
         }
 
-        [HttpPost("ItemTypeAnalysis/ThisMonth")]
+        [HttpGet("ItemTypeAnalysis/ThisMonth")]
         public async Task<IActionResult> ItemTypeAnalysisMonth()
         {
             TimeRange range = new TimeRange();
@@ -282,7 +282,7 @@ namespace Resturant_Management.Controllers
             }
         }
 
-        [HttpPost("ItemTypeAnalysis/ThisYear")]
+        [HttpGet("ItemTypeAnalysis/ThisYear")]
         public async Task<IActionResult> ItemTypeAnalysisYear()
         {
             TimeRange range = new TimeRange();
@@ -312,7 +312,7 @@ namespace Resturant_Management.Controllers
             }
         }
 
-        [HttpPost("ItemTypeAnalysis/ThisDay")]
+        [HttpGet("ItemTypeAnalysis/ThisDay")]
         public async Task<IActionResult> ItemTypeAnalysisDay()
         {
             TimeRange range = new TimeRange();
