@@ -115,15 +115,15 @@ namespace Resturant_Management.Controllers
                 var res = await _orderService.ProcessingOrders(userId);
                 if (res != null)
                 {
-                    var resul = _exceptionModelGenerator.setData<List<Order>>(false, "Ok", res);
+                    var resul = _exceptionModelGenerator.setData<List<OrderDetail>>(false, "Ok", res);
                     return StatusCode(201, resul);
                 }
-                var result = _exceptionModelGenerator.setData<List<Order>>(true, "Ok", null);
+                var result = _exceptionModelGenerator.setData<List<OrderDetail>>(true, "Ok", null);
                 return StatusCode(500, result);
             }
             catch (Exception e)
             {
-                var result = _exceptionModelGenerator.setData<List<Order>>(true, e.Message, null);
+                var result = _exceptionModelGenerator.setData<List<OrderDetail>>(true, e.Message, null);
                 return StatusCode(500, result);
             }
         }
@@ -138,15 +138,15 @@ namespace Resturant_Management.Controllers
                 var res = await _orderService.ReceivedOrders(userId);
                 if (res != null)
                 {
-                    var resul = _exceptionModelGenerator.setData<List<Order>>(false, "Ok", res);
+                    var resul = _exceptionModelGenerator.setData<List<OrderDetail>>(false, "Ok", res);
                     return StatusCode(201, resul);
                 }
-                var result = _exceptionModelGenerator.setData<List<Order>>(true, "Ok", null);
+                var result = _exceptionModelGenerator.setData<List<OrderDetail>>(true, "Ok", null);
                 return StatusCode(500, result);
             }
             catch (Exception e)
             {
-                var result = _exceptionModelGenerator.setData<List<Order>>(true, e.Message, null);
+                var result = _exceptionModelGenerator.setData<List<OrderDetail>>(true, e.Message, null);
                 return StatusCode(500, result);
             }
         }
