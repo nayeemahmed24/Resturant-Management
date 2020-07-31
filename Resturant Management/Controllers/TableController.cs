@@ -81,7 +81,6 @@ namespace Resturant_Management.Controllers
             }
         }
         [HttpGet("baseTableCategory")]
-        [AllowAnonymous]
         public async Task<IActionResult> BaseCategory()
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
