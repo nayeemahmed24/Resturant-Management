@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using JWT_Token;
 using Microsoft.AspNetCore.Authorization;
@@ -10,6 +12,8 @@ using Model;
 using Model.Entities;
 using Model.Error_Handler;
 using Model.Input_Model;
+using Payment_System.Model;
+using Payment_System.Service;
 using Services.UserServices;
 
 namespace Resturant_Management.Controllers
@@ -22,14 +26,20 @@ namespace Resturant_Management.Controllers
         private IUserAccessService _accessService;
         private IExceptionModelGenerator _exceptionModelGenerator;
         private IRoutes _routes;
+        
+       
+
         public AccessController(IRoutes routes,IUserAccessService accessService,IExceptionModelGenerator exceptionModelGenerator)
         {
+            
             _routes = routes;
             _accessService = accessService;
             _exceptionModelGenerator = exceptionModelGenerator;
         }
 
-       
+   
+
+
         [HttpPost("invitation")]
         [AllowAnonymous]
         public async Task<IActionResult> CreateRestaurant(RestaurantInputModel restaurantInputModel)
@@ -37,10 +47,20 @@ namespace Resturant_Management.Controllers
             try
             {
                 var user = _accessService.ValidateMailVerifyToken(restaurantInputModel.invitationToken);
+                var identity = user.Identity as ClaimsIdentity;
+                var userId = identity.FindFirst(Claims.UserId)?.Value;
                 if (user == null)
                 {
                     var Errorresult = _exceptionModelGenerator.setData<RestaurantInputModel>(true, "Unauthorized", null);
+                    return StatusCode(401, Errorresult);
+                }else if (_accessService.isRestaurantAvailable(userId))
+                {
+                    var Errorresult = _exceptionModelGenerator.setData<RestaurantInputModel>(true, "Forbidden", null);
                     return StatusCode(403, Errorresult);
+                }else if (_accessService.isUserNameAvailable(restaurantInputModel.userName))
+                {
+                    var ErrorResult = _exceptionModelGenerator.setData<RestaurantInputModel>(true, "Username exist", null);
+                    return StatusCode(200, ErrorResult);
                 }
 
                 var manager = await _accessService.Create(restaurantInputModel);
@@ -52,15 +72,13 @@ namespace Resturant_Management.Controllers
                 return StatusCode(500, _exceptionModelGenerator.setData<RestaurantInputModel>(true, e.Message, null));
             }
         }
-        [HttpPost("AdminCreate")]
+        [HttpPost("admincreate")]
         [AllowAnonymous]
         public async Task<IActionResult> CreateAdmin(RestaurantInputModel restaurantInputModel)
         {
 
             try
             {
-                
-
                 var manager = await _accessService.CreateAdmin(restaurantInputModel);
                 var result = _exceptionModelGenerator.setData<RestaurantModel>(false, "Ok", manager);
                 return StatusCode(201, result);
@@ -71,15 +89,14 @@ namespace Resturant_Management.Controllers
             }
         }
 
-
-
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Authenticate([FromBody]AuthenticateModel authenticateModel)
         {
             try
             {
-                var user = await _accessService.GetUserByUsername(authenticateModel.Username);
+                var user = _accessService.GetUserByUsername(authenticateModel.Username);
+               
                 if (user == null)
                 {
                     return StatusCode(404, _exceptionModelGenerator.setData<TokenModel>(true, "NOT_EXISTS", null));
@@ -89,17 +106,10 @@ namespace Resturant_Management.Controllers
 
                     if (_accessService.IsAuthorizedUser(user, authenticateModel.Password))
                     {
-                        if (!user.isEmailVerified)
-                        {
-                            user.password = null;
-                            return StatusCode(403, _exceptionModelGenerator.setData<RestaurantModel>(true, "MAIL_NOT_VERIFIED",user ));
-                        }
-                        else
-                        {
+                        
                             var token = _accessService.GetAuthenticationToken(user);
                             return StatusCode(200, _exceptionModelGenerator.setData<TokenModel>(false, "Ok", token));
-                        }
-
+                        
                     }
                     else
                     {
@@ -113,19 +123,19 @@ namespace Resturant_Management.Controllers
             }
 
         }
+
         [HttpPost("recover")]
         [AllowAnonymous]
-        public async Task<IActionResult> RecoverPassword(RestaurantUpdateModel userUpdateModel)
+        public async Task<IActionResult> RecoverPassword(RecoveryModel recoveryModel)
         {
             try
             {
 
-                var user = await _accessService.GetUserByEmail(userUpdateModel.email);
+                var user = _accessService.GetUserByUsername(recoveryModel.username);
                 if (user != null)
                 {
-                    string oneTimeToken = _accessService.GetPasswordRecoverToken(user);
-                    _accessService.VerificationMailSender(user.email, "Reset Your Password", oneTimeToken, _routes.RecoverPassword);
-                    return StatusCode(307, _exceptionModelGenerator.setData<RestaurantUpdateModel>(false, "MAIL_SENT", null));
+                    _accessService.SendRecoveryMail(recoveryModel.clientId, user);
+                    return StatusCode(200, _exceptionModelGenerator.setData<RestaurantUpdateModel>(false, "MAIL_SENT", null));
                 }
                 else
                 {
@@ -138,30 +148,22 @@ namespace Resturant_Management.Controllers
             }
         }
 
-        [HttpGet("recover/{token}")]
+        [HttpPut("reset")]
         [AllowAnonymous]
-        public IActionResult SetNewPassword(string token)
-        {
-            string route = _routes.ResetRoute + token;
-            return Redirect(route);
-        }
-
-        [HttpPost("reset")]
-        [AllowAnonymous]
-        public IActionResult ResetPassword(RestaurantUpdateModel userUpdateModel)
+        public IActionResult ResetPassword(RecoveryModel recoveryModel)
         {
             try
             {
-                if (userUpdateModel.token != null)
+                if (recoveryModel.token != null)
                 {
-                    string userId = _accessService.ResetPasswordVerification(userUpdateModel.token);
+                    string userId = _accessService.ResetPasswordVerification(recoveryModel.token);
                     if (userId != null)
                     {
                         var user = _accessService.GetUser(userId);
                         if (user != null)
                         {
-                            user.password = userUpdateModel.password;
-                            _accessService.Update(user);
+                            user.password = recoveryModel.password;
+                            _accessService.PasswordRecovery(user);
                             return StatusCode(200, _exceptionModelGenerator.setData<RestaurantUpdateModel>(false, "Ok", null));
                         }
                         else

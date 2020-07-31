@@ -14,5 +14,8 @@ namespace Model.Input_Model
         [EmailAddress]
         [Required(ErrorMessage = "Email address is required")]
         public string email { get; set; }
+
+        [Required]
+        public string ClientId { get; set; }
     }
 }

@@ -11,20 +11,21 @@ namespace Model.Input_Model
 {
     public class RestaurantInputModel
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
         [Required(ErrorMessage = "Restaurant name is required")]
         [StringLength(20, MinimumLength = 3)]
         public string restaurantName { get; set; }
 
-        [Required(ErrorMessage = "Manager name is required")]
+        [Required(ErrorMessage = "First name is required")]
         [StringLength(20, MinimumLength = 3)]
-        public string managerFirstName { get; set; }
+        public string firstName { get; set; }
 
-        [Required(ErrorMessage = "Manager name is required")]
+        [Required(ErrorMessage = "Last name is required")]
         [StringLength(20, MinimumLength = 3)]
-        public string managerLastName { get; set; }
+        public string lastName { get; set; }
+
+        [Required(ErrorMessage ="User name is required")]
+        public string userName { get; set; }
 
         [Required(ErrorMessage = "Password is required")]
         [MinLength(6)]
@@ -45,7 +46,6 @@ namespace Model.Input_Model
         [FileFormatValidation(".jpg|.png", ErrorMessage = "Only '.jpg' & '.png' files are supported")]
         public IFormFile backgroundImage { get; set; }
 
-        [Required]
         public string invitationToken { get; set; }
     }
 }

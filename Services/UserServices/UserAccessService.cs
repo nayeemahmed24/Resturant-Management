@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using JWT_Token;
 using JWT_Token.Configurations;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.WebUtilities;
 using Model;
 using Model.Entities;
 using Model.Input_Model;
@@ -16,6 +18,8 @@ using Repository;
 using Services.Email;
 using Services.FileUploadService;
 using Services.Helper_Services;
+using Services.UtilityService;
+using RazorLight;
 
 namespace Services.UserServices
 {
@@ -29,6 +33,7 @@ namespace Services.UserServices
         private IMailSender _mailSender;
         private IRoutes _routes;
         private IFileUploadService _fileUploadService;
+     
         public UserAccessService(IFileUploadService fileUploadService,IRoutes routes,IMailSender mailSender,ITokenGenerator tokenGenerator,IMongoRepository repository,IPasswordManager passwordManager,CustomTokenValidator customTokenValidator,IJwtSetting jwtSetting)
         {
             _fileUploadService = fileUploadService;
@@ -39,7 +44,6 @@ namespace Services.UserServices
             _repository = repository;
             _jwtSetting = jwtSetting;
             _passwordManager = passwordManager;
-
         }
         public ClaimsPrincipal ValidateMailVerifyToken(string token)
         {
@@ -51,12 +55,14 @@ namespace Services.UserServices
             string hashedPassword = _passwordManager.HashPassword(userResponse.password);
             RestaurantModel userModel = new RestaurantModel
             {
+                Id = userResponse.Id,
                 restaurantName = userResponse.restaurantName,
-                managerFirstName = userResponse.managerFirstName,
-                managerLastName = userResponse.managerLastName,
+                firstName = userResponse.firstName,
+                lastName = userResponse.lastName,
+                username = userResponse.userName,
                 password = hashedPassword,
                 email = userResponse.email,
-                isEmailVerified = true,
+                //isEmailVerified = true,
                 role = Role.User
             };
             
@@ -71,12 +77,14 @@ namespace Services.UserServices
             string hashedPassword = _passwordManager.HashPassword(userResponse.password);
             RestaurantModel userModel = new RestaurantModel
             {
+                Id = GetUniqueId(),
                 restaurantName = userResponse.restaurantName,
-                managerFirstName = userResponse.managerFirstName,
-                managerLastName = userResponse.managerLastName,
+                firstName = userResponse.lastName,
+                lastName = userResponse.lastName,
+                username = userResponse.userName,
                 password = hashedPassword,
                 email = userResponse.email,
-                isEmailVerified = true,
+                //isEmailVerified = true,
                 role = Role.Admin
             };
 
@@ -92,34 +100,50 @@ namespace Services.UserServices
             await _repository.UpdateAsync<RestaurantModel>(e => e.Id == user.Id, user);
             return true;
         }
-        public async Task<bool> UpdateResturant(RestaurantUpdateModel user,RestaurantModel userModel)
+        public async Task<RestaurantModel> UpdateResturant(RestaurantUpdateModel user,RestaurantModel userModel)
         {
-            var updateR = new RestaurantModel
-            {
-                Id = userModel.Id,
-                restaurantName = user.restaurantName,
-                managerFirstName = user.managerFirstName,
-                managerLastName = user.managerLastName,
-                logo = userModel.logo,
-                backgroundImage = userModel.backgroundImage,
-                password = userModel.password,
-                email = user.email,
-                isEmailVerified = userModel.isEmailVerified,
-                isBlockedUser = userModel.isBlockedUser,
-                role = userModel.role
-            };
+            //var updateR = new RestaurantModel
+            //{
+            //    Id = userModel.Id,
+            //    restaurantName = user.restaurantName,
+            //    firstName = user.firstName,
+            //    lastName = user.lastName,
+            //    logo = userModel.logo,
+            //    backgroundImage = userModel.backgroundImage,
+            //    password = userModel.password,
+            //    email = user.email,
+            //    //isEmailVerified = userModel.isEmailVerified,
+            //    isBlockedUser = userModel.isBlockedUser,
+            //    role = userModel.role
+            //};
 
+            if(user.firstName != null && user.lastName != null)
+            {
+                userModel.firstName = user.firstName;
+                userModel.lastName = user.lastName;
+            }
+
+            if (user.restaurantName != null)
+            {
+                userModel.restaurantName = user.restaurantName;
+            }
+
+            if(user.password != null)
+            {
+                string hashedPassword = _passwordManager.HashPassword(user.password);
+                userModel.password = hashedPassword;
+            }
     
-            await _repository.UpdateAsync<RestaurantModel>(e => e.Id == userModel.Id, updateR);
-            return true;
+            await _repository.UpdateAsync<RestaurantModel>(e => e.Id == userModel.Id, userModel);
+            return userModel.RemovePassword();
         }
         public  RestaurantModel GetUser(string Id)
         {
             return  _repository.GetItem<RestaurantModel>(d => d.Id == Id);
         }
-        public async Task<RestaurantModel> GetUserByUsername(string username)
+        public RestaurantModel GetUserByUsername(string username)
         {
-            return await _repository.GetItemAsync<RestaurantModel>(d => d.restaurantName == username);
+            return  _repository.GetItem<RestaurantModel>(d => d.username == username);
         }
 
         public async Task<RestaurantModel> GetUserByEmail(string email)
@@ -127,13 +151,21 @@ namespace Services.UserServices
             return await _repository.GetItemAsync<RestaurantModel>(d => d.email == email);
         }
 
-        public void VerificationMailSender(string emailTo, string subject, string token, string api)
+        public async void VerificationMailSender(string emailTo, string subject, string token,EmailTemplateModel emailTemplateModel)
         {
-            String link = api + token;
+            var parameter = new Dictionary<string, string>() { { "token", token } };
+            var requestUrl = new Uri(QueryHelpers.AddQueryString(emailTemplateModel.link, parameter));
+
+            emailTemplateModel.link = requestUrl.ToString();
+
+            var templateFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "EmailTemplates");
+            var engine = new RazorLightEngineBuilder().UseFileSystemProject(templateFolderPath).UseMemoryCachingProvider().Build();
+            string result = await engine.CompileRenderAsync("EmailTemplate.cshtml", emailTemplateModel);
+
             MailModel mailModel = new MailModel
             {
                 To = emailTo,
-                MessageBody = link,
+                MessageBody = result,
                 Subject = subject
             };
             _mailSender.sendMail(mailModel);
@@ -156,15 +188,15 @@ namespace Services.UserServices
             tokenModel.token = token;
             return tokenModel;
         }
-        public ImageDataModel ImagePath(RestaurantModel restaurantModel)
+        public ImageDataModel ImagePath(string imageName)
         {
             string fileType = "jpg";
             string file = "";
-            if (restaurantModel.logo != null)
+            if (imageName != null)
             {
 
-                fileType = getExtension(restaurantModel.logo);
-                file = Path.Combine(Directory.GetCurrentDirectory(), _routes.StaticDir, restaurantModel.logo);
+                fileType = getExtension(imageName);
+                file = Path.Combine(Directory.GetCurrentDirectory(), _routes.StaticDir, imageName);
 
             }
             bool s = File.Exists(file);
@@ -219,20 +251,143 @@ namespace Services.UserServices
 
         public async Task<ImageDataModel> UpdateImage(PhotoUpdate photoUpdate, RestaurantModel user)
         {
+            await _fileUploadService.DeleteImage(user.logo);
             var path = await _fileUploadService.UploadSingleFile(photoUpdate.profilePhoto, FIleDirectories.ImageDir);
 
             user.logo = path;
-            Update(user);
+            await Update(user);
 
-            var imageData = ImagePath(user);
+            var imageData = ImagePath(user.logo);
 
             return imageData;
         }
-        public void ResetPassword(string id, RestaurantUpdateModel userUpdateModel)
+        public async Task<ImageDataModel> UpdateBackgroudImage(PhotoUpdate photoUpdate, RestaurantModel user)
+        {
+            await _fileUploadService.DeleteImage(user.logo);
+            var path = await _fileUploadService.UploadSingleFile(photoUpdate.profilePhoto, FIleDirectories.ImageDir);
+
+            user.backgroundImage = path;
+            await Update(user);
+
+            var imageData = ImagePath(user.backgroundImage);
+
+            return imageData;
+        }
+        public async void ResetPassword(string id, RestaurantUpdateModel restaurantUpdateModel)
         {
             var user = GetUser(id);
-            user.password = userUpdateModel.password;
-            Update(user);
+
+            await UpdateResturant(restaurantUpdateModel, user);
+        }
+
+        public async void PasswordRecovery(RestaurantModel restaurantModel)
+        {
+            string hashedPassword = _passwordManager.HashPassword(restaurantModel.password);
+            restaurantModel.password = hashedPassword;
+            await Update(restaurantModel);
+        }
+
+        public void SendRecoveryMail(string clientId,RestaurantModel restaurantModel)
+        {
+           
+            string oneTimeToken = GetPasswordRecoverToken(restaurantModel);
+            var clientData = GetClientInfo(clientId);
+            string redirectionRoute = clientData.host + clientData.recoverRoute;
+            var emailModel = new EmailTemplateModel()
+            { 
+                text = "This mail is from Restaurant Management system. Click the button below to reset your password", 
+                buttonText = "Reset Password", 
+                link =redirectionRoute
+            };
+        
+
+            VerificationMailSender(restaurantModel.email, "Reset Your Password", oneTimeToken,emailModel);
+        }
+
+        public string GetUniqueId()
+        {
+            string first = DateTime.Now.ToString("yyMMddHHmmssff");
+            string last = GetRandomString();
+            string unique_id = first + "-" + last;
+
+            return unique_id;
+        }
+
+        public string GetRandomString()
+        {
+            StringBuilder builder = new StringBuilder();
+            Random random = new Random();
+            char ch;
+            for (int i = 0; i < 20; i++)
+            {
+                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
+                builder.Append(ch);
+            }
+            return builder.ToString().ToLower();
+        }
+
+        public bool isRestaurantAvailable(string userId)
+        {
+
+            var user = GetUser(userId);
+            if (user == null)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool isUserNameAvailable(string username)
+        {
+            var user = GetUserByUsername(username);
+            if (user == null)
+            {
+                return false;
+            }
+            return true;
+        }
+        public ClientModel GetClientInfo(string clientId)
+        {
+            return _repository.GetItem<ClientModel>(c => c._id == clientId);
+        }
+
+        public async Task<ResturantStatus> GetStatus(string userid)
+        {
+            if (userid != null)
+            {
+                var Res = GetUser(userid);
+                if (Res != null)
+                {
+                    return Res.OpenClose;
+                }
+
+                
+            }
+            return ResturantStatus.Close;
+        }
+        public async Task<RestaurantModel> OpenClose(string userid)
+        {
+            if (userid != null)
+            {
+                var Resturant =  GetUser(userid);
+                if (Resturant != null)
+                {
+                    if (Resturant.OpenClose == ResturantStatus.Open)
+                    {
+                        Resturant.OpenClose = ResturantStatus.Close;
+                    }
+                    else
+                    {
+                        Resturant.OpenClose = ResturantStatus.Open;
+                    }
+
+                    await _repository.UpdateAsync<RestaurantModel>(d => d.Id == Resturant.Id, Resturant);
+
+                    return Resturant;
+                }
+            }
+
+            return null;
         }
     }
 }

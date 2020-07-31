@@ -18,15 +18,23 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Model;
 using Model.Error_Handler;
+using Payment_System.Service;
 using Repository;
 using Repository.Configurations;
+using Services.AddonServices;
 using Services.AdminAuth;
 using Services.AdminAuth.Contracts;
 using Services.Email;
 using Services.Email.Configuration;
 using Services.FileUploadService;
 using Services.Helper_Services;
+using Services.MenuServices;
+using Services.OrderService;
 using Services.UserServices;
+using Services.Paginator;
+using Services.Sort_Service;
+using Services.TableServices;
+using Resturant_Management.Communication.Hubs;
 
 namespace Resturant_Management
 {
@@ -56,6 +64,11 @@ namespace Resturant_Management
             services.AddSingleton<ITokenGenerator, TokenGenerator>();
             services.AddSingleton<IAdminVerificationService, AdminVerficationService>();
             services.AddSingleton<IAdminAccessService, AdminAccessService>();
+            services.AddSingleton<IAddonService, AddonService>();
+            services.AddSingleton<ISortService, SortService>();
+            services.AddSingleton<IPaymentService,PaymentSevice>();
+            services.AddSingleton<ITableService, TableService>();
+            services.AddSingleton<IOrderService, OrderService>();
             services.AddSingleton<IExceptionModelGenerator, ExceptionModelGenerator>();
             services.AddSingleton<IPasswordManager, PasswordManager>();
             services.AddSingleton<IUserAccessService, UserAccessService>();
@@ -65,8 +78,10 @@ namespace Resturant_Management
             services.AddSingleton<CustomTokenValidator>();
             services.AddSingleton<IFileUploadService, FileUploadService>();
             services.AddSingleton<IStoragePathService, StoragePathService>();
+            services.AddSingleton<IMenuServices, MenuServices>();
             services.Configure<Routes>(Configuration.GetSection(nameof(Routes)));
             services.AddSingleton<IRoutes>(mailVarify => mailVarify.GetRequiredService<IOptions<Routes>>().Value);
+            services.AddSingleton<IPaginator, Paginator>();
 
 
             var serviceProvider = services.BuildServiceProvider();
@@ -98,11 +113,11 @@ namespace Resturant_Management
             {
                 options.AddPolicy(MyCorsOrigin, builder =>
                 {
-                    builder.WithOrigins("http://localhost:4200", "http://sequenceweb.mydomain.com:4200").AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+                    builder.WithOrigins("http://localhost:4200", "http://localhost:4400", "http://sequenceweb.mydomain.com:4200").AllowAnyHeader().AllowAnyMethod().AllowCredentials();
                 });
             });
 
-
+            services.AddSignalR();
 
         }
 
@@ -126,6 +141,7 @@ namespace Resturant_Management
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<CommunicatonHub>("/notification");
             });
         }
     }

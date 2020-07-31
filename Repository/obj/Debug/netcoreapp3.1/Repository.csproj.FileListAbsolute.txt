@@ -1,9 +1,0 @@
-E:\Resturant Management\Repository\bin\Debug\netcoreapp3.1\Repository.deps.json
-E:\Resturant Management\Repository\bin\Debug\netcoreapp3.1\Repository.dll
-E:\Resturant Management\Repository\bin\Debug\netcoreapp3.1\Repository.pdb
-E:\Resturant Management\Repository\obj\Debug\netcoreapp3.1\Repository.csprojAssemblyReference.cache
-E:\Resturant Management\Repository\obj\Debug\netcoreapp3.1\Repository.csproj.CoreCompileInputs.cache
-E:\Resturant Management\Repository\obj\Debug\netcoreapp3.1\Repository.AssemblyInfoInputs.cache
-E:\Resturant Management\Repository\obj\Debug\netcoreapp3.1\Repository.AssemblyInfo.cs
-E:\Resturant Management\Repository\obj\Debug\netcoreapp3.1\Repository.dll
-E:\Resturant Management\Repository\obj\Debug\netcoreapp3.1\Repository.pdb

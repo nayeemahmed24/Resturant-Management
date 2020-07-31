@@ -1,0 +1,364 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using Model;
+using Model.Entities;
+using Model.Error_Handler;
+using Model.Input_Model;
+using Model.View_Model;
+using Payment_System.Model;
+using Payment_System.Service;
+using Resturant_Management.Communication.Hubs;
+using Services.OrderService;
+using Services.UserServices;
+
+namespace Resturant_Management.Controllers
+{
+    [Route("v1/[controller]")]
+    [ApiController]
+    [Authorize(Roles = Role.User)]
+    public class OrderController : ControllerBase
+    {
+        private IExceptionModelGenerator _exceptionModelGenerator;
+        private IOrderService _orderService;
+        private IHubContext<CommunicatonHub> _hubContext;
+        //Test Payment
+        private IPaymentService _paymentService;
+        private IUserAccessService _userAccessService;
+        public OrderController( IUserAccessService userAccessService,IHubContext<CommunicatonHub> hubContext,IPaymentService paymentService,IOrderService orderService,IExceptionModelGenerator exceptionModelGenerator)
+
+        {
+            _userAccessService = userAccessService;
+            _paymentService = paymentService;
+            _orderService = orderService;
+            _exceptionModelGenerator = exceptionModelGenerator;
+            _hubContext = hubContext;
+        }
+
+        // Pay and place ( Card Payment )
+        [HttpGet("Order/PlacePay")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Pay(PaymentInputModel pm)
+        {
+            try
+            {
+                if (pm.Order.ResturantId != null)
+                {
+                    var status = await _userAccessService.GetStatus(pm.Order.ResturantId);
+                    if (status == ResturantStatus.Close)
+                    {
+                        var resut = _exceptionModelGenerator.setData<Order>(true, "Resturant Is Closed", null);
+                        return StatusCode(500, resut);
+                    }
+                }
+                var paymentStatus = await _paymentService.MakePayment(pm);
+                if (paymentStatus)
+                {
+                    pm.Order.Status = OrderStatus.Received;
+                    var res = await _orderService.makeOrder(pm.Order);
+                    if (res != null)
+                    {
+                        var resul = _exceptionModelGenerator.setData<Order>(false, "Ok", res);
+                        await _hubContext.Clients.All.SendAsync(pm.Order.ResturantId, resul);
+                        return StatusCode(201, resul);
+                    }
+                }
+                var result = _exceptionModelGenerator.setData<Order>(true, "Ok", null);
+                return StatusCode(500, result);
+
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, _exceptionModelGenerator.setData<Order>(true, e.Message, null));
+            }
+
+        }
+
+        // Cash Payment 
+        [HttpPost("Order/{restaurantId}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> PlaceOrder(string restaurantId,Order order)
+        {
+            try
+            {
+                if (order.ResturantId != null)
+                {
+                    var status = await _userAccessService.GetStatus(order.ResturantId);
+                    if (status == ResturantStatus.Close)
+                    {
+                        var resut = _exceptionModelGenerator.setData<Order>(true, "Resturant Is Closed", null);
+                        return StatusCode(500, resut);
+
+                    }
+                }
+                order.Status = OrderStatus.Received;
+                var res = await _orderService.makeOrder(order);
+                if (res != null)
+                {
+                    var resul = _exceptionModelGenerator.setData<Order>(false, "Ok", res);
+                    await _hubContext.Clients.All.SendAsync(restaurantId, resul);
+                    return StatusCode(201, resul);
+                }
+                var result = _exceptionModelGenerator.setData<Order>(true, "Ok", null);
+                return StatusCode(500, result);
+            }
+            catch (Exception e)
+            {
+                var result = _exceptionModelGenerator.setData<Order>(true, e.Message, null);
+                return StatusCode(500, result);
+            }
+        }
+        // Get All Processing Order
+        [HttpGet("ProcessingOrder")]
+        public async Task<IActionResult> ProcessingOrder()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(Claims.UserId)?.Value;
+            try
+            {
+                var res = await _orderService.ProcessingOrders(userId);
+                if (res != null)
+                {
+                    var resul = _exceptionModelGenerator.setData<List<Order>>(false, "Ok", res);
+                    return StatusCode(201, resul);
+                }
+                var result = _exceptionModelGenerator.setData<List<OrderDetail>>(true, "Ok", null);
+                return StatusCode(500, result);
+            }
+            catch (Exception e)
+            {
+                var result = _exceptionModelGenerator.setData<List<OrderDetail>>(true, e.Message, null);
+                return StatusCode(500, result);
+            }
+        }
+        // Get All Recieced Order
+        [HttpGet("RecievedOrder")]
+        public async Task<IActionResult> ReceivedOrder()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(Claims.UserId)?.Value;
+            try
+            {
+                var res = await _orderService.ReceivedOrders(userId);
+                if (res != null)
+                {
+                    var resul = _exceptionModelGenerator.setData<List<Order>>(false, "Ok", res);
+                    return StatusCode(201, resul);
+                }
+                var result = _exceptionModelGenerator.setData<List<OrderDetail>>(true, "Ok", null);
+                return StatusCode(500, result);
+            }
+            catch (Exception e)
+            {
+                var result = _exceptionModelGenerator.setData<List<OrderDetail>>(true, e.Message, null);
+                return StatusCode(500, result);
+            }
+        }
+        
+        [HttpGet("changestatus/process/{orderid}")]
+        public async Task<IActionResult> MakeProcessOrder(string orderid)
+        {
+            
+            try
+            {
+                var res = await _orderService.MakeProcessing(orderid);
+                if (res != null)
+                {
+                    var resul = _exceptionModelGenerator.setData<Order>(false, "Ok", res);
+                    return StatusCode(201, resul);
+                }
+                var result = _exceptionModelGenerator.setData<Order>(true, "Ok", null);
+                return StatusCode(500, result);
+            }
+            catch (Exception e)
+            {
+                var result = _exceptionModelGenerator.setData<Order>(true, e.Message, null);
+                return StatusCode(500, result);
+            }
+        }
+        [HttpGet("changestatus/ready/{orderid}")]
+        public async Task<IActionResult> MakeReadyOrder(string orderid)
+        {
+
+            try
+            {
+                var res = await _orderService.MakeReady(orderid);
+                if (res != null)
+                {
+                    var resul = _exceptionModelGenerator.setData<Order>(false, "Ok", res);
+                    return StatusCode(201, resul);
+                }
+                var result = _exceptionModelGenerator.setData<Order>(true, "Ok", null);
+                return StatusCode(500, result);
+            }
+            catch (Exception e)
+            {
+                var result = _exceptionModelGenerator.setData<Order>(true, e.Message, null);
+                return StatusCode(500, result);
+            }
+        }
+
+        [HttpGet("TotalSell/{itemtype}")]
+        public async Task<IActionResult> TotalSell(string itemtype)
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(Claims.UserId)?.Value;
+            try
+            {
+                var res = await _orderService.FindTotalSellByItemType(itemtype,userId);
+                if (res != null)
+                {
+                    var resul = _exceptionModelGenerator.setData<SoldQuantity>(false, "Ok", res);
+                    return StatusCode(201, resul);
+                }
+                var result = _exceptionModelGenerator.setData<SoldQuantity>(true, "Ok", null);
+                return StatusCode(500, result);
+            }
+            catch (Exception e)
+            {
+                var result = _exceptionModelGenerator.setData<SoldQuantity>(true, e.Message, null);
+                return StatusCode(500, result);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetOrderDetail(string orderId)
+        {
+            try
+            {
+                var res = await _orderService.GetFullOrder(orderId);
+                if (res != null)
+                {
+
+                    var resul = _exceptionModelGenerator.setData<OrderDetail>(false, "Ok", res);
+                    return StatusCode(201, resul);
+                }
+                var result = _exceptionModelGenerator.setData<OrderDetail>(true, "Ok", null);
+                return StatusCode(500, result);
+            }
+            catch (Exception e)
+            {
+                var result = _exceptionModelGenerator.setData<OrderDetail>(true, e.Message, null);
+                return StatusCode(500, result);
+            }
+        }
+
+        [HttpGet("ItemTypeAnalysis/ThisMonth")]
+        public async Task<IActionResult> ItemTypeAnalysisMonth()
+        {
+            TimeRange range = new TimeRange();
+            var date = DateTime.Now;
+            var firstDayOfMonth = new DateTime(date.Year, date.Month, 1);
+            var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
+            range.StarTime = firstDayOfMonth;
+            range.EndTime = lastDayOfMonth;
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(Claims.UserId)?.Value;
+            try
+            {
+                var res = await _orderService.AnalysisBasedOnType(range.StarTime,range.EndTime,userId);
+                if (res != null)
+                {
+                    var resul = _exceptionModelGenerator.setData<ItemTypeAnalysis>(false, "Ok", res);
+                    return StatusCode(201, resul);
+                }
+                var result = _exceptionModelGenerator.setData<ItemTypeAnalysis>(true, "Ok", null);
+                return StatusCode(500, result);
+            }
+            catch (Exception e)
+            {
+                var result = _exceptionModelGenerator.setData<ItemTypeAnalysis>(true, e.Message, null);
+                return StatusCode(500, result);
+            }
+        }
+
+
+        [HttpGet("ItemTypeAnalysis/ThisYear")]
+        public async Task<IActionResult> ItemTypeAnalysisYear()
+        {
+            TimeRange range = new TimeRange();
+            var date = DateTime.Now;
+            var firstDayOfMonth = new DateTime(date.Year, 1, 1);
+            var lastDayOfMonth = new DateTime(date.Year, 1, 1).AddYears(1).AddDays(-1);
+            range.StarTime = firstDayOfMonth;
+            range.EndTime = lastDayOfMonth;
+
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(Claims.UserId)?.Value;
+            try
+            {
+                var res = await _orderService.AnalysisBasedOnType(range.StarTime, range.EndTime, userId);
+                if (res != null)
+                {
+                    var resul = _exceptionModelGenerator.setData<ItemTypeAnalysis>(false, "Ok", res);
+                    return StatusCode(201, resul);
+                }
+                var result = _exceptionModelGenerator.setData<ItemTypeAnalysis>(true, "Ok", null);
+                return StatusCode(500, result);
+            }
+            catch (Exception e)
+            {
+                var result = _exceptionModelGenerator.setData<ItemTypeAnalysis>(true, e.Message, null);
+                return StatusCode(500, result);
+            }
+        }
+
+        [HttpGet("ItemTypeAnalysis/ThisDay")]
+        public async Task<IActionResult> ItemTypeAnalysisDay()
+        {
+            TimeRange range = new TimeRange();
+            var date = DateTime.Now;
+            var firstDayOfMonth = new DateTime(date.Year, date.Month, date.Day,0,0,1);
+            var lastDayOfMonth = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);
+            range.StarTime = firstDayOfMonth;
+            range.EndTime = lastDayOfMonth;
+
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(Claims.UserId)?.Value;
+            try
+            {
+                var res = await _orderService.AnalysisBasedOnType(range.StarTime, range.EndTime, userId);
+                if (res != null)
+                {
+                    var resul = _exceptionModelGenerator.setData<ItemTypeAnalysis>(false, "Ok", res);
+                    return StatusCode(201, resul);
+                }
+                var result = _exceptionModelGenerator.setData<ItemTypeAnalysis>(true, "Ok", null);
+                return StatusCode(500, result);
+            }
+            catch (Exception e)
+            {
+                var result = _exceptionModelGenerator.setData<ItemTypeAnalysis>(true, e.Message, null);
+                return StatusCode(500, result);
+            }
+        }
+        [HttpGet("Delete/{id}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            try
+            {
+                var res = await _orderService.DeleteOrder(id);
+                if (res != null)
+                {
+                    var resul = _exceptionModelGenerator.setData<Order>(false, "Ok", res);
+                    return StatusCode(201, resul);
+                }
+                var result = _exceptionModelGenerator.setData<Order>(true, "Order Not Found", null);
+                return StatusCode(500, result);
+
+            }
+            catch (Exception e)
+            {
+                var result = _exceptionModelGenerator.setData<Order>(true, e.Message, null);
+                return StatusCode(500, result);
+            }
+        }
+
+    }
+}

@@ -16,7 +16,7 @@ namespace Resturant_Management.Controllers
 {
     [Route("v1/[controller]")]
     [ApiController]
-    [Authorize(Roles = Role.User)]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private IExceptionModelGenerator _exceptionModelGenerator;
@@ -35,7 +35,7 @@ namespace Resturant_Management.Controllers
             try
             {
                 var user = _userAccessService.GetUser(userId);
-                user.logo = null;
+                //user.logo = null;
                 user.password = null;
                 if (user != null)
                 {
@@ -58,6 +58,33 @@ namespace Resturant_Management.Controllers
 
         }
 
+        [HttpGet("OpenClose")]
+        public async Task<IActionResult> OpenClose()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(Claims.UserId)?.Value;
+            try
+            {
+                var user = await _userAccessService.OpenClose(userId);
+                if (user != null)
+                {
+                    var result = _exceptionModelGenerator.setData<RestaurantModel>(false, "Ok", user);
+                    return StatusCode(200, result);
+                }
+                else
+                {
+                    var result = _exceptionModelGenerator.setData<RestaurantModel>(true, "NOT_FOUND", null);
+                    return StatusCode(404, result);
+                }
+
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, _exceptionModelGenerator.setData<RestaurantModel>(true, e.Message, null));
+            }
+        } 
+
+
         [HttpPut("update")]
         public IActionResult Put(RestaurantUpdateModel userUpdateModel)
         {
@@ -70,8 +97,8 @@ namespace Resturant_Management.Controllers
                 var user = _userAccessService.GetUser(userId);
                 if (user != null)
                 {
-                    var newdata = _userAccessService.UpdateResturant(userUpdateModel, user);
-                    return StatusCode(204, _exceptionModelGenerator.setData<RestaurantModel>(false, "Ok", null));
+                    var newdata = _userAccessService.UpdateResturant(userUpdateModel,user);
+                    return StatusCode(200, _exceptionModelGenerator.setData<RestaurantModel>(false, "Ok", newdata.Result));
                 }
                 else
                 {
@@ -94,12 +121,12 @@ namespace Resturant_Management.Controllers
             {
                 var user = _userAccessService.GetUser(userId);
 
-                if (user == null)
+                if (user == null || user.logo==null)
                 {
-                    return StatusCode(404, _exceptionModelGenerator.setData<RestaurantModel>(true, "NOT_FOUND", null));
+                    return StatusCode(204, _exceptionModelGenerator.setData<RestaurantModel>(true, "NOT_FOUND", null));
                 }
 
-                var fileData = _userAccessService.ImagePath(user);
+                var fileData = _userAccessService.ImagePath(user.logo);
 
                 var b = PhysicalFile(fileData.path, "image/" + fileData.Imagetype);
 
@@ -136,6 +163,35 @@ namespace Resturant_Management.Controllers
                 return StatusCode(500, _exceptionModelGenerator.setData<RestaurantModel>(true, e.Message, null));
             }
         }
+
+
+
+        [HttpPut("update/backgroundphoto")]
+        public async Task<IActionResult> PhotoBackgroundUpdate([FromForm]PhotoUpdate photoUpdate)
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userId = identity.FindFirst(Claims.UserId)?.Value;
+            var photo = photoUpdate.profilePhoto;
+            try
+            {
+
+                var user = _userAccessService.GetUser(userId);
+                if (user != null)
+                {
+                    var newdata = _userAccessService.UpdateBackgroudImage(photoUpdate, user);
+                    return PhysicalFile(newdata.Result.path, "image/" + newdata.Result.Imagetype);
+                }
+                else
+                {
+                    return StatusCode(404, _exceptionModelGenerator.setData<RestaurantModel>(true, "NOT_FOUND", null));
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, _exceptionModelGenerator.setData<RestaurantModel>(true, e.Message, null));
+            }
+        }
+
 
         [HttpPut("reset")]
         public IActionResult ResetPassword(RestaurantUpdateModel userUpdateModel)
