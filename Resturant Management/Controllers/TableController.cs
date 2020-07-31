@@ -110,6 +110,7 @@ namespace Resturant_Management.Controllers
         [HttpGet("baseTableCategory/{userid}")]
         [AllowAnonymous]
         public async Task<IActionResult> BaseCategory(string userid)
+
         {
 
             try

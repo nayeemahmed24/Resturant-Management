@@ -42,7 +42,7 @@ namespace Resturant_Management.Controllers
         }
 
         // Pay and place ( Card Payment )
-        [HttpGet("Order/PlacePay")]
+        [HttpPost("Order/PlacePay")]
         [AllowAnonymous]
         public async Task<IActionResult> Pay(PaymentInputModel pm)
         {
