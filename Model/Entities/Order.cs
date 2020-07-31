@@ -21,6 +21,8 @@ namespace Model.Entities
         [DefaultValue(false)]
         public bool Paid { get; set; }
         [Required]
+        public Table TableNumber { get; set; }
+        [Required]
         public string ResturantId { get; set; }
         [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
         [BsonRepresentation(BsonType.DateTime)]
