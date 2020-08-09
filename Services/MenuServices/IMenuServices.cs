@@ -25,6 +25,7 @@ namespace Services.MenuServices
         public Task<MenuCatergory> FindCategoryById(string id);
         public Task AssignOnCategory(MenuCatergory menu);
         public Task AssignOnItem(MenuItem menu);
+        public Task<MenuCatergory> ChangeCateogryStatus(MenuCatergory menuCatergory);
 
     }
 }

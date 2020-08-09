@@ -22,5 +22,6 @@ namespace Model.Entities
         public bool IsChildAvailable { get; set; }
         [DefaultValue(false)]
         public bool ItemAdded { get; set; }
+        public bool available { get; set; }
     }
 }

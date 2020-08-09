@@ -55,6 +55,24 @@ namespace Resturant_Management.Controllers
             }
         }
 
+        [HttpGet("changeCategoryStatus/{id}")]
+        public async Task<IActionResult> ChangeCategoryStatus(string id)
+        {
+            try
+            {
+                var result = await _tableService.CategoryStatus(id);
+                if (result != null)
+                {
+                    return StatusCode(200, _exceptionModelGenerator.setData<TableCategory>(false, "Ok", result));
+                }
+                return StatusCode(200, _exceptionModelGenerator.setData<TableCategory>(true, "Not found", null));
+            }catch(Exception e)
+            {
+                var result = _exceptionModelGenerator.setData<TableCategory>(true, e.Message, null);
+                return StatusCode(500, result);
+            }
+        }
+
         [HttpPut("editTableCategory")]
         public async Task<IActionResult> EditTableCategory(TableCategory table)
         {
@@ -234,6 +252,24 @@ namespace Resturant_Management.Controllers
                 return StatusCode(500, result);
             }
 
+        }
+
+        [HttpGet("changeTableStatus/{id}")]
+        public async Task<IActionResult> ChangeTableStatus(string id)
+        {
+            try
+            {
+                var result = await _tableService.TableStatus(id);
+                if (result != null)
+                {
+                    return StatusCode(200, _exceptionModelGenerator.setData<Table>(false, "ok", result));
+                }
+                return StatusCode(200, _exceptionModelGenerator.setData<Table>(true, "Not found", null));
+            }catch(Exception e)
+            {
+                var result = _exceptionModelGenerator.setData<Table>(true, e.Message, null);
+                return StatusCode(500, result);
+            }
         }
 
         [HttpPost("sortedit")]

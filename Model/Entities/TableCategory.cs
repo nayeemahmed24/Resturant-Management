@@ -15,5 +15,6 @@ namespace Model.Entities
         public string CategoryTitle { get; set; }
         
         public string ResturantId { get; set; }
+        public bool available { get; set; }
     }
 }

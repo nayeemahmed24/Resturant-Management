@@ -69,6 +69,25 @@ namespace Resturant_Management.Controllers
 
         }
 
+        [HttpGet("categoryAvail/{id}")]
+        public async Task<IActionResult> ChangeCategoryAvailability(string id)
+        {
+            try
+            {
+                var category = await _menuServices.FindCategoryById(id);
+                if (category != null)
+                {
+                    var result = await _menuServices.ChangeCateogryStatus(category);
+                    return StatusCode(200, _exceptionModelGenerator.setData<MenuCatergory>(false, "Ok", result));
+                }
+                return StatusCode(404, _exceptionModelGenerator.setData<MenuCatergory>(true, "No data", null));
+            }catch(Exception e)
+            {
+                return StatusCode(500, _exceptionModelGenerator.setData<MenuCatergory>(true, e.Message, null));
+            }
+        }
+
+
         [HttpGet("getchild/{parentId}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetChildCategories(String parentId)

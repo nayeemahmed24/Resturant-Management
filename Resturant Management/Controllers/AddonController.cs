@@ -135,7 +135,7 @@ namespace Resturant_Management.Controllers
         }
 
         [HttpPost("changeAddonStatus")]
-        public async Task<IActionResult> ChangeAddonStatus(AddonInput addonInput)
+        public async Task<IActionResult> ChangeAddonStatus(Addon addonInput)
         {
             try
             {

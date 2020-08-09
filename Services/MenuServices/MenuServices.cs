@@ -40,6 +40,7 @@ namespace Services.MenuServices
             }
 
             category.Restaurant.password = null;
+            category.available = true;
    
             await _repository.SaveAsync<MenuCatergory>(category);
             if (category.Parent != null)
@@ -117,6 +118,12 @@ namespace Services.MenuServices
             return menuItem;
         }
 
+        public async Task<MenuCatergory> ChangeCateogryStatus(MenuCatergory menuCatergory)
+        {
+            menuCatergory.available = !menuCatergory.available;
+            await _repository.UpdateAsync<MenuCatergory>(d => d.Id == menuCatergory.Id, menuCatergory);
+            return menuCatergory;
+        }
 
         private async Task<MenuItem> FindMenuByMenuItemInput(MenuItemInput menu)
         {

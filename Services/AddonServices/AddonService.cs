@@ -26,6 +26,7 @@ namespace Services.AddonServices
         public async Task<Addon> AddAddon(AddonInput addon)
         {
             var resAddon = await buildAddon(addon);
+            resAddon.Available = true;
             
             await _repository.SaveAsync<Addon>(resAddon);
             
@@ -100,7 +101,7 @@ namespace Services.AddonServices
             }
             return lists;
         }
-        public async Task<Addon> ChangeStatus(AddonInput addonInput)
+        public async Task<Addon> ChangeStatus(Addon addonInput)
         {
             var addon = await  FindAddonById(addonInput.Id);
             if (addon != null)

@@ -11,6 +11,8 @@ namespace Services.TableServices
         public Task<TableCategory> AddTableCategory(TableCategory tableCategory);
         public Task<TableCategory> EditTableCategory(TableCategory tableCategory);
         public Task<Table> AddTable(Table table);
+        public Task<TableCategory> CategoryStatus(string id);
+        public Task<Table> TableStatus(string id);
         public Task<Table> EditTable(Table table);
         public Task<List<Table>> GetChildTableListByTableCategoryId(string tableCategoryId);
         public  Task<List<TableCategory>> GetBaseCategory( string resturantId);

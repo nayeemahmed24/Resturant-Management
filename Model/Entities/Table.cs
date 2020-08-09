@@ -14,6 +14,7 @@ namespace Model.Entities
         public int TableTitle { get; set; }
         [Required]
         public string TableCategoryId { get; set; }
+        public bool available { get; set; }
 
     }
 }

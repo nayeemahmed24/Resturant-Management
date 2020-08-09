@@ -280,5 +280,28 @@ namespace Services.TableServices
             }
         }
 
+        public async Task<TableCategory> CategoryStatus(string id)
+        {
+            var category = await FindTableCategoryById(id);
+            if (category != null)
+            {
+                category.available = !category.available;
+                await _repository.UpdateAsync<TableCategory>(d => d.Id == id, category);
+                return category;
+            }
+            return null;
+        }
+
+        public async Task<Table> TableStatus(string id)
+        {
+            var table = await FindTableById(id);
+            if (table != null)
+            {
+                table.available = !table.available;
+                await _repository.UpdateAsync<Table>(d => d.Id == id, table);
+                return table;
+            }
+            return null;
+        }
     }
 }
